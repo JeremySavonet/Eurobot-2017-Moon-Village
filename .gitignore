@@ -45,3 +45,4 @@ tmp/
 # Ignore Eagle temp files
 *.b#*
 *.s#*
+*~*
