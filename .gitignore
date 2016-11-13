@@ -41,6 +41,7 @@ tmp/
 */timing/
 */testbench/
 */*_sim/
+*/output_files/
 
 # Ignore Eagle temp files
 *.b#*
