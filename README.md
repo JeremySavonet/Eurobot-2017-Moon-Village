@@ -53,7 +53,7 @@ Change the RBF
 You can change the default RBF file that come with the distribution above.
 Just create your sof file that fit your needs with Quartus Tools.
 Convert the sof file to a rbf file using the command: 
-``
+```
 quartus_cpf -c -o bitstream_compression=on DE0_NANO_SOC.sof DE0_NANO_SOC.rbf
 ```
 
