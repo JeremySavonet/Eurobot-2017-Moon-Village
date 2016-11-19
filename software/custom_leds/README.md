@@ -1,4 +1,4 @@
-HPS_FPGA_LED:
+HPS_FPGA_CUSTOM_LED:
 ====
 
 This is a demo program to get started with the DEO nano SoC board and test that your development environment is set up right.
