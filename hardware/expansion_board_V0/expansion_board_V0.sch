@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.3.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -9364,7 +9364,6 @@ Source:</description>
 <part name="GND45" library="iocene" deviceset="GND" device=""/>
 <part name="J18" library="SparkFun-Connectors" deviceset="M05X2" device="NO_SILK"/>
 <part name="GND73" library="iocene" deviceset="GND" device=""/>
-<part name="U$11" library="SparkFun-Aesthetics" deviceset="OSHW-LOGO" device="S"/>
 <part name="LIPO_ELEC" library="iocene" deviceset="CON2" device="_3.81"/>
 <part name="LIPO_SERVO" library="iocene" deviceset="CON2" device="_3.81"/>
 <part name="LIPO_MOTEUR" library="iocene" deviceset="CON2" device="_3.81"/>
@@ -14017,7 +14016,6 @@ Source:</description>
 <attribute name="VALUE" x="27.94" y="28.194" size="1.778" layer="96"/>
 </instance>
 <instance part="5V32" gate="G$1" x="22.86" y="35.56" rot="MR0"/>
-<instance part="U$11" gate="G$1" x="254" y="10.16"/>
 <instance part="IO0" gate="G$1" x="99.06" y="172.72" smashed="yes" rot="R180">
 <attribute name="NAME" x="96.266" y="175.26" size="1.778" layer="95" rot="MR270"/>
 <attribute name="VALUE" x="100.584" y="178.054" size="1.778" layer="96" rot="MR0"/>
