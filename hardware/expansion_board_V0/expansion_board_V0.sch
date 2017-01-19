@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.3.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -3556,19 +3556,6 @@ Source:</description>
 <packages>
 <package name="ARDUINOR3">
 <description>The new Arduino R3 'classic' adds duplicate I2C pins and an IORef pin (and an unused pin</description>
-<wire x1="0" y1="0" x2="66.04" y2="0" width="0" layer="20"/>
-<wire x1="66.04" y1="0" x2="66.04" y2="2.54" width="0" layer="20"/>
-<wire x1="66.04" y1="2.54" x2="68.58" y2="5.08" width="0" layer="20"/>
-<wire x1="68.58" y1="5.08" x2="68.58" y2="37.846" width="0" layer="20"/>
-<wire x1="68.58" y1="37.846" x2="66.04" y2="40.386" width="0" layer="20"/>
-<wire x1="66.04" y1="40.386" x2="66.04" y2="51.816" width="0" layer="20"/>
-<wire x1="66.04" y1="51.816" x2="64.516" y2="53.34" width="0" layer="20"/>
-<wire x1="64.516" y1="53.34" x2="0" y2="53.34" width="0" layer="20"/>
-<wire x1="0" y1="53.34" x2="0" y2="0" width="0" layer="20"/>
-<circle x="15.24" y="50.8" radius="1.796" width="0.127" layer="51"/>
-<circle x="13.97" y="2.54" radius="1.796" width="0.127" layer="51"/>
-<circle x="66.04" y="35.56" radius="1.796" width="0.127" layer="51"/>
-<circle x="66.04" y="7.62" radius="1.796" width="0.127" layer="51"/>
 <pad name="D4" x="53.34" y="50.8" drill="1" diameter="1.6764" shape="octagon"/>
 <pad name="A0" x="50.8" y="2.54" drill="1" diameter="1.6764" shape="octagon"/>
 <pad name="D3" x="55.88" y="50.8" drill="1" diameter="1.6764" shape="octagon"/>
