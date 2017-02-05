@@ -30,7 +30,7 @@ git lfs install
 When you are done, create the SD card. You will need to create two partition on it:
   * One around 524Mo in FAT format
   * The other around 2,7Go in Ext3 format
-  
+
 You can use the method of your choice to create those partition.
 Then, it's time to write data on your SD card:
 
@@ -46,13 +46,25 @@ shell# umount mnt/usb1
 shell# umount mnt/usb2
 ```
 
+OR,
+==
+
+You can run the script robot.sh provided in robot_filesystem folder.
+
+```
+sudo ./robot.sh
+```
+
+Just provides data when asked (path to a valid rootfs and path to your sd card).
+
+
 Now, you'r done with the SD card. You have a nice Debian distribution working on the DE0 nano SoC.
 
 Change the RBF
 ===
 You can change the default RBF file that come with the distribution above.
 Just create your sof file that fit your needs with Quartus Tools.
-Convert the sof file to a rbf file using the command: 
+Convert the sof file to a rbf file using the command:
 ```
 quartus_cpf -c -o bitstream_compression=on DE0_NANO_SOC.sof DE0_NANO_SOC.rbf
 ```
