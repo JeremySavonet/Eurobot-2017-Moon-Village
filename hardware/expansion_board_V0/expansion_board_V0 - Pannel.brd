@@ -27,7 +27,7 @@
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
@@ -48,15 +48,15 @@
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="5" fill="1" visible="no" active="yes"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
 <layer number="51" name="tDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
@@ -1029,6 +1029,8 @@
 <vertex x="-187" y="15"/>
 <vertex x="-195" y="15"/>
 </polygon>
+<hole x="-3.18" y="31.12" drill="3.2"/>
+<hole x="-3.18" y="-31.12" drill="3.2"/>
 </plain>
 <libraries>
 <library name="iocene">
@@ -7258,11 +7260,11 @@ Your Eurocircuits Team
 <via x="-8.4" y="-38" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-16.5" y="-39.4" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-11.2" y="-40.8" extent="1-16" drill="0.3" diameter="0.65"/>
-<via x="-6.9" y="-31.1" extent="1-16" drill="0.3" diameter="0.65"/>
+<via x="-5.4" y="-33" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-15.1" y="-28.6" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-9.9" y="-28.6" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-13.1" y="-24.9" extent="1-16" drill="0.3" diameter="0.65"/>
-<via x="-4.4" y="-26.9" extent="1-16" drill="0.3" diameter="0.65"/>
+<via x="-5.3" y="-28.7" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-4.6" y="-18.7" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-5.8" y="-13.1" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-23.3" y="-20.9" extent="1-16" drill="0.3" diameter="0.65"/>
@@ -7281,8 +7283,8 @@ Your Eurocircuits Team
 <via x="-19.5" y="26.4" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-16" y="23.1" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-12.8" y="27.2" extent="1-16" drill="0.3" diameter="0.65"/>
-<via x="-8.6" y="31.4" extent="1-16" drill="0.3" diameter="0.65"/>
-<via x="-4.1" y="29.4" extent="1-16" drill="0.3" diameter="0.65"/>
+<via x="-5.4" y="32.8" extent="1-16" drill="0.3" diameter="0.65"/>
+<via x="-5.1" y="29" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-8.8" y="36.7" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-20.6" y="36" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-19" y="40.7" extent="1-16" drill="0.3" diameter="0.65"/>
@@ -7622,6 +7624,8 @@ Your Eurocircuits Team
 <via x="-65.6" y="-10.4" extent="1-16" drill="0.3" diameter="0.65"/>
 <via x="-41.6" y="-10.4" extent="1-16" drill="0.3" diameter="0.65"/>
 <contactref element="J50" pad="P$2"/>
+<via x="-68.9" y="-20.6" extent="1-16" drill="0.3" diameter="0.65"/>
+<via x="-68.8" y="-14.4" extent="1-16" drill="0.3" diameter="0.65"/>
 <wire x1="-204.55" y1="22.2" x2="-204.55" y2="22.2" width="0" layer="19" extent="1-2"/>
 <wire x1="-204.55" y1="22.2" x2="-204.55" y2="22.2" width="0" layer="19" extent="2-15"/>
 <wire x1="-204.55" y1="22.2" x2="-204.55" y2="22.2" width="0" layer="19" extent="15-16"/>
@@ -7641,8 +7645,6 @@ Your Eurocircuits Team
 <wire x1="-192.6" y1="44.25" x2="-192.6" y2="44.25" width="0" layer="19" extent="15-16"/>
 <wire x1="-192.6" y1="44.25" x2="-192.6" y2="44.25" width="0" layer="19" extent="2-15"/>
 <wire x1="-192.6" y1="44.25" x2="-192.6" y2="44.25" width="0" layer="19" extent="1-2"/>
-<via x="-68.9" y="-20.6" extent="1-16" drill="0.3" diameter="0.65"/>
-<via x="-68.8" y="-14.4" extent="1-16" drill="0.3" diameter="0.65"/>
 </signal>
 <signal name="3V3">
 <contactref element="U4" pad="P$4"/>
@@ -14619,46 +14621,6 @@ Your Eurocircuits Team
 <approved hash="8,2,25df39cb24db63c6"/>
 <approved hash="8,15,25df39cb24db63c6"/>
 <approved hash="8,1,25df39cb24db63c6"/>
-<approved hash="3,1,6b32793e793c6932"/>
-<approved hash="3,1,32773c793c7d3273"/>
-<approved hash="3,1,32773c793c7d3273"/>
-<approved hash="3,1,6b32793e793c6932"/>
-<approved hash="3,1,8b32893c893c8b32"/>
-<approved hash="3,1,8b32893c893c8b32"/>
-<approved hash="3,1,32753c793e7d3273"/>
-<approved hash="3,1,32753c793e7d3273"/>
-<approved hash="8,1,79dd3edb3fdc27c9"/>
-<approved hash="8,2,79dd3edb3fdc27c9"/>
-<approved hash="8,15,79dd3edb3fdc27c9"/>
-<approved hash="8,16,79dd3edb3fdc27c9"/>
-<approved hash="8,16,53edd44e4c785b8f"/>
-<approved hash="8,2,53edd44e4c785b8f"/>
-<approved hash="8,15,53edd44e4c785b8f"/>
-<approved hash="8,1,53edd44e4c785b8f"/>
-<approved hash="8,1,8445ab96eb875403"/>
-<approved hash="8,2,8445ab96eb875403"/>
-<approved hash="8,15,8445ab96eb875403"/>
-<approved hash="8,16,8445ab96eb875403"/>
-<approved hash="8,16,2bd937df2acf6dda"/>
-<approved hash="8,2,2bd937df2acf6dda"/>
-<approved hash="8,15,2bd937df2acf6dda"/>
-<approved hash="8,1,2bd937df2acf6dda"/>
-<approved hash="8,1,78c53fe73ec028dd"/>
-<approved hash="8,2,78c53fe73ec028dd"/>
-<approved hash="8,15,78c53fe73ec028dd"/>
-<approved hash="8,16,78c53fe73ec028dd"/>
-<approved hash="8,16,7049f4266c50786b"/>
-<approved hash="8,2,7049f4266c50786b"/>
-<approved hash="8,15,7049f4266c50786b"/>
-<approved hash="8,1,7049f4266c50786b"/>
-<approved hash="8,1,a42d8832c863742b"/>
-<approved hash="8,2,a42d8832c863742b"/>
-<approved hash="8,15,a42d8832c863742b"/>
-<approved hash="8,16,a42d8832c863742b"/>
-<approved hash="8,16,2ae536c725db6cc6"/>
-<approved hash="8,2,2ae536c725db6cc6"/>
-<approved hash="8,15,2ae536c725db6cc6"/>
-<approved hash="8,1,2ae536c725db6cc6"/>
 <approved hash="7,39,07fe3805c405fbfe"/>
 <approved hash="7,39,ee0ceff713f7120c"/>
 <approved hash="7,39,a64099bf65bf5a40"/>
@@ -14728,44 +14690,44 @@ Your Eurocircuits Team
 <approved hash="7,39,b02db0d04cd04c2d"/>
 <approved hash="7,39,923992c46ec46e39"/>
 <approved hash="7,39,ab36abcb57cb5736"/>
+<approved hash="7,40,0f658500fdfc8998"/>
+<approved hash="7,40,ab332300ff028930"/>
+<approved hash="7,40,fae3f8e1f8e1fae3"/>
+<approved hash="7,40,c2cfc0cdc0cdc2cf"/>
+<approved hash="7,40,e6698500fdfc6094"/>
 <approved hash="7,40,36037a02fdfe4ffc"/>
 <approved hash="7,40,fc8dfe8ffe8ffc8d"/>
 <approved hash="7,40,356d7a1efde24c8e"/>
 <approved hash="7,40,913bdc1eff1c4c26"/>
+<approved hash="7,40,3e058500fdfcb8f8"/>
+<approved hash="7,40,9a532300ff02b850"/>
+<approved hash="7,40,f28ff08df08df28f"/>
+<approved hash="7,40,33778500fdfcb58a"/>
+<approved hash="7,40,0a7b8500fdfc8c86"/>
+<approved hash="7,40,97212300ff02b522"/>
+<approved hash="7,40,db5b8500fdfc5da6"/>
+<approved hash="7,40,423f2300ff02603c"/>
 <approved hash="7,40,9255dc02ff004f54"/>
-<approved hash="7,40,5a717a06fdfa238a"/>
-<approved hash="7,40,fe27dc06ff042322"/>
 <approved hash="7,40,59637a02fdfe209c"/>
 <approved hash="7,40,fd35dc02ff002034"/>
-<approved hash="7,40,fcedfeeffeeffced"/>
-<approved hash="7,40,f28ff08df08df28f"/>
-<approved hash="7,40,3e058500fdfcb8f8"/>
-<approved hash="7,40,33778500fdfcb58a"/>
-<approved hash="7,40,97212300ff02b522"/>
-<approved hash="7,40,c2cfc0cdc0cdc2cf"/>
-<approved hash="7,40,db5b8500fdfc5da6"/>
-<approved hash="7,40,e6698500fdfc6094"/>
-<approved hash="7,40,423f2300ff02603c"/>
-<approved hash="7,40,8e677a02fdfff799"/>
-<approved hash="7,40,2a31dc02ff01f731"/>
-<approved hash="7,40,fae3f8e1f8e1fae3"/>
-<approved hash="7,40,0a7b8500fdfc8c86"/>
-<approved hash="7,40,8d517a06fdfbf4ab"/>
 <approved hash="7,40,fccdfecffecffccd"/>
-<approved hash="7,40,0f658500fdfc8998"/>
-<approved hash="7,40,9a532300ff02b850"/>
-<approved hash="7,40,ab332300ff028930"/>
+<approved hash="7,40,fcedfeeffeeffced"/>
+<approved hash="7,40,8e677a02fdfff799"/>
+<approved hash="7,40,8d517a06fdfbf4ab"/>
+<approved hash="7,40,5a717a06fdfa238a"/>
+<approved hash="7,40,fe27dc06ff042322"/>
+<approved hash="7,40,2907dc06ff05f403"/>
 <approved hash="7,40,ae2d2300ff028c2e"/>
 <approved hash="7,40,7f0d2300ff025d0e"/>
-<approved hash="7,40,2907dc06ff05f403"/>
+<approved hash="7,40,2a31dc02ff01f731"/>
 <approved hash="7,40,c0cfc2cdc2cdc0cf"/>
-<approved hash="7,40,fe8dfc8ffc8ffe8d"/>
+<approved hash="7,40,f08ff28df28df08f"/>
 <approved hash="7,40,fecdfccffccffecd"/>
 <approved hash="7,40,feedfceffceffeed"/>
-<approved hash="7,40,f08ff28df28df08f"/>
+<approved hash="7,40,fe8dfc8ffc8ffe8d"/>
 <approved hash="7,40,f8e3fae1fae1f8e3"/>
-<approved hash="7,40,0493056ef96ef893"/>
 <approved hash="7,40,c4eec4e138ed38ea"/>
+<approved hash="7,40,0493056ef96ef893"/>
 <approved hash="7,40,e503e4f818f81903"/>
 <approved hash="7,40,c78ac276dc76c18a"/>
 <approved hash="7,40,c465c1983b983e65"/>
@@ -14774,9 +14736,49 @@ Your Eurocircuits Team
 <approved hash="7,40,2d212edad2ded125"/>
 <approved hash="7,40,924b92b76eb76e4b"/>
 <approved hash="7,40,37a7375bcb5bcba7"/>
+<approved hash="3,1,6b32793e793c6932"/>
+<approved hash="3,1,32773c793c7d3273"/>
+<approved hash="3,1,32773c793c7d3273"/>
+<approved hash="3,1,6b32793e793c6932"/>
+<approved hash="3,1,8b32893c893c8b32"/>
+<approved hash="3,1,8b32893c893c8b32"/>
+<approved hash="3,1,32753c793e7d3273"/>
+<approved hash="3,1,32753c793e7d3273"/>
+<approved hash="8,1,79dd3edb3fdc27c9"/>
+<approved hash="8,2,79dd3edb3fdc27c9"/>
+<approved hash="8,15,79dd3edb3fdc27c9"/>
+<approved hash="8,16,79dd3edb3fdc27c9"/>
+<approved hash="8,16,53edd44e4c785b8f"/>
+<approved hash="8,2,53edd44e4c785b8f"/>
+<approved hash="8,15,53edd44e4c785b8f"/>
+<approved hash="8,1,53edd44e4c785b8f"/>
+<approved hash="8,1,8445ab96eb875403"/>
+<approved hash="8,2,8445ab96eb875403"/>
+<approved hash="8,15,8445ab96eb875403"/>
+<approved hash="8,16,8445ab96eb875403"/>
+<approved hash="8,16,2bd937df2acf6dda"/>
+<approved hash="8,2,2bd937df2acf6dda"/>
+<approved hash="8,15,2bd937df2acf6dda"/>
+<approved hash="8,1,2bd937df2acf6dda"/>
+<approved hash="8,1,78c53fe73ec028dd"/>
+<approved hash="8,2,78c53fe73ec028dd"/>
+<approved hash="8,15,78c53fe73ec028dd"/>
+<approved hash="8,16,78c53fe73ec028dd"/>
+<approved hash="8,16,7049f4266c50786b"/>
+<approved hash="8,2,7049f4266c50786b"/>
+<approved hash="8,15,7049f4266c50786b"/>
+<approved hash="8,1,7049f4266c50786b"/>
+<approved hash="8,1,a42d8832c863742b"/>
+<approved hash="8,2,a42d8832c863742b"/>
+<approved hash="8,15,a42d8832c863742b"/>
+<approved hash="8,16,a42d8832c863742b"/>
+<approved hash="8,16,2ae536c725db6cc6"/>
+<approved hash="8,2,2ae536c725db6cc6"/>
+<approved hash="8,15,2ae536c725db6cc6"/>
+<approved hash="8,1,2ae536c725db6cc6"/>
 <approved hash="6,1,a2b3a9f0bd8db230"/>
-<approved hash="19,1,8f58a537a5687f20"/>
 <approved hash="19,1,93eea557a5306e52"/>
+<approved hash="19,1,8f58a537a5687f20"/>
 <approved hash="5,1,bc54fc566ffe1054"/>
 <approved hash="5,1,165481566b54fc56"/>
 <approved hash="5,1,bc54fc566ffe1054"/>
@@ -14817,8 +14819,8 @@ Your Eurocircuits Team
 <approved hash="5,1,8d3bc21ceb99d74b"/>
 <approved hash="5,1,8bca31deb3445de2"/>
 <approved hash="5,1,8bca31deb3445de2"/>
-<approved hash="19,16,c0ee3dc4bc9bd837"/>
 <approved hash="5,16,a26bad461aa7babe"/>
+<approved hash="19,16,c0ee3dc4bc9bd837"/>
 </errors>
 </board>
 </drawing>
