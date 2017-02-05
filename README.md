@@ -57,6 +57,20 @@ sudo ./robot.sh
 
 Just provides data when asked (path to a valid rootfs and path to your sd card).
 
+Note:
+---
+Maybe we can reduce the size of our image. For example:
+  * 1Mo: Uboot
+  * 256Mo: RBF + others stuffs
+  * 256Mo: RootFs
+
+and then use the command:
+```
+sudo resize2fs /dev/mmcblk0p2
+
+```
+
+to enlarge rootfs partition.
 
 Now, you'r done with the SD card. You have a nice Debian distribution working on the DE0 nano SoC.
 
