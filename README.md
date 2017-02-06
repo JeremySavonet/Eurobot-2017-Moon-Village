@@ -84,3 +84,105 @@ quartus_cpf -c -o bitstream_compression=on DE0_NANO_SOC.sof DE0_NANO_SOC.rbf
 ```
 
 Replace the rbf with yours on the first partition of your SD card.
+
+Setup the CrossCompile Toolchain:
+====
+
+1- Get Arm Cross Compiler: GCC
+
+Get the latest gcc compiler for ARM:
+
+We will be using the standard Linaro GCC toolchain for the ARMv7 instruction set
+to compile our projects.
+
+```
+wget -c https://releases.linaro.org/components/toolchain/binaries/6.2-2016.11/arm-linux-gnueabihf/gcc-linaro-6.2.1-2016.11-i686_arm-linux-gnueabihf.tar.xz
+tar -xvf gcc-linaro-6.2.1-2016.11-i686_arm-linux-gnueabihf.tar.xz
+export CROSS_COMPILE=$PWD/gcc-linaro-6.2.1-2016.11-i686_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+```
+
+For others gcc version, go to:
+https://releases.linaro.org/components/toolchain/binaries/6.2-2016.11/arm-linux-gnueabihf/
+
+2- Get Linux Kernel from sources
+
+Note:
+---
+
+We use Kernel 4.4.x (Longterm support):
+
+Tested:
+
+  * Kernel sources
+
+```
+git clone https://github.com/altera-opensource/linux-socfpga.git
+cd linux-socfpga
+git tag –l rel*
+git checkout rel_socfpga-4.1_15.09.01_pr
+```
+  * Configuring the Kernel
+
+```
+make ARCH=arm socfpga_defconfig
+```
+
+Maybe on some system you will need to install extra packages:
+
+```
+sudo dpkg --add-architecture i386 sudo apt-get update sudo apt-get install libc6:i386 libstdc++6:i386 libfontconfig1:i386 libfreetype6:i386 libice6:i386 lib32ncurses5 zlib1g:i386 libusb-0.1-4:i386
+```
+
+After that, Open the Kernel configuration tool:
+
+```
+make ARCH=arm menuconfig
+```
+
+
+Note:
+---
+
+Go into the “General Setup” menu. Uncheck “Automatically append version information to the version string”. This will prevent the kernel from adding extra “version” information to the kernel.
+
+And, enter the “Enable the block layer” menu option and enable the “Support for large (2TB+) block devices and files” option. Although the chances of you actually having 2TB+ files on your filesystem are small, if you look at the help for this option (press “?”) you’ll notice that this option is required to be enabled if you’re using the EXT4 filesystem (which we are). If you forget to enable this option, the kernel will mount your filesystem in read-only mode and print out a helpful message reminding you to come back and enable this if you want full read/write support.
+
+When you’re done looking at the available options, hit the right arrow key to select the “Save” option at the bottom of the window and press enter. When asked for a filename, leave it at the default (“.config”) and hit enter. Hit enter again, then exit the configuration tool.
+
+  * Compiling the Kernel and create zImage
+
+```
+make CROSS_COMPILE=$PWD/gcc-linaro-6.2.1-2016.11-i686_arm-linux-gnueabihf/bin/arm-linux-gnueabihf- ARCH=arm LOCALVERSION= zImage
+```
+
+Use the zImage created to make your SD card.
+
+The part below is not tested and is here for information if we decide to try other linux kernel from others sources:
+==
+
+```
+git clone https://github.com/RobertCNelson/socfpga-kernel-dev
+cd socfpga-kernel-dev/
+
+git checkout origin/v4.4.x -b LOCAL-BRANCH-NAME
+```
+
+You can checkout other version. For example:
+
+For 4.6.x (Stable)
+
+```
+git checkout origin/v4.6.x -b LOCAL-BRANCH-NAME
+```
+
+For 4.7.x (Prepatch)
+
+```
+git checkout origin/v4.7.x -b LOCAL-BRANCH-NAME
+```
+
+3- Build the kernel
+
+```
+./build_kernel.sh
+```
