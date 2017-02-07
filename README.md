@@ -104,12 +104,18 @@ export CROSS_COMPILE=$PWD/gcc-linaro-6.2.1-2016.11-i686_arm-linux-gnueabihf/bin/
 For others gcc version, go to:
 https://releases.linaro.org/components/toolchain/binaries/6.2-2016.11/arm-linux-gnueabihf/
 
+Or, simply run:
+
+```
+sudo apt-get install gcc-arm-linux-gnueabi
+```
+
 2- Get Linux Kernel from sources
 
 Note:
 ---
 
-We use Kernel 4.4.x (Longterm support):
+We use Kernel 4.5.x
 
 Tested:
 
@@ -118,25 +124,29 @@ Tested:
 ```
 git clone https://github.com/altera-opensource/linux-socfpga.git
 cd linux-socfpga
-git tag –l rel*
-git checkout rel_socfpga-4.1_15.09.01_pr
+git tag
+git checkout rel_socfpga-4.5_16.06.01_pr
 ```
   * Configuring the Kernel
 
 ```
-make ARCH=arm socfpga_defconfig
+make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm socfpga_defconfig
 ```
 
 Maybe on some system you will need to install extra packages:
 
 ```
+sudo apt-get install libncurses5-dev
+
+or,
+
 sudo dpkg --add-architecture i386 sudo apt-get update sudo apt-get install libc6:i386 libstdc++6:i386 libfontconfig1:i386 libfreetype6:i386 libice6:i386 lib32ncurses5 zlib1g:i386 libusb-0.1-4:i386
 ```
 
 After that, Open the Kernel configuration tool:
 
 ```
-make ARCH=arm menuconfig
+make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm menuconfig
 ```
 
 
@@ -152,7 +162,7 @@ When you’re done looking at the available options, hit the right arrow key to 
   * Compiling the Kernel and create zImage
 
 ```
-make CROSS_COMPILE=$PWD/gcc-linaro-6.2.1-2016.11-i686_arm-linux-gnueabihf/bin/arm-linux-gnueabihf- ARCH=arm LOCALVERSION= zImage
+make CROSS_COMPILE=arm-linux-gnueabi- ARCH=arm LOCALVERSION= zImage
 ```
 
 Use the zImage created to make your SD card.
