@@ -15,7 +15,7 @@ case $touche in
 # create an empty image file of 3.8Go
 image="robot.img"
 
-dd if=/dev/zero of=$image bs=512M count=7 # about 3.8Go
+dd if=/dev/zero of=$image bs=800M count=1 # about 3.8Go
 
 # Use a loopback device for partition and data
 ld=$(losetup --show -f $image)
@@ -35,7 +35,7 @@ n # new partition
 p # primary partition
 1 # partion number 1
 # default, start immediately after preceding partition
-+256M # 256 MB for dtb files and others stuff
++64M # 64 MB for dtb files and others stuff
 
 n # new partition
 p # primary partition
@@ -70,6 +70,7 @@ mkfs -t vfat $part1
 mkfs.ext4 $part2
 
 # Burn u-boot in partition 3 at index 4
+dd if=./u-boot/u-boot-spl.sfp of=$part3 bs=64k seek=0
 dd if=./u-boot/u-boot.img of=$part3 bs=64k seek=4
 
 # Create temp dir to cp device files to
