@@ -1,3 +1,4 @@
+// Copyright (c) 2016-2017 All Rights Reserved WestBot
 
 #include <error.h>
 #include <fcntl.h>
@@ -25,8 +26,6 @@ Led::Led()
     , lw_bridge_map( 0 )
     , devmem_fd( 0 )
 {
-    int result = 0;
-
     // Open up the /dev/mem device (aka, RAM)
     devmem_fd = open( "/dev/mem", O_RDWR | O_SYNC );
     if( devmem_fd < 0 )
@@ -75,7 +74,7 @@ void Led::turnOn( int ledId )
 {
     if( ledId == 1 )
     {
-        *custom_led = 0x02;
+        *custom_led_map = 0x02;
     }
     else
     {
@@ -88,7 +87,7 @@ void Led::turnOff( int ledId )
 {
     if( ledId == 1 )
     {
-        *custom_led = 0x02;
+        *custom_led_map = 0x02;
     }
     else
     {

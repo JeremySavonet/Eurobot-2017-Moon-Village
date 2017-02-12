@@ -4,16 +4,20 @@ TARGET = HPS_FPGA_CUSTOM_LED
 #
 CROSS_COMPILE = arm-linux-gnueabihf-
 ALT_DEVICE_FAMILY ?= soc_cv_av
-CFLAGS = -g -Wall -I${SOCEDS_DEST_ROOT}/ip/altera/hps/altera_hps/hwlib/include -I${SOCEDS_DEST_ROOT}/ip/altera/hps/altera_hps/hwlib/include/$(ALT_DEVICE_FAMILY) -D$(ALT_DEVICE_FAMILY)
+CXXFLAGS = -g -Wall -I${SOCEDS_DEST_ROOT}/ip/altera/hps/altera_hps/hwlib/include -I${SOCEDS_DEST_ROOT}/ip/altera/hps/altera_hps/hwlib/include/$(ALT_DEVICE_FAMILY) -D$(ALT_DEVICE_FAMILY)
 LDFLAGS =  -g -Wall
-CC = $(CROSS_COMPILE)g++
+CXX = $(CROSS_COMPILE)g++
 ARCH= arm
+
+SRCS=Led.cpp \
+     main.cpp
+OBJS=$(SRCS:.cpp=.o )
 
 build: $(TARGET)
 $(TARGET): main.o
-	$(CC) $(LDFLAGS)   $^ -o $@
+	$(CXX) $(LDFLAGS) $(SRCS) -o $@
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
