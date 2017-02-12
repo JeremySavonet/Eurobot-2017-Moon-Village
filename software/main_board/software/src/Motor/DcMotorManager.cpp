@@ -4,7 +4,13 @@
 
 using namespace WestBot;
 
-DcMotorManager::DcMotorManager()
+namespace
+{
+    const int DC_MOTOR_BASE_ADDRESS = 0x10008;
+}
+
+DcMotorManager::DcMotorManager( MemoryManager& memoryManager )
+    : MotorManager( memoryManager, DC_MOTOR_BASE_ADDRESS )
 {
 }
 

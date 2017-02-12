@@ -7,12 +7,14 @@
 
 #include "MotorManager.hpp"
 
+#include "../Memory/MemoryManager.hpp"
+
 namespace WestBot {
 
 class BrushlessMotorManager : public MotorManager
 {
 public:
-    BrushlessMotorManager();
+    BrushlessMotorManager( MemoryManager& memoryManager );
     ~BrushlessMotorManager();
 
     void disablePwm( int deviceId, int channel ) override;

@@ -4,13 +4,17 @@
 
 using namespace WestBot;
 
-MotorManager::MotorManager()
+MotorManager::MotorManager( MemoryManager& memoryManager,
+                            uint32_t motorBaseAddress )
+    : _memoryManager( memoryManager )
 {
+    // Init the memory for general motor
+    _motorMap = _memoryManager.mapModuleToMemory( motorBaseAddress );
 }
 
 MotorManager::~MotorManager()
 {
-
+    _motorMap = 0;
 }
 
 void MotorManager::disablePwm( int deviceId, int channel )
@@ -41,4 +45,9 @@ void MotorManager::setPwmNegative0( int deviceId, int32_t value )
 void MotorManager::setPwmNegative1( int deviceId, int32_t value )
 {
 
+}
+
+uint32_t* MotorManager::motorMap()
+{
+    return _motorMap;
 }

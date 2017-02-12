@@ -4,7 +4,13 @@
 
 using namespace WestBot;
 
-BrushlessMotorManager::BrushlessMotorManager()
+namespace
+{
+    const int BRUSHLESS_MOTOR_BASE_ADDRESS = 0x10008;
+}
+
+BrushlessMotorManager::BrushlessMotorManager( MemoryManager& memoryManager )
+    : MotorManager( memoryManager, BRUSHLESS_MOTOR_BASE_ADDRESS )
 {
 }
 

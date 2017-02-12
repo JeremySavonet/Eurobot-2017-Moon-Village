@@ -16,7 +16,7 @@ int main( void )
     MemoryManager memoryManager;
 
     // Init managers for motor controls
-    DcMotorManager motorManager;
+    DcMotorManager motorManager( memoryManager );
     QeiManager qeiManager( memoryManager );
 
     std::cout << "Here we start!" << std::endl;
