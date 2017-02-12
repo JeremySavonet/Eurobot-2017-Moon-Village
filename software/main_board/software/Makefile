@@ -16,11 +16,13 @@ CXX = $(CROSS_COMPILE)g++
 ARCH = arm
 
 SRCDIR = src
-CPPSRCS = $(SRCDIR)/Memory/MemoryManager.cpp \
+CPPSRCS = $(SRCDIR)/ControlSystem/Filters/Pid.cpp \
+          $(SRCDIR)/Memory/MemoryManager.cpp \
           $(SRCDIR)/Motor/BrushlessMotorManager.cpp \
           $(SRCDIR)/Motor/DcMotorManager.cpp \
           $(SRCDIR)/Motor/QeiManager.cpp \
           $(SRCDIR)/Motor/MotorManager.cpp \
+          $(SRCDIR)/Robot/AngleDistance.cpp \
           main.cpp
 OBJS = $(CPPSRCS:.cpp=.o )
 
