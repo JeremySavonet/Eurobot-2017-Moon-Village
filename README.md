@@ -196,3 +196,77 @@ git checkout origin/v4.7.x -b LOCAL-BRANCH-NAME
 ```
 ./build_kernel.sh
 ```
+
+Wifi with Realtek 8192du driver:
+====
+
+There is two options to make the WiFi works on the board:
+
+  * You are not using a 4.5.0 Linux kernel, so you need to build your own
+    versionkernel of the kernel module by fetching source of the 8192d and
+    compile it with your crosstoolchain.
+  * Or, just use the 8192du.ko already built for our kernel (4.5.0).
+
+  Once you have the 8192du.ko in your linux rootFs, you can install the module
+  manually (insmod path-to-your-8192du.ko) or at boot time:
+
+In your rc.local file put:
+```
+insmod 8192du.ko
+
+ifup wlan0
+```
+
+If the module is plugged in on your board you can see now a new interface called
+wlan0 if you type 'ifconfig' in a shell.
+
+Setup a WiFi Access point:
+====
+
+Install the following package:
+
+```
+apt-get install dnsmasq hostapd
+```
+
+Create an hostapd configuration file in /etc/hostapd/hostapd.conf
+
+```
+interface=wlan0
+ssid=YOUR-SSID
+channel=1
+hw_mode=g
+wpa=3
+wpa_passphrase=YOUR-PASSWORD
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+```
+
+DO NOT forget to edit the file /etc/init.d/hostapd and set:
+
+```
+DAEMON_CONF=/etc/hostpad/hostapd.conf
+```
+Also edit the file /etc/default/hostapd and change the line:
+
+```
+DAEMON_CONF=/etc/hostpad/hostapd.conf
+```
+
+Then, update your /etc/network/interfaces file with the following:
+
+```
+auto wlan0
+iface wlan0 inet static
+hostapd /etc/hostapd/hostapd.conf
+address 192.168.10.1
+netmask 255.255.255.0
+```
+
+Finally, restart your wlan0 interface by typing:
+
+```
+ifdown wlan0
+ifup wlan0
+```
