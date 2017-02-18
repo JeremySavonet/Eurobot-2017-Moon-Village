@@ -32,7 +32,7 @@ tmp/
 *~
 *example*
 *sopc_*
-*.sdc
+
 
 # Ignore Quartus II generated folders
 */db/
