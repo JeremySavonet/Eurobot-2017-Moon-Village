@@ -1,5 +1,3 @@
-// Copyright (c) 2013-2016 All Rights Reserved Devialet SA
-
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/io.h>
