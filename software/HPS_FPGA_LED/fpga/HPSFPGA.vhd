@@ -20,8 +20,8 @@ entity hpsfpga is
 	ADC_SDO     : in  std_logic;
 
 	----------/ ARDUINO --------/
-	ARDUINO_IO      : inout std_logic_vector(16-1 downto 0);
-	ARDUINO_RESET_N : inout std_logic;
+	--ARDUINO_IO      : inout std_logic_vector(16-1 downto 0);
+	--ARDUINO_RESET_N : inout std_logic;
 
 --`ifdef ENABLE_CLK
 --	--------/ CLK --------/
@@ -35,8 +35,132 @@ entity hpsfpga is
 	FPGA_CLK3_50 : in std_logic;
 
 	----------/ GPIO --------/
-	GPIO_0  : inout   std_logic_vector(36-1 downto 0);
-	GPIO_1  : inout   std_logic_vector(36-1 downto 0);
+	--GPIO_0  : inout   std_logic_vector(36-1 downto 0);
+	--GPIO_1  : inout   std_logic_vector(36-1 downto 0);
+
+
+    ----------- ADC (//) ---------
+    ad0_sclk : out std_logic;
+    ad0_miso : in  std_logic;
+    ad0_drdy : in  std_logic;
+    ad0_sync : out std_logic;
+    ad0_clk  : out std_logic;
+
+    --------- ADC (muxed) --------
+    ad1_sclk : out std_logic;
+    ad1_mosi : out std_logic;
+    ad1_miso : in  std_logic;
+    ad1_ss   : out std_logic;
+    ad1_drdy : in  std_logic;
+    ad1_rst  : out std_logic;
+
+    ---------- H BRIDGE ----------
+    m0_pwma  : out std_logic;
+    m0_pwmb  : out std_logic;
+    m0_fault : in  std_logic;
+    
+    m1_pwma  : out std_logic;
+    m1_pwmb  : out std_logic;
+    m1_fault : in  std_logic;
+
+    m2_pwma  : out std_logic;
+    m2_pwmb  : out std_logic;
+
+    m3_pwma  : out std_logic;
+    m3_pwmb  : out std_logic;
+
+    m23_fault: in  std_logic;
+
+    m4_pwma  : out std_logic;
+    m4_pwmb  : out std_logic;
+
+    m5_pwma  : out std_logic;
+    m5_pwmb  : out std_logic;
+
+    m45_fault: in  std_logic;
+
+    ---------- QEI ----------    
+    qei0_a   : in  std_logic;
+    qei0_b   : in  std_logic;
+
+    qei1_a   : in  std_logic;
+    qei1_b   : in  std_logic;
+
+    qei2_a   : in  std_logic;
+    qei2_b   : in  std_logic;
+    qei2_z   : in  std_logic;
+
+    qei3_a   : in  std_logic;
+    qei3_b   : in  std_logic;
+    qei3_z   : in  std_logic;
+
+    ---------- ESC ----------    
+    esc0_pwm : in  std_logic;
+    esc0_dir : out std_logic;
+
+    esc1_pwm : in  std_logic;
+    esc1_dir : out std_logic;
+
+    ------- PWM (Servos) ------
+    s : out std_logic_vector(8-1 downto 0);    
+
+    --------- IOs ----------
+    io_0 : in  std_logic;
+    io_1 : in  std_logic;
+    io_2 : out std_logic;
+    io_3 : out std_logic;
+    io_4 : in  std_logic;
+    io_5 : in  std_logic;
+    io_6 : out std_logic;
+    io_7 : out std_logic;
+
+    --------- UART ----------
+    uart0_rx     : in  std_logic;
+    uart0_tx     : out std_logic;
+
+    uart1_rx     : in  std_logic;
+    uart1_tx     : out std_logic;
+
+    uart2_rx     : in  std_logic;
+    uart2_tx     : out std_logic;
+    uart2_custom : out std_logic;
+
+    uart3_rx     : in  std_logic;
+    uart3_tx     : out std_logic;
+    uart3_custom : out std_logic;
+
+    --------- I2C ----------
+    i2c0_scl     : inout std_logic;
+    i2c0_sda     : inout std_logic;
+    i2c0_reset   : out   std_logic;
+
+    i2c1_scl     : inout std_logic;
+    i2c1_sda     : inout std_logic;
+    i2c1_reset   : out   std_logic;
+
+    --------- SPI ----------
+    spi0_sclk    : out std_logic;
+    spi0_mosi    : out std_logic;
+    spi0_miso    : in  std_logic;
+    spi0_ss      : out std_logic;
+
+    spi1_sclk    : out std_logic;
+    spi1_mosi    : out std_logic;
+    spi1_miso    : in  std_logic;
+    spi1_ss      : out std_logic;
+
+    --! Use SPI1
+    imu_ss       : out std_logic;
+    imu_drdy     : in  std_logic;
+    imu_fsync    : in  std_logic;
+
+    ---------- LED -----------
+    led_green : out std_logic;
+    led_red   : out std_logic;
+
+    --------- MGMT -----------
+    lv_mux    : out std_logic_vector(2-1 downto 0);
+    buzzer    : out std_logic;
 
 --`ifdef ENABLE_HPS
 	----------/ HPS --------/
@@ -180,8 +304,75 @@ architecture hpsfpga_arch of hpsfpga is
     signal hps_fpga_reset_n : std_logic;
 
 
-	signal cnt : std_logic_vector(32-1 downto 0);
+	signal cnt : std_logic_vector(32-4-1 downto 0);
 	signal dir : std_logic;
+
+
+    signal w_qei0_cnt : std_logic_vector(16-1 downto 0);
+    signal w_qei1_cnt : std_logic_vector(16-1 downto 0);
+
+    signal r_qei0_cnt : std_logic_vector(16-1 downto 0);
+    signal r_qei1_cnt : std_logic_vector(16-1 downto 0);
+
+    signal r_led_red  : std_logic;
+
+    signal r_clk_25mhz : std_logic;
+    signal r_clk_12mhz : std_logic;
+
+
+
+    signal r_ad0_miso  : std_logic;
+    signal r_ad0_drdy  : std_logic;
+    signal r_ad0_en    : std_logic;
+
+	 
+    signal w_m0_pwm : std_logic;
+    signal w_m1_pwm : std_logic;
+    signal w_m2_pwm : std_logic;
+    signal w_m3_pwm : std_logic;
+    signal w_m4_pwm : std_logic;
+    signal w_m5_pwm : std_logic;
+
+    constant MSG_SIZE : natural := 1+2+4*2+2+2;
+
+    signal r_uart_tx_data  : std_logic_vector(MSG_SIZE*8-1 downto 0);
+    signal w_uart_tx_valid : std_logic;
+    signal w_uart_tx_busy  : std_logic;
+
+    signal w_ad0_rx_busy   : std_logic;
+    signal r_ad0_rx_busy   : std_logic;
+    signal w_ad0_rx_data   : std_logic_vector(192-1 downto 0);
+    signal r_ad0_rx_valid  : std_logic;
+
+    function reverse_vector (a: in std_logic_vector) return std_logic_vector is
+        variable result: std_logic_vector(a'RANGE);
+        alias aa: std_logic_vector(a'REVERSE_RANGE) is a;
+    begin
+        for i in aa'RANGE loop
+            result(i) := aa(i);
+        end loop;
+        return result;
+    end; -- function reverse_any_vector
+
+    -- changes the endianess BIG <-> LITTLE
+    function ChangeEndian(vec : std_ulogic_vector) return std_ulogic_vector is
+        variable vRet      : std_ulogic_vector(vec'range);
+        constant cNumBytes : natural := vec'length / 8;
+    begin
+        for i in 0 to cNumBytes-1 loop
+          for j in 7 downto 0 loop
+            vRet(8*i + j) := vec(8*(cNumBytes-1-i) + j);
+          end loop;  -- j
+        end loop;  -- i
+
+        return vRet;
+    end function ChangeEndian;
+
+
+    function ChangeEndian(vec : std_logic_vector) return std_logic_vector is
+    begin
+        return std_logic_vector(ChangeEndian(std_ulogic_vector(vec)));
+    end function ChangeEndian;
 
 
 
@@ -195,18 +386,19 @@ begin
         elsif rising_edge(FPGA_CLK1_50) then
             if (dir = '0') then
                 cnt <= std_logic_vector(unsigned(cnt) + 1);
-                if (cnt = X"FFFFFFFE") then
+                if (cnt = X"FFFFFFE") then
                     dir <= '1';
                 end if;
             else
             cnt <= std_logic_vector(unsigned(cnt) - 1);
-	             if (cnt = X"00000001") then
+	             if (cnt = X"0000001") then
 	                 dir <= '0';
 	             end if;		    
             end if;
         end if;
     end process;
 
+    LED(0) <= '0';    
 
     inst_pwm_0: entity work.pwm 
     generic map(
@@ -219,8 +411,8 @@ begin
         clk       => FPGA_CLK1_50,
         reset_n   => hps_fpga_reset_n,                             
         ena       => '1',                               
-        duty      => cnt(31 downto 16),
-        pwm_out   => LED(0 downto 0)    
+        duty      => cnt(31-4 downto 16-4),
+        pwm_out(0)=> led_green    
     );
 
 
@@ -235,7 +427,7 @@ begin
         clk       => FPGA_CLK1_50,
         reset_n   => hps_fpga_reset_n,                             
         ena       => '1',                               
-        duty      => cnt(30 downto 16),
+        duty      => cnt(30-4 downto 16-4),
         pwm_out   => LED(1 downto 1)    
     );
 
@@ -250,7 +442,7 @@ begin
         clk       => FPGA_CLK1_50,
         reset_n   => hps_fpga_reset_n,                             
         ena       => '1',                               
-        duty      => cnt(29 downto 16),
+        duty      => cnt(29-4 downto 16-4),
         pwm_out   => LED(2 downto 2)    
     );
 
@@ -265,13 +457,304 @@ begin
         clk       => FPGA_CLK1_50,
         reset_n   => hps_fpga_reset_n,                             
         ena       => '1',                               
-        duty      => cnt(28 downto 16),
+        duty      => cnt(28-4 downto 16-4),
         pwm_out   => LED(3 downto 3)    
     );
+	 
+	 
+    p_async: process(SW,dir,w_m0_pwm,w_m1_pwm,w_m2_pwm,w_m3_pwm,w_m4_pwm,w_m5_pwm) is
+    begin
+        m0_pwma <= '0';
+        m1_pwma <= '0';
+        m2_pwma <= '0';
+        m3_pwma <= '0';
+        m4_pwma <= '0';
+        m5_pwma <= '0';
+
+        m0_pwmb <= '0';
+        m1_pwmb <= '0';
+        m2_pwmb <= '0';
+        m3_pwmb <= '0';
+        m4_pwmb <= '0';
+        m5_pwmb <= '0';		
+	 
+        if (dir = '0') then
+            m0_pwma <= w_m0_pwm;
+            m1_pwma <= w_m1_pwm;
+            m2_pwma <= w_m2_pwm;
+            m3_pwma <= w_m3_pwm;
+            m4_pwma <= w_m4_pwm;
+            m5_pwma <= w_m5_pwm;
+
+            if (SW(1) = '1') then
+                m0_pwmb <= not w_m0_pwm;
+                m1_pwmb <= not w_m1_pwm;
+                m2_pwmb <= not w_m2_pwm;
+                m3_pwmb <= not w_m3_pwm;
+                m4_pwmb <= not w_m4_pwm;
+                m5_pwmb <= not w_m5_pwm;
+            end if;
+        else
+            m0_pwmb <= w_m0_pwm;
+            m1_pwmb <= w_m1_pwm;
+            m2_pwmb <= w_m2_pwm;
+            m3_pwmb <= w_m3_pwm;
+            m4_pwmb <= w_m4_pwm;
+            m5_pwmb <= w_m5_pwm;	
+	  
+            if (SW(1) = '1') then
+                m0_pwma <= not w_m0_pwm;
+                m1_pwma <= not w_m1_pwm;
+                m2_pwma <= not w_m2_pwm;
+                m3_pwma <= not w_m3_pwm;
+                m4_pwma <= not w_m4_pwm;
+                m5_pwma <= not w_m5_pwm;
+            end if;
+        end if;
+	 end process;
 
 
-	
-	
+    inst_pwm_m0: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 20_000,     --PWM switching frequency in Hz
+        bits_resolution => 16,         --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => X"5555",
+        pwm_out(0)=> w_m0_pwm    
+    );	 
+	 
+	 
+    inst_pwm_m1: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 20_000,     --PWM switching frequency in Hz
+        bits_resolution => 16,         --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => X"5555",
+        pwm_out(0)=> w_m1_pwm    
+    );	 	 
+
+
+    inst_pwm_m2: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 20_000,     --PWM switching frequency in Hz
+        bits_resolution => 16,         --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => X"5555",
+        pwm_out(0)=> w_m2_pwm    
+    );	 
+
+    inst_pwm_m3: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 20_000,     --PWM switching frequency in Hz
+        bits_resolution => 16,         --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => X"5555",
+        pwm_out(0)=> w_m3_pwm    
+    );	 
+
+    inst_pwm_m4: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 20_000,     --PWM switching frequency in Hz
+        bits_resolution => 16,         --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => X"5555",
+        pwm_out(0)=> w_m4_pwm    
+    );	 
+
+    inst_pwm_m5: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 20_000,     --PWM switching frequency in Hz
+        bits_resolution => 16,         --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => X"5555",
+        pwm_out(0)=> w_m5_pwm    
+    );	 
+
+
+	 
+    inst_qei0: entity work.QuadratureCounterPorts 
+    port map (
+        clock     => FPGA_CLK1_50,
+        QuadA     => qei0_a,                             
+        QuadB     => qei0_b,                               
+        CounterValue => w_qei0_cnt
+    );	 		 
+
+
+    inst_qei1: entity work.QuadratureCounterPorts 
+    port map (
+        clock     => FPGA_CLK1_50,
+        QuadA     => qei1_a,                             
+        QuadB     => qei1_b,                               
+        CounterValue => w_qei1_cnt
+    );	 		
+
+    led_red <= r_led_red;
+    
+    p_sync: process(FPGA_CLK1_50) is
+    begin
+        if rising_edge(FPGA_CLK1_50) then
+            r_qei0_cnt <= w_qei0_cnt;
+            r_qei1_cnt <= w_qei1_cnt;
+
+            if w_qei0_cnt /= r_qei0_cnt and unsigned(w_qei0_cnt) = 0 then
+                r_led_red <= not r_led_red;
+            end if; 
+
+            if w_qei1_cnt /= r_qei1_cnt and unsigned(w_qei1_cnt) = 0 then
+                r_led_red <= not r_led_red;                
+            end if; 
+        end if;
+    end process;
+
+
+    p_sync_spi: process(FPGA_CLK1_50) is
+    begin
+        if rising_edge(FPGA_CLK1_50) then
+            r_clk_25mhz <= not r_clk_25mhz;
+            r_ad0_drdy  <= ad0_drdy;
+
+            if r_clk_25mhz = '1' then
+                r_clk_12mhz <= not r_clk_12mhz;
+            end if;
+            
+            r_ad0_en <= '0';
+
+            if ad0_drdy = '0' and r_ad0_drdy = '1' then
+                r_ad0_en <= '1';
+            end if;
+        end if;
+    end process;
+
+    ad0_clk <= r_clk_12mhz;
+
+
+    --ad0_sclk : out std_logic;
+    --ad0_miso : in  std_logic;
+    --ad0_drdy : in  std_logic;
+    --ad0_sync : in  std_logic;
+    --ad0_clk  : out std_logic;
+
+    ad0_sync <= '1';
+
+    inst_spi_ad0: entity work.spi_master
+    generic map(
+        slaves => 1,
+        d_width => 192
+    )
+    port map (
+        clock     => FPGA_CLK1_50,
+        reset_n => hps_fpga_reset_n,                             
+        enable  => r_ad0_en,                               
+        cpol    => '0',
+        cpha    => '0',
+        cont    => '0',
+        clk_div => 2,
+        addr    => 0,
+        tx_data => (others=>'0'),
+        miso    => ad0_miso,
+        sclk    => ad0_sclk,
+        ss_n    => open,
+        mosi    => open,
+        ss_n    => open,
+        busy    => w_ad0_rx_busy,
+        rx_data => w_ad0_rx_data
+
+    );	 
+
+    p_sync_ad0_output: process(FPGA_CLK1_50) is
+    begin
+        if rising_edge(FPGA_CLK1_50) then
+            r_ad0_miso <= ad0_miso;
+    
+            r_ad0_rx_busy <= w_ad0_rx_busy;
+            r_ad0_rx_valid<= '0';
+
+            if w_ad0_rx_busy = '0' and r_ad0_rx_busy = '1' then
+                r_ad0_rx_valid <= '1';
+            end if;
+        end if;
+    end process;
+
+
+
+    inst_uart0: entity work.uart
+    generic map(
+        CLK_FREQ => 50e6,
+        BAUD_RATE => 1_000_000,
+        PARITY_BIT => "none"
+    )
+    port map (
+        CLK     => FPGA_CLK1_50,
+        RST     => not hps_fpga_reset_n,    
+                         
+        -- UART INTERFACE
+        UART_TXD    => uart0_tx,
+        UART_RXD    => uart0_rx,
+        -- USER DATA INPUT INTERFACE
+        DATA_IN     => r_uart_tx_data(r_uart_tx_data'high downto r_uart_tx_data'length-8),
+        DATA_SEND   => w_uart_tx_valid, -- when DATA_SEND = 1, data on DATA_IN will be transmit, DATA_SEND can set to 1 only when BUSY = 0
+        BUSY        => w_uart_tx_busy, -- when BUSY = 1 transiever is busy, you must not set DATA_SEND to 1
+        -- USER DATA OUTPUT INTERFACE
+        DATA_OUT    => open,
+        DATA_VLD    => open,
+        FRAME_ERROR => open
+
+    );	
+
+    w_uart_tx_valid <= not w_uart_tx_busy;
+
+
+    p_sync_uart_tx: process(FPGA_CLK1_50, hps_fpga_reset_n) is
+    begin
+        if (hps_fpga_reset_n = '0') then
+            r_uart_tx_data <= X"A5" & std_logic_vector(to_unsigned(MSG_SIZE,8)) & X"00" & X"00000000" & X"00000000" & X"0000" & X"0000"; 
+        elsif rising_edge(FPGA_CLK1_50) then
+            if w_uart_tx_busy = '0' then
+                r_uart_tx_data <= r_uart_tx_data(r_uart_tx_data'high-8 downto 0) & r_uart_tx_data(r_uart_tx_data'high downto r_uart_tx_data'length-8);
+            end if;
+            --if r_ad0_rx_valid = '1' then
+            --    r_uart_tx_data <= X"A5" & std_logic_vector(to_unsigned(MSG_SIZE,8)) & X"00" & X"00000000" & X"00000000" & X"0000" & X"0000";                 
+            --end if;
+        end if;
+    end process;
+
 
 ----=======================================================
 ----  Structural coding
