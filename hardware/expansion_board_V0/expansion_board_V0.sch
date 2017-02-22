@@ -5465,56 +5465,56 @@ Source:</description>
 <part name="GND104" library="iocene" deviceset="GND" device=""/>
 <part name="A5V13" library="iocene" deviceset="A5V" device=""/>
 <part name="R45" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R44" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R44" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C101" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND103" library="iocene" deviceset="GND" device=""/>
 <part name="CON24" library="iocene" deviceset="CON3" device="_SMT" value="S1"/>
 <part name="GND111" library="iocene" deviceset="GND" device=""/>
 <part name="A5V14" library="iocene" deviceset="A5V" device=""/>
 <part name="R52" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R49" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R49" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C107" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND110" library="iocene" deviceset="GND" device=""/>
 <part name="CON29" library="iocene" deviceset="CON3" device="_SMT" value="S2"/>
 <part name="GND119" library="iocene" deviceset="GND" device=""/>
 <part name="A5V15" library="iocene" deviceset="A5V" device=""/>
 <part name="R57" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R56" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R56" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C113" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND118" library="iocene" deviceset="GND" device=""/>
 <part name="CON34" library="iocene" deviceset="CON3" device="_SMT" value="S3"/>
 <part name="GND126" library="iocene" deviceset="GND" device=""/>
 <part name="A5V16" library="iocene" deviceset="A5V" device=""/>
 <part name="R65" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R64" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R64" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C116" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND125" library="iocene" deviceset="GND" device=""/>
 <part name="CON38" library="iocene" deviceset="CON3" device="_SMT" value="S4"/>
 <part name="GND134" library="iocene" deviceset="GND" device=""/>
 <part name="A5V17" library="iocene" deviceset="A5V" device=""/>
 <part name="R70" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R69" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R69" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C123" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND133" library="iocene" deviceset="GND" device=""/>
 <part name="CON43" library="iocene" deviceset="CON3" device="_SMT" value="S5"/>
 <part name="GND142" library="iocene" deviceset="GND" device=""/>
 <part name="A5V18" library="iocene" deviceset="A5V" device=""/>
 <part name="R78" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R77" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R77" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C130" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND141" library="iocene" deviceset="GND" device=""/>
 <part name="CON47" library="iocene" deviceset="CON3" device="_SMT" value="S6"/>
 <part name="GND149" library="iocene" deviceset="GND" device=""/>
 <part name="A5V19" library="iocene" deviceset="A5V" device=""/>
 <part name="R83" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R82" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R82" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C133" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND148" library="iocene" deviceset="GND" device=""/>
 <part name="CON51" library="iocene" deviceset="CON3" device="_SMT" value="S7"/>
 <part name="GND156" library="iocene" deviceset="GND" device=""/>
 <part name="A5V20" library="iocene" deviceset="A5V" device=""/>
 <part name="R88" library="iocene" deviceset="R" device="_603" value="0.01"/>
-<part name="R87" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R87" library="iocene" deviceset="R" device="_402" value="20k"/>
 <part name="C136" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND155" library="iocene" deviceset="GND" device=""/>
 <part name="IC1" library="IMU" deviceset="ADS1258" device=""/>
@@ -5546,8 +5546,8 @@ Source:</description>
 <part name="GND204" library="iocene" deviceset="GND" device=""/>
 <part name="C170" library="iocene" deviceset="C" device="_402" value="22n"/>
 <part name="GND199" library="iocene" deviceset="GND" device=""/>
-<part name="C168" library="iocene" deviceset="C" device="_402" value="22n"/>
-<part name="C169" library="iocene" deviceset="C" device="_402" value="22n"/>
+<part name="C168" library="iocene" deviceset="C" device="_402" value="8p"/>
+<part name="C169" library="iocene" deviceset="C" device="_402" value="8p"/>
 <part name="GND193" library="iocene" deviceset="GND" device=""/>
 <part name="CON20" library="iocene" deviceset="CON3" device="_SMT" value="AN0"/>
 <part name="GND102" library="iocene" deviceset="GND" device=""/>
@@ -5700,15 +5700,15 @@ Source:</description>
 <part name="5V25" library="iocene" deviceset="5V" device=""/>
 <part name="CON30" library="iocene" deviceset="CON3" device="_SMT" value="IO2"/>
 <part name="GND120" library="iocene" deviceset="GND" device=""/>
-<part name="C114" library="iocene" deviceset="C" device="_402" value="100n"/>
+<part name="C114" library="iocene" deviceset="C" device="_402" value="nc"/>
 <part name="GND116" library="iocene" deviceset="GND" device=""/>
-<part name="R54" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R54" library="iocene" deviceset="R" device="_402" value="560"/>
 <part name="5V28" library="iocene" deviceset="5V" device=""/>
 <part name="CON35" library="iocene" deviceset="CON3" device="_SMT" value="IO3"/>
 <part name="GND127" library="iocene" deviceset="GND" device=""/>
-<part name="C117" library="iocene" deviceset="C" device="_402" value="100n"/>
+<part name="C117" library="iocene" deviceset="C" device="_402" value="nc"/>
 <part name="GND123" library="iocene" deviceset="GND" device=""/>
-<part name="R60" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R60" library="iocene" deviceset="R" device="_402" value="560"/>
 <part name="5V32" library="iocene" deviceset="5V" device=""/>
 <part name="CON39" library="iocene" deviceset="CON3" device="_SMT" value="IO4"/>
 <part name="GND135" library="iocene" deviceset="GND" device=""/>
@@ -5724,15 +5724,15 @@ Source:</description>
 <part name="5V38" library="iocene" deviceset="5V" device=""/>
 <part name="CON48" library="iocene" deviceset="CON3" device="_SMT" value="IO6"/>
 <part name="GND150" library="iocene" deviceset="GND" device=""/>
-<part name="C134" library="iocene" deviceset="C" device="_402" value="100n"/>
+<part name="C134" library="iocene" deviceset="C" device="_402" value="nc"/>
 <part name="GND146" library="iocene" deviceset="GND" device=""/>
-<part name="R80" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R80" library="iocene" deviceset="R" device="_402" value="560"/>
 <part name="5V41" library="iocene" deviceset="5V" device=""/>
 <part name="CON52" library="iocene" deviceset="CON3" device="_SMT" value="IO7"/>
 <part name="GND157" library="iocene" deviceset="GND" device=""/>
-<part name="C137" library="iocene" deviceset="C" device="_402" value="100n"/>
+<part name="C137" library="iocene" deviceset="C" device="_402" value="nc"/>
 <part name="GND152" library="iocene" deviceset="GND" device=""/>
-<part name="R85" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R85" library="iocene" deviceset="R" device="_402" value="560"/>
 <part name="5V44" library="iocene" deviceset="5V" device=""/>
 <part name="CON31" library="iocene" deviceset="CON5" device="_2.54S" value="TELEM"/>
 <part name="CON49" library="iocene" deviceset="CON5" device="_2.54S" value="I2C0"/>
@@ -5906,7 +5906,7 @@ Source:</description>
 <part name="GND33" library="iocene" deviceset="GND" device=""/>
 <part name="C18" library="iocene" deviceset="CPOL" device="" value="470u"/>
 <part name="GND34" library="iocene" deviceset="GND" device=""/>
-<part name="C19" library="iocene" deviceset="C" device="_402" value="nc"/>
+<part name="C19" library="iocene" deviceset="C" device="_402" value="22n"/>
 <part name="GND30" library="iocene" deviceset="GND" device=""/>
 <part name="U5" library="iocene" deviceset="TPS82130" device=""/>
 <part name="12V5" library="iocene" deviceset="12V" device=""/>
@@ -5920,7 +5920,7 @@ Source:</description>
 <part name="GND39" library="iocene" deviceset="GND" device=""/>
 <part name="C22" library="iocene" deviceset="CPOL" device="" value="470u"/>
 <part name="GND40" library="iocene" deviceset="GND" device=""/>
-<part name="C23" library="iocene" deviceset="C" device="_402" value="nc"/>
+<part name="C23" library="iocene" deviceset="C" device="_402" value="1n"/>
 <part name="GND36" library="iocene" deviceset="GND" device=""/>
 <part name="U6" library="iocene" deviceset="TPS82130" device=""/>
 <part name="12V6" library="iocene" deviceset="12V" device=""/>
@@ -6029,8 +6029,8 @@ Source:</description>
 <part name="U31" library="iocene" deviceset="TX_0108" device="_TSSOP" value="TXB0108PWR"/>
 <part name="D3V336" library="iocene" deviceset="D3V3" device=""/>
 <part name="U3" library="robot" deviceset="PTR08100W" device=""/>
-<part name="R100" library="iocene" deviceset="R" device="_402" value="10k"/>
-<part name="R99" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R100" library="iocene" deviceset="R" device="_402" value="50k"/>
+<part name="R99" library="iocene" deviceset="R" device="_402" value="50k"/>
 <part name="CON45" library="iocene" deviceset="CON6" device="_2.54S" value="SPI1"/>
 <part name="CON53" library="iocene" deviceset="CON5" device="_2.54S" value="I2C1"/>
 <part name="CON57" library="iocene" deviceset="CON40" device="_2.54" value="FPGA_GPIO0"/>
@@ -6055,8 +6055,8 @@ Source:</description>
 <part name="GND136" library="iocene" deviceset="GND" device=""/>
 <part name="5V45" library="iocene" deviceset="5V" device=""/>
 <part name="GND153" library="iocene" deviceset="GND" device=""/>
-<part name="R101" library="iocene" deviceset="R" device="_402" value="10k"/>
-<part name="R102" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R101" library="iocene" deviceset="R" device="_402" value="50k"/>
+<part name="R102" library="iocene" deviceset="R" device="_402" value="50k"/>
 <part name="GND232" library="iocene" deviceset="GND" device=""/>
 <part name="C189" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND225" library="iocene" deviceset="GND" device=""/>
@@ -6071,10 +6071,10 @@ Source:</description>
 <part name="D3V341" library="iocene" deviceset="D3V3" device=""/>
 <part name="U32" library="iocene" deviceset="TX_0108" device="_TSSOP" value="TXS0108PWR"/>
 <part name="D3V340" library="iocene" deviceset="D3V3" device=""/>
-<part name="R103" library="iocene" deviceset="R" device="_402" value="10k"/>
-<part name="R104" library="iocene" deviceset="R" device="_402" value="10k"/>
-<part name="R105" library="iocene" deviceset="R" device="_402" value="10k"/>
-<part name="R106" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R103" library="iocene" deviceset="R" device="_402" value="50k"/>
+<part name="R104" library="iocene" deviceset="R" device="_402" value="50k"/>
+<part name="R105" library="iocene" deviceset="R" device="_402" value="50k"/>
+<part name="R106" library="iocene" deviceset="R" device="_402" value="50k"/>
 <part name="D3V34" library="iocene" deviceset="D3V3" device=""/>
 <part name="5V19" library="iocene" deviceset="5V" device=""/>
 <part name="5V26" library="iocene" deviceset="5V" device=""/>
@@ -6264,6 +6264,7 @@ Source:</description>
 <text x="83.82" y="60.96" size="1.778" layer="98">Up to 3A, 3.3Vdc for USB HUB and wifi</text>
 <text x="83.82" y="35.56" size="1.778" layer="98">Up to 3A, 5Vdc for sensors and ADC</text>
 <text x="93.98" y="12.7" size="1.778" layer="98">Up to 3A, 5Vdc for FPGA</text>
+<text x="223.52" y="144.78" size="1.778" layer="98">Footprint trop large</text>
 </plain>
 <instances>
 <instance part="3V32" gate="G$1" x="274.32" y="66.04" rot="MR0"/>
@@ -7367,6 +7368,8 @@ Source:</description>
 <wire x1="194.31" y1="36.576" x2="295.402" y2="34.036" width="0.1524" layer="94"/>
 <text x="238.76" y="167.64" size="1.778" layer="98">A2</text>
 <wire x1="-0.762" y1="106.934" x2="97.282" y2="106.934" width="0.1524" layer="94"/>
+<text x="124.46" y="71.12" size="1.778" layer="98">Delete power pad on DRV8402</text>
+<text x="124.46" y="68.58" size="1.778" layer="98">Footprint reversed and pitch error on INA240</text>
 </plain>
 <instances>
 <instance part="U10" gate="G$1" x="142.24" y="142.24" smashed="yes">
@@ -9443,7 +9446,7 @@ Source:</description>
 <pinref part="U8" gate="G$1" pin="OUT"/>
 </segment>
 </net>
-<net name="M4_CS" class="0">
+<net name="M5_CS" class="0">
 <segment>
 <wire x1="213.36" y1="175.26" x2="213.36" y2="180.34" width="0.1524" layer="91"/>
 <wire x1="213.36" y1="180.34" x2="195.58" y2="180.34" width="0.1524" layer="91"/>
@@ -10297,6 +10300,7 @@ Source:</description>
 <text x="17.78" y="109.22" size="1.778" layer="94">SPIs</text>
 <text x="17.78" y="58.42" size="1.778" layer="94">I2Cs</text>
 <text x="58.42" y="203.2" size="1.778" layer="94">MOTOR QEI</text>
+<text x="200.66" y="203.2" size="1.778" layer="98">Manque des résistances de pull up</text>
 </plain>
 <instances>
 <instance part="CON21" gate="G$1" x="162.56" y="190.5" smashed="yes" rot="R180">
@@ -12350,6 +12354,8 @@ Source:</description>
 <text x="198.12" y="15.24" size="1.778" layer="94">OTHER I/Os - HUB USB - WiFi - MEM</text>
 <text x="129.54" y="193.04" size="1.778" layer="94">HUB USB</text>
 <text x="66.04" y="5.08" size="1.778" layer="94" rot="MR0">WIFI MODULE GEMICOM</text>
+<text x="86.36" y="12.7" size="1.778" layer="98" rot="R90">FOOTPRINT error, manque pin 1?</text>
+<text x="86.36" y="63.5" size="1.778" layer="98" rot="R90">FOOTPRINT error, manque pin 1?</text>
 </plain>
 <instances>
 <instance part="U20" gate="G$1" x="170.18" y="132.08" rot="MR0"/>
@@ -14136,7 +14142,7 @@ Source:</description>
 <label x="119.38" y="157.48" size="1.778" layer="95" rot="MR0"/>
 </segment>
 </net>
-<net name="M4_CS" class="0">
+<net name="M5_CS" class="0">
 <segment>
 <wire x1="170.18" y1="149.86" x2="203.2" y2="149.86" width="0.1524" layer="91"/>
 <label x="172.72" y="149.86" size="1.778" layer="95"/>
