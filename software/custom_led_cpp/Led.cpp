@@ -1,13 +1,5 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include <error.h>
-#include <fcntl.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-#include <unistd.h>
-
 #include "hps_0.h"
 
 #include "Led.hpp"
