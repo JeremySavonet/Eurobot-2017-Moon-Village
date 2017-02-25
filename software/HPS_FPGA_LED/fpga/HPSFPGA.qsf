@@ -1292,13 +1292,13 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[3] -t
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[18] -to debug_io|vcc -section_id debug_io
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[31] -to debug_io|gnd -section_id debug_io
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_SAMPLE_DEPTH=64" -section_id debug_io
+set_global_assignment -name QSYS_FILE hps_fpga.qsys
 set_global_assignment -name QSYS_FILE "../../orca/de2-115/system.qsys"
 set_global_assignment -name VHDL_FILE uart.vhd
 set_global_assignment -name VHDL_FILE spi_master.vhd
 set_global_assignment -name VHDL_FILE qei.vhd
 set_global_assignment -name VHDL_FILE HPSFPGA.vhd
 set_global_assignment -name VHDL_FILE pwm.vhd
-set_global_assignment -name QIP_FILE hps_fpga/synthesis/hps_fpga.qip
 set_global_assignment -name SDC_FILE HPSFPGA.sdc
 set_global_assignment -name SIGNALTAP_FILE stp_debug.stp
 set_global_assignment -name SIGNALTAP_FILE stp_debug2.stp
