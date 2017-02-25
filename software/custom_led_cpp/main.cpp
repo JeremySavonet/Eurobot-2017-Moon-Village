@@ -1,7 +1,11 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
+#include <memory>
+
+#include <stdlib.h>
+
 #include <QCoreApplication>
-#include <QThread>
+#include <QTimer>
 
 #include "Led.hpp"
 #include "MemoryManager.hpp"
@@ -12,16 +16,30 @@ int main( int argc, char *argv[] )
 {
     QCoreApplication app(argc, argv);
 
-    MemoryManager manager;
-    Led led( manager );
+    // Timer pour le match
+    QTimer* timer = new QTimer();
+    timer->setSingleShot( true ); // In single shot mode. Need to be re-armed each time.
 
-    while( true )
-    {
-        led.turnOn( 1 );
-        QThread::msleep( 250 );
-        led.turnOff( 1 );
-        QThread::msleep( 250 );
-    }
+    // Manage the LW_BRIDGE FOR US
+    MemoryManager manager;
+
+    // Create a simple manager (Led peripheral)
+    const Led::Ptr ledManager =
+        std::make_shared< Led >( manager );
+
+    // Simply turn on LED_1
+    ledManager->turnOn( 1 );
+
+    QObject::connect(
+        timer,
+        & QTimer::timeout,
+        & app,
+        [ ledManager ]() mutable
+        {
+            ledManager->turnOff( 1 );
+        } );
+
+    timer->start( 90 * 1000 );
 
     return app.exec();
 }
