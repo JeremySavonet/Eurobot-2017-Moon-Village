@@ -57,11 +57,11 @@ entity hpsfpga is
     ---------- H BRIDGE ----------
     m0_pwma  : out std_logic;
     m0_pwmb  : out std_logic;
-    m0_fault : in  std_logic;
+    m01_fault: in  std_logic; --m01_fault
     
     m1_pwma  : out std_logic;
     m1_pwmb  : out std_logic;
-    m1_fault : in  std_logic;
+    m01_resetn: out  std_logic; --m01_resetn
 
     m2_pwma  : out std_logic;
     m2_pwmb  : out std_logic;
@@ -69,7 +69,7 @@ entity hpsfpga is
     m3_pwma  : out std_logic;
     m3_pwmb  : out std_logic;
 
-    m23_fault: in  std_logic;
+    m2345_fault: in  std_logic; --m2345_fault
 
     m4_pwma  : out std_logic;
     m4_pwmb  : out std_logic;
@@ -77,7 +77,7 @@ entity hpsfpga is
     m5_pwma  : out std_logic;
     m5_pwmb  : out std_logic;
 
-    m45_fault: in  std_logic;
+    m2345_resetn: out  std_logic; --m2345_resetn
 
     ---------- QEI ----------    
     qei0_a   : in  std_logic;
@@ -227,6 +227,27 @@ end entity;
 
 architecture hpsfpga_arch of hpsfpga is
 
+	component system is
+		port (
+			clk_clk        : in  std_logic                     := 'X';             -- clk
+			pio_0_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
+			pio_0_out_port : out std_logic_vector(31 downto 0);                    -- out_port
+			pio_1_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
+			pio_1_out_port : out std_logic_vector(31 downto 0);                    -- out_port
+			pio_2_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
+			pio_2_out_port : out std_logic_vector(31 downto 0);                    -- out_port
+			pio_3_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
+			pio_3_out_port : out std_logic_vector(31 downto 0);                    -- out_port
+			pio_4_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
+			pio_4_out_port : out std_logic_vector(31 downto 0);                    -- out_port
+			pio_5_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
+			pio_5_out_port : out std_logic_vector(31 downto 0);                    -- out_port
+			reset_reset_n  : in  std_logic                     := 'X'              -- reset_n
+		);
+	end component system;
+
+
+
 	component hps_fpga is
 		port (
 			button_pio_external_connection_export : in    std_logic_vector(3 downto 0)  := (others => 'X'); -- export
@@ -326,6 +347,13 @@ architecture hpsfpga_arch of hpsfpga is
     signal r_ad0_en    : std_logic;
 
 	 
+    signal r_m0_duty : std_logic_vector(16-1 downto 0);
+    signal r_m0_dir  : std_logic;
+
+    signal r_m1_duty : std_logic_vector(16-1 downto 0);
+    signal r_m1_dir  : std_logic;
+
+
     signal w_m0_pwm : std_logic;
     signal w_m1_pwm : std_logic;
     signal w_m2_pwm : std_logic;
@@ -343,6 +371,7 @@ architecture hpsfpga_arch of hpsfpga is
     signal r_ad0_rx_busy   : std_logic;
     signal w_ad0_rx_data   : std_logic_vector(192-1 downto 0);
     signal r_ad0_rx_valid  : std_logic;
+    signal r_pid_state     : std_logic;
 
     function reverse_vector (a: in std_logic_vector) return std_logic_vector is
         variable result: std_logic_vector(a'RANGE);
@@ -374,6 +403,11 @@ architecture hpsfpga_arch of hpsfpga is
         return std_logic_vector(ChangeEndian(std_ulogic_vector(vec)));
     end function ChangeEndian;
 
+    signal w_m0_pio_0_in  : std_logic_vector(32-1 downto 0);
+    signal w_m0_pio_0_out : std_logic_vector(32-1 downto 0);
+
+    signal w_m1_pio_0_in  : std_logic_vector(32-1 downto 0);
+    signal w_m1_pio_0_out : std_logic_vector(32-1 downto 0);
 
 
 begin
@@ -383,7 +417,16 @@ begin
         if (hps_fpga_reset_n = '0') then
             cnt  <= (others=>'0');
             dir  <= '0';
+
+            m01_resetn <= '0';
+            m2345_resetn <= '0';
+
+
         elsif rising_edge(FPGA_CLK1_50) then
+            m01_resetn <= '1';
+            m2345_resetn <= '1';
+
+
             if (dir = '0') then
                 cnt <= std_logic_vector(unsigned(cnt) + 1);
                 if (cnt = X"FFFFFFE") then
@@ -462,7 +505,7 @@ begin
     );
 	 
 	 
-    p_async: process(SW,dir,w_m0_pwm,w_m1_pwm,w_m2_pwm,w_m3_pwm,w_m4_pwm,w_m5_pwm) is
+    p_async: process(SW,dir,r_m0_dir,r_m1_dir,w_m0_pwm,w_m1_pwm,w_m2_pwm,w_m3_pwm,w_m4_pwm,w_m5_pwm) is
     begin
         m0_pwma <= '0';
         m1_pwma <= '0';
@@ -479,38 +522,67 @@ begin
         m5_pwmb <= '0';		
 	 
         if (dir = '0') then
-            m0_pwma <= w_m0_pwm;
-            m1_pwma <= w_m1_pwm;
+            --m0_pwma <= w_m0_pwm;
+            --m1_pwma <= w_m1_pwm;
             m2_pwma <= w_m2_pwm;
             m3_pwma <= w_m3_pwm;
             m4_pwma <= w_m4_pwm;
             m5_pwma <= w_m5_pwm;
 
             if (SW(1) = '1') then
-                m0_pwmb <= not w_m0_pwm;
-                m1_pwmb <= not w_m1_pwm;
+                --m0_pwmb <= not w_m0_pwm;
+                --m1_pwmb <= not w_m1_pwm;
                 m2_pwmb <= not w_m2_pwm;
                 m3_pwmb <= not w_m3_pwm;
                 m4_pwmb <= not w_m4_pwm;
                 m5_pwmb <= not w_m5_pwm;
             end if;
         else
-            m0_pwmb <= w_m0_pwm;
-            m1_pwmb <= w_m1_pwm;
+            --m0_pwmb <= w_m0_pwm;
+            --m1_pwmb <= w_m1_pwm;
             m2_pwmb <= w_m2_pwm;
             m3_pwmb <= w_m3_pwm;
             m4_pwmb <= w_m4_pwm;
             m5_pwmb <= w_m5_pwm;	
 	  
             if (SW(1) = '1') then
-                m0_pwma <= not w_m0_pwm;
-                m1_pwma <= not w_m1_pwm;
+                --m0_pwma <= not w_m0_pwm;
+                --m1_pwma <= not w_m1_pwm;
                 m2_pwma <= not w_m2_pwm;
                 m3_pwma <= not w_m3_pwm;
                 m4_pwma <= not w_m4_pwm;
                 m5_pwma <= not w_m5_pwm;
             end if;
         end if;
+
+
+
+        if (r_m0_dir = '0') then
+            m0_pwma <= w_m0_pwm;
+            if (SW(1) = '1') then
+                m0_pwmb <= not w_m0_pwm;
+            end if;
+        else
+            m0_pwmb <= w_m0_pwm;	
+            if (SW(1) = '1') then
+                m0_pwma <= not w_m0_pwm;
+            end if;
+        end if;
+
+        if (r_m1_dir = '0') then
+            m1_pwma <= w_m1_pwm;
+            if (SW(1) = '1') then
+                m1_pwmb <= not w_m1_pwm;
+            end if;
+        else
+            m1_pwmb <= w_m1_pwm;	
+            if (SW(1) = '1') then
+                m1_pwma <= not w_m1_pwm;
+            end if;
+        end if;
+
+
+
 	 end process;
 
 
@@ -525,8 +597,8 @@ begin
         clk       => FPGA_CLK1_50,
         reset_n   => hps_fpga_reset_n,                             
         ena       => '1',                               
-        duty      => X"5555",
-        pwm_out(0)=> w_m0_pwm    
+        duty      => r_m0_duty,
+        pwm_out(0)=> w_m0_pwm
     );	 
 	 
 	 
@@ -541,8 +613,8 @@ begin
         clk       => FPGA_CLK1_50,
         reset_n   => hps_fpga_reset_n,                             
         ena       => '1',                               
-        duty      => X"5555",
-        pwm_out(0)=> w_m1_pwm    
+        duty      => r_m1_duty,
+        pwm_out(0)=> w_m1_pwm   
     );	 	 
 
 
@@ -708,6 +780,7 @@ begin
 
             if w_ad0_rx_busy = '0' and r_ad0_rx_busy = '1' then
                 r_ad0_rx_valid <= '1';
+                r_pid_state <= not r_pid_state;
             end if;
         end if;
     end process;
@@ -752,8 +825,92 @@ begin
             --if r_ad0_rx_valid = '1' then
             --    r_uart_tx_data <= X"A5" & std_logic_vector(to_unsigned(MSG_SIZE,8)) & X"00" & X"00000000" & X"00000000" & X"0000" & X"0000";                 
             --end if;
+
+
+
+
         end if;
     end process;
+
+    w_m0_pio_0_in <= r_pid_state & "0000000" & w_ad0_rx_data(24-1 downto  0);
+    w_m1_pio_0_in <= r_pid_state & "0000000" & w_ad0_rx_data(48-1 downto 24);
+
+
+
+    p_sync_pid: process(FPGA_CLK1_50, hps_fpga_reset_n) is
+        variable v: integer;
+    begin
+        if (hps_fpga_reset_n = '0') then
+            r_m0_duty <= (others=>'0');
+            r_m0_dir  <= '0';
+
+            r_m1_duty <= (others=>'0');
+            r_m1_dir  <= '0';
+        elsif rising_edge(FPGA_CLK1_50) then
+            v := to_integer(signed(w_m0_pio_0_out));
+            if v >= 0 then
+                r_m0_duty <= std_logic_vector(to_unsigned(abs(v),16));
+                r_m0_dir <= '1';
+            elsif v < 0 then
+                r_m0_duty <= std_logic_vector(to_unsigned(abs(v),16));
+                r_m0_dir <= '0';
+            end if;
+
+            v := to_integer(signed(w_m1_pio_0_out));
+            if v >= 0 then
+                r_m1_duty <= std_logic_vector(to_unsigned(abs(v),16));
+                r_m1_dir <= '0';
+            elsif v < 0 then
+                r_m1_duty <= std_logic_vector(to_unsigned(abs(v),16));
+                r_m1_dir <= '1';
+            end if;
+
+        end if;
+    end process;
+
+
+
+    --led(8-1 downto 4) <= w_ledg_out(4-1 downto 0);
+
+
+
+    inst_m0_pid_rv : component system
+    port map (
+        clk_clk                => FPGA_CLK1_50,
+        reset_reset_n          => hps_fpga_reset_n,
+		pio_0_in_port          => w_m0_pio_0_in,
+        pio_0_out_port         => w_m0_pio_0_out,
+		pio_1_in_port          => (others=>'0'),
+        pio_1_out_port         => open,
+		pio_2_in_port          => (others=>'0'),
+        pio_2_out_port         => open,
+		pio_3_in_port          => (others=>'0'),
+        pio_3_out_port         => open,
+		pio_4_in_port          => (others=>'0'),
+        pio_4_out_port         => open,
+		pio_5_in_port          => (others=>'0'),
+        pio_5_out_port         => open
+    );
+
+    inst_m1_pid_rv : component system
+    port map (
+        clk_clk                => FPGA_CLK1_50,
+        reset_reset_n          => hps_fpga_reset_n,
+		pio_0_in_port          => w_m1_pio_0_in,
+        pio_0_out_port         => w_m1_pio_0_out,
+		pio_1_in_port          => (others=>'0'),
+        pio_1_out_port         => open,
+		pio_2_in_port          => (others=>'0'),
+        pio_2_out_port         => open,
+		pio_3_in_port          => (others=>'0'),
+        pio_3_out_port         => open,
+		pio_4_in_port          => (others=>'0'),
+        pio_4_out_port         => open,
+		pio_5_in_port          => (others=>'0'),
+        pio_5_out_port         => open
+    );
+
+
 
 
 ----=======================================================
