@@ -47,7 +47,7 @@ uint32_t* MemoryManager::mapModuleToMemory( uint32_t moduleBaseAddress )
      return ( uint32_t* )( _lwBridgeMap + moduleBaseAddress );
 }
 
-// Private
+// Private Methods
 int MemoryManager::init()
 {
     // Open up the /dev/mem device (aka, RAM)

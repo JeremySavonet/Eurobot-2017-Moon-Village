@@ -1,12 +1,13 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include <memory>
-
 #include <stdlib.h>
+
+#include <memory>
 
 #include <QCoreApplication>
 #include <QTimer>
 
+#include "GameManager.hpp"
 #include "Led.hpp"
 #include "MemoryManager.hpp"
 
@@ -16,30 +17,22 @@ int main( int argc, char *argv[] )
 {
     QCoreApplication app(argc, argv);
 
-    // Timer pour le match
-    QTimer* timer = new QTimer();
-    timer->setSingleShot( true ); // In single shot mode. Need to be re-armed each time.
-
     // Manage the LW_BRIDGE FOR US
     MemoryManager manager;
 
+    // La tirette
+    Button::Ptr fireStarter =
+        std::make_shared< Button >( manager, "fireStarter" );
+
     // Create a simple manager (Led peripheral)
-    const Led::Ptr ledManager =
-        std::make_shared< Led >( manager );
+    Led ledManager( manager );
+
+    // General manager for strat.
+    // Manage a state machine to process game actions.
+    GameManager gameManager( fireStarter );
 
     // Simply turn on LED_1
-    ledManager->turnOn( 1 );
-
-    QObject::connect(
-        timer,
-        & QTimer::timeout,
-        & app,
-        [ ledManager ]() mutable
-        {
-            ledManager->turnOff( 1 );
-        } );
-
-    timer->start( 90 * 1000 );
+    ledManager.turnOn( 1 );
 
     return app.exec();
 }

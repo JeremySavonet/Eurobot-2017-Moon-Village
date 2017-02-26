@@ -2,7 +2,7 @@
 
 #include "hps_0.h"
 
-#include "Button.h"
+#include "Button.hpp"
 
 using namespace WestBot;
 
@@ -32,7 +32,7 @@ void Button::reset()
     *_buttonMap = 0x00;
 }
 
-// Private methods
+// Protected methods
 
 void Button::handleEvents()
 {

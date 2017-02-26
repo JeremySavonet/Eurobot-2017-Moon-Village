@@ -3,6 +3,8 @@
 #ifndef WESTBOT_BUTTON_HPP_
 #define WESTBOT_BUTTON_HPP_
 
+#include <memory>
+
 #include <QObject>
 #include <QString>
 
@@ -17,10 +19,11 @@ class Button : public QObject
     Q_OBJECT
 
 public:
+    using Ptr = std::shared_ptr< Button >;
+
     Button( MemoryManager& manager,
             const QString& name,
             QObject* parent = nullptr );
-
     ~Button() override;
 
     const QString& name() const;
@@ -31,7 +34,7 @@ signals:
     void released();
     void pressed();
 
-private:
+protected:
     void handleEvents();
 
 private:

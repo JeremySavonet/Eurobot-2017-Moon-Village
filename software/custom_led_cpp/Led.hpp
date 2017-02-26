@@ -3,9 +3,9 @@
 #ifndef WESTBOT_LED_HPP_
 #define WESTBOT_LED_HPP_
 
-#include <memory>
-
 #include <stdint.h>
+
+#include <memory>
 
 #include "MemoryManager.hpp"
 
@@ -16,8 +16,8 @@ class Led
 public:
     using Ptr = std::shared_ptr< Led >;
 
-    Led( MemoryManager& manager ); // Default constructor
-    ~Led(); // Destructor
+    Led( MemoryManager& manager );
+    ~Led();
 
     void turnOn( int ledId );
     void turnOff( int ledId );
