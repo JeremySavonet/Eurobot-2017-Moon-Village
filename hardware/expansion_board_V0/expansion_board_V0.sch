@@ -5690,19 +5690,19 @@ Source:</description>
 <part name="GND105" library="iocene" deviceset="GND" device=""/>
 <part name="C102" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND100" library="iocene" deviceset="GND" device=""/>
-<part name="R42" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R42" library="iocene" deviceset="R" device="_402" value="1k"/>
 <part name="5V22" library="iocene" deviceset="5V" device=""/>
 <part name="CON25" library="iocene" deviceset="CON3" device="_SMT" value="IO1"/>
 <part name="GND112" library="iocene" deviceset="GND" device=""/>
 <part name="C108" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND108" library="iocene" deviceset="GND" device=""/>
-<part name="R47" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R47" library="iocene" deviceset="R" device="_402" value="1k"/>
 <part name="5V25" library="iocene" deviceset="5V" device=""/>
 <part name="CON30" library="iocene" deviceset="CON3" device="_SMT" value="IO2"/>
 <part name="GND120" library="iocene" deviceset="GND" device=""/>
-<part name="C114" library="iocene" deviceset="C" device="_402" value="nc"/>
+<part name="C114" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND116" library="iocene" deviceset="GND" device=""/>
-<part name="R54" library="iocene" deviceset="R" device="_402" value="560"/>
+<part name="R54" library="iocene" deviceset="R" device="_402" value="1k"/>
 <part name="5V28" library="iocene" deviceset="5V" device=""/>
 <part name="CON35" library="iocene" deviceset="CON3" device="_SMT" value="IO3"/>
 <part name="GND127" library="iocene" deviceset="GND" device=""/>
@@ -5714,13 +5714,13 @@ Source:</description>
 <part name="GND135" library="iocene" deviceset="GND" device=""/>
 <part name="C124" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND131" library="iocene" deviceset="GND" device=""/>
-<part name="R67" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R67" library="iocene" deviceset="R" device="_402" value="1k"/>
 <part name="5V34" library="iocene" deviceset="5V" device=""/>
 <part name="CON44" library="iocene" deviceset="CON3" device="_SMT" value="IO5"/>
 <part name="GND143" library="iocene" deviceset="GND" device=""/>
 <part name="C131" library="iocene" deviceset="C" device="_402" value="100n"/>
 <part name="GND139" library="iocene" deviceset="GND" device=""/>
-<part name="R75" library="iocene" deviceset="R" device="_402" value="10k"/>
+<part name="R75" library="iocene" deviceset="R" device="_402" value="1k"/>
 <part name="5V38" library="iocene" deviceset="5V" device=""/>
 <part name="CON48" library="iocene" deviceset="CON3" device="_SMT" value="IO6"/>
 <part name="GND150" library="iocene" deviceset="GND" device=""/>
@@ -14573,6 +14573,7 @@ Source:</description>
 <text x="114.3" y="91.44" size="1.778" layer="98" rot="R90">Analog pin, do not use</text>
 <text x="93.98" y="40.64" size="1.778" layer="94">LTC connector</text>
 <text x="58.42" y="12.7" size="1.778" layer="98" rot="R90">Analog pin, do not use</text>
+<text x="104.14" y="215.9" size="1.778" layer="98">Add pulldown 1k on output  (bitstream loading)</text>
 </plain>
 <instances>
 <instance part="GND219" gate="G$1" x="43.18" y="132.08" smashed="yes"/>
