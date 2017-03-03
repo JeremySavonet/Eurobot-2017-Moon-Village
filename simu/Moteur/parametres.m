@@ -1,4 +1,5 @@
 
+clear all
 
 param.mot.Pu = 15.7;		% W     puissance utile
 param.mot.Um = 12;			% V     tension max
@@ -8,7 +9,8 @@ param.mot.Kc = 0.0342;		% Nm/A  constante de couple
 param.mot.J  = 105;			% g/cm²	inertie
 param.mot.R  = 2;			% ohm   résistance
 param.mot.L  = 1.8;			% mH    self
-param.mot.r  = 728/45;		% .     réducteur
+param.mot.rr = 728/45;		% .     réducteur ratio
+param.mot.rn = 1;			% .		réducteur rendement
 param.mot.f = 0.000065;		% Nm/(rad/s) frottements
 
 param.wheel.D	= 70;		% mm
@@ -34,6 +36,7 @@ param.wheel.l = param.wheel.l/1000;
 
 
 contr = param;
+contr.mot.filter = 0.00001;
 
 
 % contr.mot.R = contr.mot.R*2;
