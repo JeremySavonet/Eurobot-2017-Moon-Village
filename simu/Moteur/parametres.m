@@ -11,7 +11,8 @@ param.mot.R  = 2;			% ohm   résistance
 param.mot.L  = 1.8;			% mH    self
 param.mot.rr = 728/45;		% .     réducteur ratio
 param.mot.rn = 1;			% .		réducteur rendement
-param.mot.f = 0.000065;		% Nm/(rad/s) frottements
+param.mot.fv = 0.000065;	% Nm/(rad/s) frottements
+param.mot.fs = 0.00065;	% Nm    frottements sec
 
 param.wheel.D	= 70;		% mm
 param.wheel.l	= 200;		% mm	entraxe
@@ -34,14 +35,22 @@ param.wheel.l = param.wheel.l/1000;
 % param.mot.J = param.mot.J/1000;
 % param.mot.f = param.mot.f/1000;
 
+param.adc.retard = 78/2/144444 *2;
 
 contr = param;
 contr.mot.filter = 0.00001;
 
 
-% contr.mot.R = contr.mot.R*2;
-% contr.mot.L = contr.mot.L*1.1;
-% contr.mot.f = contr.mot.f*1.1;
-% contr.mot.J = contr.mot.J*1.1;
-% contr.mot.Kc= contr.mot.Kc*1.2;
-% contr.mot.Ke= contr.mot.Ke*1.2;
+% contr.mot.L = contr.mot.L/1.1;
+% param.mot.R = param.mot.R/1.5;
+
+% contr.mot.f = contr.mot.f/2;
+% contr.mot.J = contr.mot.J*1.5;
+% contr.mot.Kc= contr.mot.Kc/1.5;
+% contr.mot.Ke= contr.mot.Ke*1.5;
+contr.adc.retard = contr.adc.retard +0.0001;
+
+
+
+
+
