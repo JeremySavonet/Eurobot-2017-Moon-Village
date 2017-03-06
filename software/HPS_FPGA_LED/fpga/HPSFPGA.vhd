@@ -11,6 +11,13 @@ use     ieee.std_logic_1164.all;
 use     ieee.numeric_std.all;
 
 
+library work;
+use     work.uart_pkg.all;
+use     work.spi_master_pkg.all;
+use     work.qei_pkg.all;
+use     work.pwm_pkg.all;
+
+
 entity hpsfpga is
     port (
 	----------/ ADC --------/
@@ -245,49 +252,49 @@ architecture hpsfpga_arch of hpsfpga is
 	component hps_fpga is
 		port (
             clk_clk                               : in    std_logic                       := 'X';             -- clk
-            hps_0_h2f_reset_reset_n               : out   std_logic;                                          -- reset_n
-            hps_0_hps_io_hps_io_emac1_inst_TX_CLK : out   std_logic;                                          -- hps_io_emac1_inst_TX_CLK
-            hps_0_hps_io_hps_io_emac1_inst_TXD0   : out   std_logic;                                          -- hps_io_emac1_inst_TXD0
-            hps_0_hps_io_hps_io_emac1_inst_TXD1   : out   std_logic;                                          -- hps_io_emac1_inst_TXD1
-            hps_0_hps_io_hps_io_emac1_inst_TXD2   : out   std_logic;                                          -- hps_io_emac1_inst_TXD2
-            hps_0_hps_io_hps_io_emac1_inst_TXD3   : out   std_logic;                                          -- hps_io_emac1_inst_TXD3
-            hps_0_hps_io_hps_io_emac1_inst_RXD0   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD0
-            hps_0_hps_io_hps_io_emac1_inst_MDIO   : inout std_logic                       := 'X';             -- hps_io_emac1_inst_MDIO
-            hps_0_hps_io_hps_io_emac1_inst_MDC    : out   std_logic;                                          -- hps_io_emac1_inst_MDC
-            hps_0_hps_io_hps_io_emac1_inst_RX_CTL : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RX_CTL
-            hps_0_hps_io_hps_io_emac1_inst_TX_CTL : out   std_logic;                                          -- hps_io_emac1_inst_TX_CTL
-            hps_0_hps_io_hps_io_emac1_inst_RX_CLK : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RX_CLK
-            hps_0_hps_io_hps_io_emac1_inst_RXD1   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD1
-            hps_0_hps_io_hps_io_emac1_inst_RXD2   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD2
-            hps_0_hps_io_hps_io_emac1_inst_RXD3   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD3
-            hps_0_hps_io_hps_io_sdio_inst_CMD     : inout std_logic                       := 'X';             -- hps_io_sdio_inst_CMD
-            hps_0_hps_io_hps_io_sdio_inst_D0      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D0
-            hps_0_hps_io_hps_io_sdio_inst_D1      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D1
-            hps_0_hps_io_hps_io_sdio_inst_CLK     : out   std_logic;                                          -- hps_io_sdio_inst_CLK
-            hps_0_hps_io_hps_io_sdio_inst_D2      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D2
-            hps_0_hps_io_hps_io_sdio_inst_D3      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D3
-            hps_0_hps_io_hps_io_usb1_inst_D0      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D0
-            hps_0_hps_io_hps_io_usb1_inst_D1      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D1
-            hps_0_hps_io_hps_io_usb1_inst_D2      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D2
-            hps_0_hps_io_hps_io_usb1_inst_D3      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D3
-            hps_0_hps_io_hps_io_usb1_inst_D4      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D4
-            hps_0_hps_io_hps_io_usb1_inst_D5      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D5
-            hps_0_hps_io_hps_io_usb1_inst_D6      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D6
-            hps_0_hps_io_hps_io_usb1_inst_D7      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D7
-            hps_0_hps_io_hps_io_usb1_inst_CLK     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_CLK
-            hps_0_hps_io_hps_io_usb1_inst_STP     : out   std_logic;                                          -- hps_io_usb1_inst_STP
-            hps_0_hps_io_hps_io_usb1_inst_DIR     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_DIR
-            hps_0_hps_io_hps_io_usb1_inst_NXT     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_NXT
-            hps_0_hps_io_hps_io_spim1_inst_CLK    : out   std_logic;                                          -- hps_io_spim1_inst_CLK
-            hps_0_hps_io_hps_io_spim1_inst_MOSI   : out   std_logic;                                          -- hps_io_spim1_inst_MOSI
-            hps_0_hps_io_hps_io_spim1_inst_MISO   : in    std_logic                       := 'X';             -- hps_io_spim1_inst_MISO
-            hps_0_hps_io_hps_io_spim1_inst_SS0    : out   std_logic;                                          -- hps_io_spim1_inst_SS0
-            hps_0_hps_io_hps_io_uart0_inst_RX     : in    std_logic                       := 'X';             -- hps_io_uart0_inst_RX
-            hps_0_hps_io_hps_io_uart0_inst_TX     : out   std_logic;                                          -- hps_io_uart0_inst_TX
-            hps_0_hps_io_hps_io_i2c0_inst_SDA     : inout std_logic                       := 'X';             -- hps_io_i2c0_inst_SDA
-            hps_0_hps_io_hps_io_i2c0_inst_SCL     : inout std_logic                       := 'X';             -- hps_io_i2c0_inst_SCL
-            hps_0_hps_io_hps_io_i2c1_inst_SDA     : inout std_logic                       := 'X';             -- hps_io_i2c1_inst_SDA
-            hps_0_hps_io_hps_io_i2c1_inst_SCL     : inout std_logic                       := 'X';             -- hps_io_i2c1_inst_SCL
+            hps_arm_h2f_reset_reset_n               : out   std_logic;                                          -- reset_n
+            hps_arm_hps_io_hps_io_emac1_inst_TX_CLK : out   std_logic;                                          -- hps_io_emac1_inst_TX_CLK
+            hps_arm_hps_io_hps_io_emac1_inst_TXD0   : out   std_logic;                                          -- hps_io_emac1_inst_TXD0
+            hps_arm_hps_io_hps_io_emac1_inst_TXD1   : out   std_logic;                                          -- hps_io_emac1_inst_TXD1
+            hps_arm_hps_io_hps_io_emac1_inst_TXD2   : out   std_logic;                                          -- hps_io_emac1_inst_TXD2
+            hps_arm_hps_io_hps_io_emac1_inst_TXD3   : out   std_logic;                                          -- hps_io_emac1_inst_TXD3
+            hps_arm_hps_io_hps_io_emac1_inst_RXD0   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD0
+            hps_arm_hps_io_hps_io_emac1_inst_MDIO   : inout std_logic                       := 'X';             -- hps_io_emac1_inst_MDIO
+            hps_arm_hps_io_hps_io_emac1_inst_MDC    : out   std_logic;                                          -- hps_io_emac1_inst_MDC
+            hps_arm_hps_io_hps_io_emac1_inst_RX_CTL : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RX_CTL
+            hps_arm_hps_io_hps_io_emac1_inst_TX_CTL : out   std_logic;                                          -- hps_io_emac1_inst_TX_CTL
+            hps_arm_hps_io_hps_io_emac1_inst_RX_CLK : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RX_CLK
+            hps_arm_hps_io_hps_io_emac1_inst_RXD1   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD1
+            hps_arm_hps_io_hps_io_emac1_inst_RXD2   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD2
+            hps_arm_hps_io_hps_io_emac1_inst_RXD3   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD3
+            hps_arm_hps_io_hps_io_sdio_inst_CMD     : inout std_logic                       := 'X';             -- hps_io_sdio_inst_CMD
+            hps_arm_hps_io_hps_io_sdio_inst_D0      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D0
+            hps_arm_hps_io_hps_io_sdio_inst_D1      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D1
+            hps_arm_hps_io_hps_io_sdio_inst_CLK     : out   std_logic;                                          -- hps_io_sdio_inst_CLK
+            hps_arm_hps_io_hps_io_sdio_inst_D2      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D2
+            hps_arm_hps_io_hps_io_sdio_inst_D3      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D3
+            hps_arm_hps_io_hps_io_usb1_inst_D0      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D0
+            hps_arm_hps_io_hps_io_usb1_inst_D1      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D1
+            hps_arm_hps_io_hps_io_usb1_inst_D2      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D2
+            hps_arm_hps_io_hps_io_usb1_inst_D3      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D3
+            hps_arm_hps_io_hps_io_usb1_inst_D4      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D4
+            hps_arm_hps_io_hps_io_usb1_inst_D5      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D5
+            hps_arm_hps_io_hps_io_usb1_inst_D6      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D6
+            hps_arm_hps_io_hps_io_usb1_inst_D7      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D7
+            hps_arm_hps_io_hps_io_usb1_inst_CLK     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_CLK
+            hps_arm_hps_io_hps_io_usb1_inst_STP     : out   std_logic;                                          -- hps_io_usb1_inst_STP
+            hps_arm_hps_io_hps_io_usb1_inst_DIR     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_DIR
+            hps_arm_hps_io_hps_io_usb1_inst_NXT     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_NXT
+            hps_arm_hps_io_hps_io_spim1_inst_CLK    : out   std_logic;                                          -- hps_io_spim1_inst_CLK
+            hps_arm_hps_io_hps_io_spim1_inst_MOSI   : out   std_logic;                                          -- hps_io_spim1_inst_MOSI
+            hps_arm_hps_io_hps_io_spim1_inst_MISO   : in    std_logic                       := 'X';             -- hps_io_spim1_inst_MISO
+            hps_arm_hps_io_hps_io_spim1_inst_SS0    : out   std_logic;                                          -- hps_io_spim1_inst_SS0
+            hps_arm_hps_io_hps_io_uart0_inst_RX     : in    std_logic                       := 'X';             -- hps_io_uart0_inst_RX
+            hps_arm_hps_io_hps_io_uart0_inst_TX     : out   std_logic;                                          -- hps_io_uart0_inst_TX
+            hps_arm_hps_io_hps_io_i2c0_inst_SDA     : inout std_logic                       := 'X';             -- hps_io_i2c0_inst_SDA
+            hps_arm_hps_io_hps_io_i2c0_inst_SCL     : inout std_logic                       := 'X';             -- hps_io_i2c0_inst_SCL
+            hps_arm_hps_io_hps_io_i2c1_inst_SDA     : inout std_logic                       := 'X';             -- hps_io_i2c1_inst_SDA
+            hps_arm_hps_io_hps_io_i2c1_inst_SCL     : inout std_logic                       := 'X';             -- hps_io_i2c1_inst_SCL
             memory_mem_a                          : out   std_logic_vector(14 downto 0);                      -- mem_a
             memory_mem_ba                         : out   std_logic_vector(2 downto 0);                       -- mem_ba
             memory_mem_ck                         : out   std_logic;                                          -- mem_ck
@@ -473,7 +480,7 @@ begin
 
     LED(0) <= '0';    
 
-    inst_pwm_0: entity work.pwm 
+    inst_pwm_0: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -489,7 +496,7 @@ begin
     );
 
 
-    inst_pwm_1: entity work.pwm 
+    inst_pwm_1: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -504,7 +511,7 @@ begin
         pwm_out   => LED(1 downto 1)    
     );
 
-    inst_pwm_2: entity work.pwm 
+    inst_pwm_2: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -519,7 +526,7 @@ begin
         pwm_out   => LED(2 downto 2)    
     );
 
-    inst_pwm_3: entity work.pwm 
+    inst_pwm_3: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -534,7 +541,7 @@ begin
         pwm_out   => LED(3 downto 3)    
     );
 	 
-    inst_pwm_50hz: entity work.pwm 
+    inst_pwm_50hz: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 50,         --PWM switching frequency in Hz
@@ -671,7 +678,7 @@ begin
     end process;
 
 
-    inst_pwm_m0: entity work.pwm 
+    inst_pwm_m0: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -687,7 +694,7 @@ begin
     );	 
 	 
 	 
-    inst_pwm_m1: entity work.pwm 
+    inst_pwm_m1: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -703,7 +710,7 @@ begin
     );	 	 
 
 
-    inst_pwm_m2: entity work.pwm 
+    inst_pwm_m2: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -718,7 +725,7 @@ begin
         pwm_out(0)=> w_m2_pwm    
     );	 
 
-    inst_pwm_m3: entity work.pwm 
+    inst_pwm_m3: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -733,7 +740,7 @@ begin
         pwm_out(0)=> w_m3_pwm    
     );	 
 
-    inst_pwm_m4: entity work.pwm 
+    inst_pwm_m4: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -748,7 +755,7 @@ begin
         pwm_out(0)=> w_m4_pwm    
     );	 
 
-    inst_pwm_m5: entity work.pwm 
+    inst_pwm_m5: pwm 
     generic map(
         sys_clk         => 50_000_000, --system clock frequency in Hz
         pwm_freq        => 20_000,     --PWM switching frequency in Hz
@@ -765,7 +772,7 @@ begin
 
 
 	 
-    inst_qei0: entity work.QuadratureCounterPorts 
+    inst_qei0: QuadratureCounterPorts 
     port map (
         clock     => FPGA_CLK1_50,
         QuadA     => qei0_a,                             
@@ -774,7 +781,7 @@ begin
     );	 		 
 
 
-    inst_qei1: entity work.QuadratureCounterPorts 
+    inst_qei1: QuadratureCounterPorts 
     port map (
         clock     => FPGA_CLK1_50,
         QuadA     => qei1_a,                             
@@ -782,7 +789,7 @@ begin
         CounterValue => w_qei1_cnt
     );	 	
 
-    inst_qei2: entity work.QuadratureCounterPorts 
+    inst_qei2: QuadratureCounterPorts 
     port map (
         clock     => FPGA_CLK1_50,
         QuadA     => qei2_a,                             
@@ -790,7 +797,7 @@ begin
         CounterValue => w_qei2_cnt
     );	 
 
-    inst_qei3: entity work.QuadratureCounterPorts 
+    inst_qei3: QuadratureCounterPorts 
     port map (
         clock     => FPGA_CLK1_50,
         QuadA     => qei3_a,                             
@@ -858,7 +865,7 @@ begin
 
     ad0_sync <= '1';
 
-    inst_spi_ad0: entity work.spi_master
+    inst_spi_ad0: spi_master
     generic map(
         slaves => 1,
         d_width => 192
@@ -900,7 +907,7 @@ begin
 
 
 
-    inst_uart0: entity work.uart
+    inst_uart0: uart
     generic map(
         CLK_FREQ => 50e6,
         BAUD_RATE => 1_000_000,
@@ -1049,60 +1056,60 @@ begin
 
 
 	    -- HPS ETHERNET
-	    hps_0_hps_io_hps_io_emac1_inst_TX_CLK =>  HPS_ENET_GTX_CLK    ,   --                             hps_0_hps_iohps_io_emac1_inst_TX_CLK
-	    hps_0_hps_io_hps_io_emac1_inst_TXD0   =>  HPS_ENET_TX_DATA(0) ,   --                             hps_io_emac1_inst_TXD0
-	    hps_0_hps_io_hps_io_emac1_inst_TXD1   =>  HPS_ENET_TX_DATA(1) ,   --                             hps_io_emac1_inst_TXD1
-	    hps_0_hps_io_hps_io_emac1_inst_TXD2   =>  HPS_ENET_TX_DATA(2),   --                             hps_io_emac1_inst_TXD2
-	    hps_0_hps_io_hps_io_emac1_inst_TXD3   =>  HPS_ENET_TX_DATA(3),   --                             hps_io_emac1_inst_TXD3
-	    hps_0_hps_io_hps_io_emac1_inst_RXD0   =>  HPS_ENET_RX_DATA(0),   --                             hps_io_emac1_inst_RXD0
-	    hps_0_hps_io_hps_io_emac1_inst_MDIO   =>  HPS_ENET_MDIO       ,   --                             hps_io_emac1_inst_MDIO
-	    hps_0_hps_io_hps_io_emac1_inst_MDC    =>  HPS_ENET_MDC        ,   --                             hps_io_emac1_inst_MDC
-	    hps_0_hps_io_hps_io_emac1_inst_RX_CTL =>  HPS_ENET_RX_DV      ,   --                             hps_io_emac1_inst_RX_CTL
-	    hps_0_hps_io_hps_io_emac1_inst_TX_CTL =>  HPS_ENET_TX_EN      ,   --                             hps_io_emac1_inst_TX_CTL
-	    hps_0_hps_io_hps_io_emac1_inst_RX_CLK =>  HPS_ENET_RX_CLK     ,   --                             hps_io_emac1_inst_RX_CLK
-	    hps_0_hps_io_hps_io_emac1_inst_RXD1   =>  HPS_ENET_RX_DATA(1),   --                             hps_io_emac1_inst_RXD1
-	    hps_0_hps_io_hps_io_emac1_inst_RXD2   =>  HPS_ENET_RX_DATA(2),   --                             hps_io_emac1_inst_RXD2
-	    hps_0_hps_io_hps_io_emac1_inst_RXD3   =>  HPS_ENET_RX_DATA(3),   --                             hps_io_emac1_inst_RXD3		  
+	    hps_arm_hps_io_hps_io_emac1_inst_TX_CLK =>  HPS_ENET_GTX_CLK    ,   --                             hps_arm_hps_iohps_io_emac1_inst_TX_CLK
+	    hps_arm_hps_io_hps_io_emac1_inst_TXD0   =>  HPS_ENET_TX_DATA(0) ,   --                             hps_io_emac1_inst_TXD0
+	    hps_arm_hps_io_hps_io_emac1_inst_TXD1   =>  HPS_ENET_TX_DATA(1) ,   --                             hps_io_emac1_inst_TXD1
+	    hps_arm_hps_io_hps_io_emac1_inst_TXD2   =>  HPS_ENET_TX_DATA(2),   --                             hps_io_emac1_inst_TXD2
+	    hps_arm_hps_io_hps_io_emac1_inst_TXD3   =>  HPS_ENET_TX_DATA(3),   --                             hps_io_emac1_inst_TXD3
+	    hps_arm_hps_io_hps_io_emac1_inst_RXD0   =>  HPS_ENET_RX_DATA(0),   --                             hps_io_emac1_inst_RXD0
+	    hps_arm_hps_io_hps_io_emac1_inst_MDIO   =>  HPS_ENET_MDIO       ,   --                             hps_io_emac1_inst_MDIO
+	    hps_arm_hps_io_hps_io_emac1_inst_MDC    =>  HPS_ENET_MDC        ,   --                             hps_io_emac1_inst_MDC
+	    hps_arm_hps_io_hps_io_emac1_inst_RX_CTL =>  HPS_ENET_RX_DV      ,   --                             hps_io_emac1_inst_RX_CTL
+	    hps_arm_hps_io_hps_io_emac1_inst_TX_CTL =>  HPS_ENET_TX_EN      ,   --                             hps_io_emac1_inst_TX_CTL
+	    hps_arm_hps_io_hps_io_emac1_inst_RX_CLK =>  HPS_ENET_RX_CLK     ,   --                             hps_io_emac1_inst_RX_CLK
+	    hps_arm_hps_io_hps_io_emac1_inst_RXD1   =>  HPS_ENET_RX_DATA(1),   --                             hps_io_emac1_inst_RXD1
+	    hps_arm_hps_io_hps_io_emac1_inst_RXD2   =>  HPS_ENET_RX_DATA(2),   --                             hps_io_emac1_inst_RXD2
+	    hps_arm_hps_io_hps_io_emac1_inst_RXD3   =>  HPS_ENET_RX_DATA(3),   --                             hps_io_emac1_inst_RXD3		  
 	
 	    -- HPS SD CARD
-	    hps_0_hps_io_hps_io_sdio_inst_CMD     =>  HPS_SD_CMD     ,        --                               hps_io_sdio_inst_CMD
-	    hps_0_hps_io_hps_io_sdio_inst_D0      =>  HPS_SD_DATA(0),        --                               hps_io_sdio_inst_D0
-	    hps_0_hps_io_hps_io_sdio_inst_D1      =>  HPS_SD_DATA(1),        --                               hps_io_sdio_inst_D1
-	    hps_0_hps_io_hps_io_sdio_inst_CLK     =>  HPS_SD_CLK     ,        --                               hps_io_sdio_inst_CLK
-	    hps_0_hps_io_hps_io_sdio_inst_D2      =>  HPS_SD_DATA(2),        --                               hps_io_sdio_inst_D2
-	    hps_0_hps_io_hps_io_sdio_inst_D3      =>  HPS_SD_DATA(3),        --                               hps_io_sdio_inst_D3
+	    hps_arm_hps_io_hps_io_sdio_inst_CMD     =>  HPS_SD_CMD     ,        --                               hps_io_sdio_inst_CMD
+	    hps_arm_hps_io_hps_io_sdio_inst_D0      =>  HPS_SD_DATA(0),        --                               hps_io_sdio_inst_D0
+	    hps_arm_hps_io_hps_io_sdio_inst_D1      =>  HPS_SD_DATA(1),        --                               hps_io_sdio_inst_D1
+	    hps_arm_hps_io_hps_io_sdio_inst_CLK     =>  HPS_SD_CLK     ,        --                               hps_io_sdio_inst_CLK
+	    hps_arm_hps_io_hps_io_sdio_inst_D2      =>  HPS_SD_DATA(2),        --                               hps_io_sdio_inst_D2
+	    hps_arm_hps_io_hps_io_sdio_inst_D3      =>  HPS_SD_DATA(3),        --                               hps_io_sdio_inst_D3
 	
 	    -- HPS USB
-	    hps_0_hps_io_hps_io_usb1_inst_D0      =>  HPS_USB_DATA(0),      --                               hps_io_usb1_inst_D0
-	    hps_0_hps_io_hps_io_usb1_inst_D1      =>  HPS_USB_DATA(1),      --                               hps_io_usb1_inst_D1
-	    hps_0_hps_io_hps_io_usb1_inst_D2      =>  HPS_USB_DATA(2),      --                               hps_io_usb1_inst_D2
-	    hps_0_hps_io_hps_io_usb1_inst_D3      =>  HPS_USB_DATA(3),      --                               hps_io_usb1_inst_D3
-	    hps_0_hps_io_hps_io_usb1_inst_D4      =>  HPS_USB_DATA(4),      --                               hps_io_usb1_inst_D4
-	    hps_0_hps_io_hps_io_usb1_inst_D5      =>  HPS_USB_DATA(5),      --                               hps_io_usb1_inst_D5
-	    hps_0_hps_io_hps_io_usb1_inst_D6      =>  HPS_USB_DATA(6),      --                               hps_io_usb1_inst_D6
-	    hps_0_hps_io_hps_io_usb1_inst_D7      =>  HPS_USB_DATA(7),      --                               hps_io_usb1_inst_D7
-	    hps_0_hps_io_hps_io_usb1_inst_CLK     =>  HPS_USB_CLKOUT  ,      --                               hps_io_usb1_inst_CLK
-	    hps_0_hps_io_hps_io_usb1_inst_STP     =>  HPS_USB_STP     ,      --                               hps_io_usb1_inst_STP
-	    hps_0_hps_io_hps_io_usb1_inst_DIR     =>  HPS_USB_DIR     ,      --                               hps_io_usb1_inst_DIR
-	    hps_0_hps_io_hps_io_usb1_inst_NXT     =>  HPS_USB_NXT     ,      --                               hps_io_usb1_inst_NXT
+	    hps_arm_hps_io_hps_io_usb1_inst_D0      =>  HPS_USB_DATA(0),      --                               hps_io_usb1_inst_D0
+	    hps_arm_hps_io_hps_io_usb1_inst_D1      =>  HPS_USB_DATA(1),      --                               hps_io_usb1_inst_D1
+	    hps_arm_hps_io_hps_io_usb1_inst_D2      =>  HPS_USB_DATA(2),      --                               hps_io_usb1_inst_D2
+	    hps_arm_hps_io_hps_io_usb1_inst_D3      =>  HPS_USB_DATA(3),      --                               hps_io_usb1_inst_D3
+	    hps_arm_hps_io_hps_io_usb1_inst_D4      =>  HPS_USB_DATA(4),      --                               hps_io_usb1_inst_D4
+	    hps_arm_hps_io_hps_io_usb1_inst_D5      =>  HPS_USB_DATA(5),      --                               hps_io_usb1_inst_D5
+	    hps_arm_hps_io_hps_io_usb1_inst_D6      =>  HPS_USB_DATA(6),      --                               hps_io_usb1_inst_D6
+	    hps_arm_hps_io_hps_io_usb1_inst_D7      =>  HPS_USB_DATA(7),      --                               hps_io_usb1_inst_D7
+	    hps_arm_hps_io_hps_io_usb1_inst_CLK     =>  HPS_USB_CLKOUT  ,      --                               hps_io_usb1_inst_CLK
+	    hps_arm_hps_io_hps_io_usb1_inst_STP     =>  HPS_USB_STP     ,      --                               hps_io_usb1_inst_STP
+	    hps_arm_hps_io_hps_io_usb1_inst_DIR     =>  HPS_USB_DIR     ,      --                               hps_io_usb1_inst_DIR
+	    hps_arm_hps_io_hps_io_usb1_inst_NXT     =>  HPS_USB_NXT     ,      --                               hps_io_usb1_inst_NXT
 	      
 	    -- HPS SPI
-	    hps_0_hps_io_hps_io_spim1_inst_CLK    =>  HPS_SPIM_CLK  ,        --                               hps_io_spim1_inst_CLK
-	    hps_0_hps_io_hps_io_spim1_inst_MOSI   =>  HPS_SPIM_MOSI ,        --                               hps_io_spim1_inst_MOSI
-	    hps_0_hps_io_hps_io_spim1_inst_MISO   =>  HPS_SPIM_MISO ,        --                               hps_io_spim1_inst_MISO
-	    hps_0_hps_io_hps_io_spim1_inst_SS0    =>  HPS_SPIM_SS   ,        --                               hps_io_spim1_inst_SS0
+	    hps_arm_hps_io_hps_io_spim1_inst_CLK    =>  HPS_SPIM_CLK  ,        --                               hps_io_spim1_inst_CLK
+	    hps_arm_hps_io_hps_io_spim1_inst_MOSI   =>  HPS_SPIM_MOSI ,        --                               hps_io_spim1_inst_MOSI
+	    hps_arm_hps_io_hps_io_spim1_inst_MISO   =>  HPS_SPIM_MISO ,        --                               hps_io_spim1_inst_MISO
+	    hps_arm_hps_io_hps_io_spim1_inst_SS0    =>  HPS_SPIM_SS   ,        --                               hps_io_spim1_inst_SS0
 	
 	    -- HPS UART
-	    hps_0_hps_io_hps_io_uart0_inst_RX     =>  HPS_UART_RX ,     --                               hps_io_uart0_inst_RX
-	    hps_0_hps_io_hps_io_uart0_inst_TX     =>  HPS_UART_TX ,     --                               hps_io_uart0_inst_TX
+	    hps_arm_hps_io_hps_io_uart0_inst_RX     =>  HPS_UART_RX ,     --                               hps_io_uart0_inst_RX
+	    hps_arm_hps_io_hps_io_uart0_inst_TX     =>  HPS_UART_TX ,     --                               hps_io_uart0_inst_TX
 	
 	    -- HPS I2C0
-	    hps_0_hps_io_hps_io_i2c0_inst_SDA     =>  HPS_I2C0_SDAT ,     --                               hps_io_i2c0_inst_SDA
-	    hps_0_hps_io_hps_io_i2c0_inst_SCL     =>  HPS_I2C0_SCLK ,     --                               hps_io_i2c0_inst_SCL
+	    hps_arm_hps_io_hps_io_i2c0_inst_SDA     =>  HPS_I2C0_SDAT ,     --                               hps_io_i2c0_inst_SDA
+	    hps_arm_hps_io_hps_io_i2c0_inst_SCL     =>  HPS_I2C0_SCLK ,     --                               hps_io_i2c0_inst_SCL
 	
 	    -- HPS I2C1
-	    hps_0_hps_io_hps_io_i2c1_inst_SDA     =>  HPS_I2C1_SDAT ,     --                               hps_io_i2c1_inst_SDA
-	    hps_0_hps_io_hps_io_i2c1_inst_SCL     =>  HPS_I2C1_SCLK ,     --                               hps_io_i2c1_inst_SCL
+	    hps_arm_hps_io_hps_io_i2c1_inst_SDA     =>  HPS_I2C1_SDAT ,     --                               hps_io_i2c1_inst_SDA
+	    hps_arm_hps_io_hps_io_i2c1_inst_SCL     =>  HPS_I2C1_SCLK ,     --                               hps_io_i2c1_inst_SCL
 	
 	    -- HPS DDR3
 	    memory_mem_a                          =>  HPS_DDR3_ADDR ,                       --                memorymem_a

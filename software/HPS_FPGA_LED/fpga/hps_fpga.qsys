@@ -35,7 +35,7 @@
          type = "String";
       }
    }
-   element clk_0
+   element clk_50
    {
       datum _sortIndex
       {
@@ -95,7 +95,7 @@
          type = "boolean";
       }
    }
-   element hps_0
+   element hps_arm
    {
       datum _sortIndex
       {
@@ -302,20 +302,24 @@
  <interface
    name="button_pio_external_connection"
    internal="button_pio.external_connection" />
- <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
+ <interface name="clk" internal="clk_50.clk_in" type="clock" dir="end" />
  <interface
    name="dipsw_pio_external_connection"
    internal="dipsw_pio.external_connection" />
  <interface
-   name="hps_0_h2f_reset"
-   internal="hps_0.h2f_reset"
+   name="hps_arm_h2f_reset"
+   internal="hps_arm.h2f_reset"
    type="reset"
    dir="start" />
- <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
+ <interface
+   name="hps_arm_hps_io"
+   internal="hps_arm.hps_io"
+   type="conduit"
+   dir="end" />
  <interface
    name="led_pio_external_connection"
    internal="led_pio.external_connection" />
- <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
+ <interface name="memory" internal="hps_arm.memory" type="conduit" dir="end" />
  <interface
    name="pio_n_layer1"
    internal="pio_n_layer1.data"
@@ -331,7 +335,7 @@
    internal="pio_n_layer3.data"
    type="conduit"
    dir="end" />
- <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
+ <interface name="reset" internal="clk_50.clk_in_reset" type="reset" dir="end" />
  <module name="button_pio" kind="altera_avalon_pio" version="16.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="true" />
   <parameter name="bitModifyingOutReg" value="false" />
@@ -346,7 +350,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="4" />
  </module>
- <module name="clk_0" kind="clock_source" version="16.1" enabled="1">
+ <module name="clk_50" kind="clock_source" version="16.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
@@ -380,7 +384,7 @@
   <parameter name="PLI_PORT" value="50000" />
   <parameter name="USE_PLI" value="0" />
  </module>
- <module name="hps_0" kind="altera_hps" version="16.1" enabled="1">
+ <module name="hps_arm" kind="altera_hps" version="16.1" enabled="1">
   <parameter name="ABSTRACT_REAL_COMPARE_TEST" value="false" />
   <parameter name="ABS_RAM_MEM_INIT_FILENAME" value="meminit" />
   <parameter name="ACV_PHY_CLK_ADD_FR_PHASE" value="0.0" />
@@ -1008,7 +1012,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="jtag_uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00020000" />
@@ -1017,7 +1021,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="pio_n_layer1.avl_mm">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
@@ -1026,7 +1030,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="pio_n_layer2.avl_mm">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0400" />
@@ -1035,7 +1039,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="pio_n_layer3.avl_mm">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0800" />
@@ -1044,7 +1048,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="sysid_qsys.control_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00010000" />
@@ -1053,7 +1057,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="led_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00010040" />
@@ -1062,7 +1066,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="dipsw_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00010080" />
@@ -1071,7 +1075,7 @@
  <connection
    kind="avalon"
    version="16.1"
-   start="hps_0.h2f_lw_axi_master"
+   start="hps_arm.h2f_lw_axi_master"
    end="button_pio.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x000100c0" />
@@ -1134,85 +1138,85 @@
  <connection
    kind="clock"
    version="16.1"
-   start="clk_0.clk"
+   start="clk_50.clk"
    end="hps_only_master.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="sysid_qsys.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="led_pio.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="sysid_qsys.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="led_pio.clk" />
  <connection
    kind="clock"
    version="16.1"
-   start="clk_0.clk"
+   start="clk_50.clk"
    end="fpga_only_master.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="dipsw_pio.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="button_pio.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="jtag_uart.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="pio_n_layer1.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="pio_n_layer2.clk" />
- <connection kind="clock" version="16.1" start="clk_0.clk" end="pio_n_layer3.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="dipsw_pio.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="button_pio.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="jtag_uart.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="pio_n_layer1.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="pio_n_layer2.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="pio_n_layer3.clk" />
  <connection
    kind="clock"
    version="16.1"
-   start="clk_0.clk"
+   start="clk_50.clk"
    end="onchip_memory2_0.clk1" />
  <connection
    kind="clock"
    version="16.1"
-   start="clk_0.clk"
-   end="hps_0.h2f_lw_axi_clock" />
+   start="clk_50.clk"
+   end="hps_arm.h2f_lw_axi_clock" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="hps_only_master.clk_reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="fpga_only_master.clk_reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="sysid_qsys.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="led_pio.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="dipsw_pio.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="button_pio.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="jtag_uart.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="pio_n_layer1.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="pio_n_layer2.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="pio_n_layer3.reset" />
  <connection
    kind="reset"
    version="16.1"
-   start="clk_0.clk_reset"
+   start="clk_50.clk_reset"
    end="onchip_memory2_0.reset1" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
