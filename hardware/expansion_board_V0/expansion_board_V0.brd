@@ -9,7 +9,7 @@
 <grid distance="0.1" unitdist="mm" unit="mm" style="lines" multiple="10" display="yes" altdistance="0.025" altunitdist="mm" altunit="mm"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="2" name="Route2" color="13" fill="3" visible="no" active="yes"/>
+<layer number="2" name="Route2" color="13" fill="3" visible="yes" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
 <layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
@@ -2772,7 +2772,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-109.055" y="14.94" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="16.24" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="C114" library="iocene" package="CAPC1005X55N" value="nc" x="-109.855" y="17.78" smashed="yes" rot="MR180">
+<element name="C114" library="iocene" package="CAPC1005X55N" value="100n" x="-109.855" y="17.78" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="18.18" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="18.78" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -3700,15 +3700,15 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-21.9" y="13.5" size="0.8" layer="25" font="vector"/>
 <attribute name="VALUE" x="-23.9" y="13.1" size="0.8" layer="27" font="vector"/>
 </element>
-<element name="R42" library="iocene" package="RESC1005X40N" value="10k" x="-109.855" y="13.97" smashed="yes" rot="MR180">
+<element name="R42" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="13.97" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="13.87" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="14.97" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R47" library="iocene" package="RESC1005X40N" value="10k" x="-109.855" y="16.51" smashed="yes" rot="MR180">
+<element name="R47" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="16.51" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="16.91" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="17.51" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R54" library="iocene" package="RESC1005X40N" value="560" x="-109.855" y="19.05" smashed="yes" rot="MR180">
+<element name="R54" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="19.05" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="19.45" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="20.05" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -3716,7 +3716,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-108.855" y="21.99" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="22.59" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R67" library="iocene" package="RESC1005X40N" value="10k" x="-109.855" y="24.13" smashed="yes" rot="MR180">
+<element name="R67" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="24.13" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="24.63" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="25.13" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -3784,7 +3784,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-120.82" y="-25.87" size="0.8" layer="26" font="vector" rot="MR0"/>
 <attribute name="VALUE" x="-120.42" y="-27.87" size="0.8" layer="28" font="vector" rot="MR0"/>
 </element>
-<element name="R75" library="iocene" package="RESC1005X40N" value="10k" x="-109.855" y="26.67" smashed="yes" rot="MR180">
+<element name="R75" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="26.67" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="27.07" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="27.67" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>

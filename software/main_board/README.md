@@ -1,4 +1,0 @@
-MAIN BOARD PROJECT:
-====
-
-TODO: XXX
