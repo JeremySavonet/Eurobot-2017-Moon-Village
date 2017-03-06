@@ -189,6 +189,69 @@
          type = "String";
       }
    }
+   element pio_n_layer1
+   {
+      datum _sortIndex
+      {
+         value = "10";
+         type = "int";
+      }
+   }
+   element pio_n_layer1.avl_mm
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
+      }
+   }
+   element pio_n_layer2
+   {
+      datum _sortIndex
+      {
+         value = "11";
+         type = "int";
+      }
+   }
+   element pio_n_layer2.avl_mm
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "1024";
+         type = "String";
+      }
+   }
+   element pio_n_layer3
+   {
+      datum _sortIndex
+      {
+         value = "12";
+         type = "int";
+      }
+   }
+   element pio_n_layer3.avl_mm
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "2048";
+         type = "String";
+      }
+   }
    element sysid_qsys
    {
       datum _sortIndex
@@ -238,15 +301,11 @@
  <instanceScript></instanceScript>
  <interface
    name="button_pio_external_connection"
-   internal="button_pio.external_connection"
-   type="conduit"
-   dir="end" />
+   internal="button_pio.external_connection" />
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface
    name="dipsw_pio_external_connection"
-   internal="dipsw_pio.external_connection"
-   type="conduit"
-   dir="end" />
+   internal="dipsw_pio.external_connection" />
  <interface
    name="hps_0_h2f_reset"
    internal="hps_0.h2f_reset"
@@ -255,12 +314,25 @@
  <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
  <interface
    name="led_pio_external_connection"
-   internal="led_pio.external_connection"
+   internal="led_pio.external_connection" />
+ <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
+ <interface
+   name="pio_n_layer1"
+   internal="pio_n_layer1.data"
    type="conduit"
    dir="end" />
- <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
+ <interface
+   name="pio_n_layer2"
+   internal="pio_n_layer2.data"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="pio_n_layer3"
+   internal="pio_n_layer3.data"
+   type="conduit"
+   dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
- <module name="button_pio" kind="altera_avalon_pio" version="16.1" enabled="1">
+ <module name="button_pio" kind="altera_avalon_pio" version="16.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="true" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="true" />
@@ -280,7 +352,7 @@
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
- <module name="dipsw_pio" kind="altera_avalon_pio" version="16.1" enabled="1">
+ <module name="dipsw_pio" kind="altera_avalon_pio" version="16.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="true" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="true" />
@@ -871,7 +943,7 @@
   <parameter name="writeBufferDepth" value="64" />
   <parameter name="writeIRQThreshold" value="8" />
  </module>
- <module name="led_pio" kind="altera_avalon_pio" version="16.1" enabled="1">
+ <module name="led_pio" kind="altera_avalon_pio" version="16.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -917,6 +989,15 @@
   <parameter name="useShallowMemBlocks" value="false" />
   <parameter name="writable" value="true" />
  </module>
+ <module name="pio_n_layer1" kind="pio_n" version="1.0" enabled="1">
+  <parameter name="RegCnt" value="64" />
+ </module>
+ <module name="pio_n_layer2" kind="pio_n" version="1.0" enabled="1">
+  <parameter name="RegCnt" value="64" />
+ </module>
+ <module name="pio_n_layer3" kind="pio_n" version="1.0" enabled="1">
+  <parameter name="RegCnt" value="64" />
+ </module>
  <module
    name="sysid_qsys"
    kind="altera_avalon_sysid_qsys"
@@ -931,6 +1012,33 @@
    end="jtag_uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00020000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="pio_n_layer1.avl_mm">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="pio_n_layer2.avl_mm">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0400" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="pio_n_layer3.avl_mm">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0800" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1038,6 +1146,9 @@
  <connection kind="clock" version="16.1" start="clk_0.clk" end="dipsw_pio.clk" />
  <connection kind="clock" version="16.1" start="clk_0.clk" end="button_pio.clk" />
  <connection kind="clock" version="16.1" start="clk_0.clk" end="jtag_uart.clk" />
+ <connection kind="clock" version="16.1" start="clk_0.clk" end="pio_n_layer1.clk" />
+ <connection kind="clock" version="16.1" start="clk_0.clk" end="pio_n_layer2.clk" />
+ <connection kind="clock" version="16.1" start="clk_0.clk" end="pio_n_layer3.clk" />
  <connection
    kind="clock"
    version="16.1"
@@ -1083,6 +1194,21 @@
    version="16.1"
    start="clk_0.clk_reset"
    end="jtag_uart.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_0.clk_reset"
+   end="pio_n_layer1.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_0.clk_reset"
+   end="pio_n_layer2.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_0.clk_reset"
+   end="pio_n_layer3.reset" />
  <connection
    kind="reset"
    version="16.1"

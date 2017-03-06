@@ -95,10 +95,10 @@ entity hpsfpga is
     qei3_z   : in  std_logic;
 
     ---------- ESC ----------    
-    esc0_pwm : in  std_logic;
+    esc0_pwm : out std_logic;
     esc0_dir : out std_logic;
 
-    esc1_pwm : in  std_logic;
+    esc1_pwm : out std_logic;
     esc1_dir : out std_logic;
 
     ------- PWM (Servos) ------
@@ -227,94 +227,97 @@ end entity;
 
 architecture hpsfpga_arch of hpsfpga is
 
-	component system is
-		port (
-			clk_clk        : in  std_logic                     := 'X';             -- clk
-			pio_0_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
-			pio_0_out_port : out std_logic_vector(31 downto 0);                    -- out_port
-			pio_1_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
-			pio_1_out_port : out std_logic_vector(31 downto 0);                    -- out_port
-			pio_2_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
-			pio_2_out_port : out std_logic_vector(31 downto 0);                    -- out_port
-			pio_3_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
-			pio_3_out_port : out std_logic_vector(31 downto 0);                    -- out_port
-			pio_4_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
-			pio_4_out_port : out std_logic_vector(31 downto 0);                    -- out_port
-			pio_5_in_port  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- in_port
-			pio_5_out_port : out std_logic_vector(31 downto 0);                    -- out_port
-			reset_reset_n  : in  std_logic                     := 'X'              -- reset_n
-		);
-	end component system;
+    component system is
+        port (
+            clk_clk            : in  std_logic                      := 'X';             -- clk
+            pio_data_in_value  : in  std_logic_vector(511 downto 0) := (others => 'X'); -- data_in_value
+            pio_data_in_read   : out std_logic_vector(15 downto 0);                     -- data_in_read
+            pio_data_out_value : out std_logic_vector(511 downto 0);                    -- data_out_value
+            pio_data_out_write : out std_logic_vector(15 downto 0);                     -- data_out_write
+            reset_reset_n      : in  std_logic                      := 'X'              -- reset_n
+        );
+    end component system;
+
+
 
 
 
 	component hps_fpga is
 		port (
-			button_pio_external_connection_export : in    std_logic_vector(3 downto 0)  := (others => 'X'); -- export
-			clk_clk                               : in    std_logic                     := 'X';             -- clk
-			dipsw_pio_external_connection_export  : in    std_logic_vector(3 downto 0)  := (others => 'X'); -- export
-			hps_0_h2f_reset_reset_n               : out   std_logic;                                        -- reset_n
-			hps_0_hps_io_hps_io_emac1_inst_TX_CLK : out   std_logic;                                        -- hps_io_emac1_inst_TX_CLK
-			hps_0_hps_io_hps_io_emac1_inst_TXD0   : out   std_logic;                                        -- hps_io_emac1_inst_TXD0
-			hps_0_hps_io_hps_io_emac1_inst_TXD1   : out   std_logic;                                        -- hps_io_emac1_inst_TXD1
-			hps_0_hps_io_hps_io_emac1_inst_TXD2   : out   std_logic;                                        -- hps_io_emac1_inst_TXD2
-			hps_0_hps_io_hps_io_emac1_inst_TXD3   : out   std_logic;                                        -- hps_io_emac1_inst_TXD3
-			hps_0_hps_io_hps_io_emac1_inst_RXD0   : in    std_logic                     := 'X';             -- hps_io_emac1_inst_RXD0
-			hps_0_hps_io_hps_io_emac1_inst_MDIO   : inout std_logic                     := 'X';             -- hps_io_emac1_inst_MDIO
-			hps_0_hps_io_hps_io_emac1_inst_MDC    : out   std_logic;                                        -- hps_io_emac1_inst_MDC
-			hps_0_hps_io_hps_io_emac1_inst_RX_CTL : in    std_logic                     := 'X';             -- hps_io_emac1_inst_RX_CTL
-			hps_0_hps_io_hps_io_emac1_inst_TX_CTL : out   std_logic;                                        -- hps_io_emac1_inst_TX_CTL
-			hps_0_hps_io_hps_io_emac1_inst_RX_CLK : in    std_logic                     := 'X';             -- hps_io_emac1_inst_RX_CLK
-			hps_0_hps_io_hps_io_emac1_inst_RXD1   : in    std_logic                     := 'X';             -- hps_io_emac1_inst_RXD1
-			hps_0_hps_io_hps_io_emac1_inst_RXD2   : in    std_logic                     := 'X';             -- hps_io_emac1_inst_RXD2
-			hps_0_hps_io_hps_io_emac1_inst_RXD3   : in    std_logic                     := 'X';             -- hps_io_emac1_inst_RXD3
-			hps_0_hps_io_hps_io_sdio_inst_CMD     : inout std_logic                     := 'X';             -- hps_io_sdio_inst_CMD
-			hps_0_hps_io_hps_io_sdio_inst_D0      : inout std_logic                     := 'X';             -- hps_io_sdio_inst_D0
-			hps_0_hps_io_hps_io_sdio_inst_D1      : inout std_logic                     := 'X';             -- hps_io_sdio_inst_D1
-			hps_0_hps_io_hps_io_sdio_inst_CLK     : out   std_logic;                                        -- hps_io_sdio_inst_CLK
-			hps_0_hps_io_hps_io_sdio_inst_D2      : inout std_logic                     := 'X';             -- hps_io_sdio_inst_D2
-			hps_0_hps_io_hps_io_sdio_inst_D3      : inout std_logic                     := 'X';             -- hps_io_sdio_inst_D3
-			hps_0_hps_io_hps_io_usb1_inst_D0      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D0
-			hps_0_hps_io_hps_io_usb1_inst_D1      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D1
-			hps_0_hps_io_hps_io_usb1_inst_D2      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D2
-			hps_0_hps_io_hps_io_usb1_inst_D3      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D3
-			hps_0_hps_io_hps_io_usb1_inst_D4      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D4
-			hps_0_hps_io_hps_io_usb1_inst_D5      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D5
-			hps_0_hps_io_hps_io_usb1_inst_D6      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D6
-			hps_0_hps_io_hps_io_usb1_inst_D7      : inout std_logic                     := 'X';             -- hps_io_usb1_inst_D7
-			hps_0_hps_io_hps_io_usb1_inst_CLK     : in    std_logic                     := 'X';             -- hps_io_usb1_inst_CLK
-			hps_0_hps_io_hps_io_usb1_inst_STP     : out   std_logic;                                        -- hps_io_usb1_inst_STP
-			hps_0_hps_io_hps_io_usb1_inst_DIR     : in    std_logic                     := 'X';             -- hps_io_usb1_inst_DIR
-			hps_0_hps_io_hps_io_usb1_inst_NXT     : in    std_logic                     := 'X';             -- hps_io_usb1_inst_NXT
-			hps_0_hps_io_hps_io_spim1_inst_CLK    : out   std_logic;                                        -- hps_io_spim1_inst_CLK
-			hps_0_hps_io_hps_io_spim1_inst_MOSI   : out   std_logic;                                        -- hps_io_spim1_inst_MOSI
-			hps_0_hps_io_hps_io_spim1_inst_MISO   : in    std_logic                     := 'X';             -- hps_io_spim1_inst_MISO
-			hps_0_hps_io_hps_io_spim1_inst_SS0    : out   std_logic;                                        -- hps_io_spim1_inst_SS0
-			hps_0_hps_io_hps_io_uart0_inst_RX     : in    std_logic                     := 'X';             -- hps_io_uart0_inst_RX
-			hps_0_hps_io_hps_io_uart0_inst_TX     : out   std_logic;                                        -- hps_io_uart0_inst_TX
-			hps_0_hps_io_hps_io_i2c0_inst_SDA     : inout std_logic                     := 'X';             -- hps_io_i2c0_inst_SDA
-			hps_0_hps_io_hps_io_i2c0_inst_SCL     : inout std_logic                     := 'X';             -- hps_io_i2c0_inst_SCL
-			hps_0_hps_io_hps_io_i2c1_inst_SDA     : inout std_logic                     := 'X';             -- hps_io_i2c1_inst_SDA
-			hps_0_hps_io_hps_io_i2c1_inst_SCL     : inout std_logic                     := 'X';             -- hps_io_i2c1_inst_SCL
-			led_pio_external_connection_export    : out   std_logic_vector(7 downto 0);                     -- export
-			memory_mem_a                          : out   std_logic_vector(14 downto 0);                    -- mem_a
-			memory_mem_ba                         : out   std_logic_vector(2 downto 0);                     -- mem_ba
-			memory_mem_ck                         : out   std_logic;                                        -- mem_ck
-			memory_mem_ck_n                       : out   std_logic;                                        -- mem_ck_n
-			memory_mem_cke                        : out   std_logic;                                        -- mem_cke
-			memory_mem_cs_n                       : out   std_logic;                                        -- mem_cs_n
-			memory_mem_ras_n                      : out   std_logic;                                        -- mem_ras_n
-			memory_mem_cas_n                      : out   std_logic;                                        -- mem_cas_n
-			memory_mem_we_n                       : out   std_logic;                                        -- mem_we_n
-			memory_mem_reset_n                    : out   std_logic;                                        -- mem_reset_n
-			memory_mem_dq                         : inout std_logic_vector(31 downto 0) := (others => 'X'); -- mem_dq
-			memory_mem_dqs                        : inout std_logic_vector(3 downto 0)  := (others => 'X'); -- mem_dqs
-			memory_mem_dqs_n                      : inout std_logic_vector(3 downto 0)  := (others => 'X'); -- mem_dqs_n
-			memory_mem_odt                        : out   std_logic;                                        -- mem_odt
-			memory_mem_dm                         : out   std_logic_vector(3 downto 0);                     -- mem_dm
-			memory_oct_rzqin                      : in    std_logic                     := 'X';             -- oct_rzqin
-			reset_reset_n                         : in    std_logic                     := 'X'              -- reset_n
-		);
+            clk_clk                               : in    std_logic                       := 'X';             -- clk
+            hps_0_h2f_reset_reset_n               : out   std_logic;                                          -- reset_n
+            hps_0_hps_io_hps_io_emac1_inst_TX_CLK : out   std_logic;                                          -- hps_io_emac1_inst_TX_CLK
+            hps_0_hps_io_hps_io_emac1_inst_TXD0   : out   std_logic;                                          -- hps_io_emac1_inst_TXD0
+            hps_0_hps_io_hps_io_emac1_inst_TXD1   : out   std_logic;                                          -- hps_io_emac1_inst_TXD1
+            hps_0_hps_io_hps_io_emac1_inst_TXD2   : out   std_logic;                                          -- hps_io_emac1_inst_TXD2
+            hps_0_hps_io_hps_io_emac1_inst_TXD3   : out   std_logic;                                          -- hps_io_emac1_inst_TXD3
+            hps_0_hps_io_hps_io_emac1_inst_RXD0   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD0
+            hps_0_hps_io_hps_io_emac1_inst_MDIO   : inout std_logic                       := 'X';             -- hps_io_emac1_inst_MDIO
+            hps_0_hps_io_hps_io_emac1_inst_MDC    : out   std_logic;                                          -- hps_io_emac1_inst_MDC
+            hps_0_hps_io_hps_io_emac1_inst_RX_CTL : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RX_CTL
+            hps_0_hps_io_hps_io_emac1_inst_TX_CTL : out   std_logic;                                          -- hps_io_emac1_inst_TX_CTL
+            hps_0_hps_io_hps_io_emac1_inst_RX_CLK : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RX_CLK
+            hps_0_hps_io_hps_io_emac1_inst_RXD1   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD1
+            hps_0_hps_io_hps_io_emac1_inst_RXD2   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD2
+            hps_0_hps_io_hps_io_emac1_inst_RXD3   : in    std_logic                       := 'X';             -- hps_io_emac1_inst_RXD3
+            hps_0_hps_io_hps_io_sdio_inst_CMD     : inout std_logic                       := 'X';             -- hps_io_sdio_inst_CMD
+            hps_0_hps_io_hps_io_sdio_inst_D0      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D0
+            hps_0_hps_io_hps_io_sdio_inst_D1      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D1
+            hps_0_hps_io_hps_io_sdio_inst_CLK     : out   std_logic;                                          -- hps_io_sdio_inst_CLK
+            hps_0_hps_io_hps_io_sdio_inst_D2      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D2
+            hps_0_hps_io_hps_io_sdio_inst_D3      : inout std_logic                       := 'X';             -- hps_io_sdio_inst_D3
+            hps_0_hps_io_hps_io_usb1_inst_D0      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D0
+            hps_0_hps_io_hps_io_usb1_inst_D1      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D1
+            hps_0_hps_io_hps_io_usb1_inst_D2      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D2
+            hps_0_hps_io_hps_io_usb1_inst_D3      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D3
+            hps_0_hps_io_hps_io_usb1_inst_D4      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D4
+            hps_0_hps_io_hps_io_usb1_inst_D5      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D5
+            hps_0_hps_io_hps_io_usb1_inst_D6      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D6
+            hps_0_hps_io_hps_io_usb1_inst_D7      : inout std_logic                       := 'X';             -- hps_io_usb1_inst_D7
+            hps_0_hps_io_hps_io_usb1_inst_CLK     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_CLK
+            hps_0_hps_io_hps_io_usb1_inst_STP     : out   std_logic;                                          -- hps_io_usb1_inst_STP
+            hps_0_hps_io_hps_io_usb1_inst_DIR     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_DIR
+            hps_0_hps_io_hps_io_usb1_inst_NXT     : in    std_logic                       := 'X';             -- hps_io_usb1_inst_NXT
+            hps_0_hps_io_hps_io_spim1_inst_CLK    : out   std_logic;                                          -- hps_io_spim1_inst_CLK
+            hps_0_hps_io_hps_io_spim1_inst_MOSI   : out   std_logic;                                          -- hps_io_spim1_inst_MOSI
+            hps_0_hps_io_hps_io_spim1_inst_MISO   : in    std_logic                       := 'X';             -- hps_io_spim1_inst_MISO
+            hps_0_hps_io_hps_io_spim1_inst_SS0    : out   std_logic;                                          -- hps_io_spim1_inst_SS0
+            hps_0_hps_io_hps_io_uart0_inst_RX     : in    std_logic                       := 'X';             -- hps_io_uart0_inst_RX
+            hps_0_hps_io_hps_io_uart0_inst_TX     : out   std_logic;                                          -- hps_io_uart0_inst_TX
+            hps_0_hps_io_hps_io_i2c0_inst_SDA     : inout std_logic                       := 'X';             -- hps_io_i2c0_inst_SDA
+            hps_0_hps_io_hps_io_i2c0_inst_SCL     : inout std_logic                       := 'X';             -- hps_io_i2c0_inst_SCL
+            hps_0_hps_io_hps_io_i2c1_inst_SDA     : inout std_logic                       := 'X';             -- hps_io_i2c1_inst_SDA
+            hps_0_hps_io_hps_io_i2c1_inst_SCL     : inout std_logic                       := 'X';             -- hps_io_i2c1_inst_SCL
+            memory_mem_a                          : out   std_logic_vector(14 downto 0);                      -- mem_a
+            memory_mem_ba                         : out   std_logic_vector(2 downto 0);                       -- mem_ba
+            memory_mem_ck                         : out   std_logic;                                          -- mem_ck
+            memory_mem_ck_n                       : out   std_logic;                                          -- mem_ck_n
+            memory_mem_cke                        : out   std_logic;                                          -- mem_cke
+            memory_mem_cs_n                       : out   std_logic;                                          -- mem_cs_n
+            memory_mem_ras_n                      : out   std_logic;                                          -- mem_ras_n
+            memory_mem_cas_n                      : out   std_logic;                                          -- mem_cas_n
+            memory_mem_we_n                       : out   std_logic;                                          -- mem_we_n
+            memory_mem_reset_n                    : out   std_logic;                                          -- mem_reset_n
+            memory_mem_dq                         : inout std_logic_vector(31 downto 0)   := (others => 'X'); -- mem_dq
+            memory_mem_dqs                        : inout std_logic_vector(3 downto 0)    := (others => 'X'); -- mem_dqs
+            memory_mem_dqs_n                      : inout std_logic_vector(3 downto 0)    := (others => 'X'); -- mem_dqs_n
+            memory_mem_odt                        : out   std_logic;                                          -- mem_odt
+            memory_mem_dm                         : out   std_logic_vector(3 downto 0);                       -- mem_dm
+            memory_oct_rzqin                      : in    std_logic                       := 'X';             -- oct_rzqin
+            reset_reset_n                         : in    std_logic                       := 'X';             -- reset_n
+            pio_n_layer1_data_in_value            : in    std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+            pio_n_layer1_data_in_read             : out   std_logic_vector(64-1 downto 0);                     -- data_in_read
+            pio_n_layer1_data_out_value           : out   std_logic_vector(2048-1 downto 0);                    -- data_out_value
+            pio_n_layer1_data_out_write           : out   std_logic_vector(64-1 downto 0);                     -- data_out_write
+            pio_n_layer2_data_in_value            : in    std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+            pio_n_layer2_data_in_read             : out   std_logic_vector(64-1 downto 0);                     -- data_in_read
+            pio_n_layer2_data_out_value           : out   std_logic_vector(2048-1 downto 0);                    -- data_out_value
+            pio_n_layer2_data_out_write           : out   std_logic_vector(64-1 downto 0);                     -- data_out_write
+            pio_n_layer3_data_in_value            : in    std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+            pio_n_layer3_data_in_read             : out   std_logic_vector(64-1 downto 0);                     -- data_in_read
+            pio_n_layer3_data_out_value           : out   std_logic_vector(2048-1 downto 0);                    -- data_out_value
+            pio_n_layer3_data_out_write           : out   std_logic_vector(64-1 downto 0)                      -- data_out_write
+        );
 	end component hps_fpga;
 
 
@@ -331,9 +334,13 @@ architecture hpsfpga_arch of hpsfpga is
 
     signal w_qei0_cnt : std_logic_vector(16-1 downto 0);
     signal w_qei1_cnt : std_logic_vector(16-1 downto 0);
+    signal w_qei2_cnt : std_logic_vector(16-1 downto 0);
+    signal w_qei3_cnt : std_logic_vector(16-1 downto 0);
 
     signal r_qei0_cnt : std_logic_vector(16-1 downto 0);
     signal r_qei1_cnt : std_logic_vector(16-1 downto 0);
+    signal r_qei2_cnt : std_logic_vector(16-1 downto 0);
+    signal r_qei3_cnt : std_logic_vector(16-1 downto 0);
 
     signal r_led_red  : std_logic;
 
@@ -360,6 +367,14 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_m3_pwm : std_logic;
     signal w_m4_pwm : std_logic;
     signal w_m5_pwm : std_logic;
+
+    signal r_esc0_dir       : std_logic;
+    signal r_esc1_dir       : std_logic;
+
+    signal r_lv_mux         : std_logic_vector(2-1 downto 0);
+
+    signal w_pwm_50hz       : std_logic;
+    signal r_pwm_duty_50hz  : std_logic_vector(8-1 downto 0);
 
     constant MSG_SIZE : natural := 1+2+4*2+2+2;
 
@@ -409,6 +424,21 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_m1_pio_0_in  : std_logic_vector(32-1 downto 0);
     signal w_m1_pio_0_out : std_logic_vector(32-1 downto 0);
 
+    signal w_odometry_pio_in : std_logic_vector(32-1 downto 0);
+
+
+    signal w_pio_n_layer1_data_in_value            : std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+    signal w_pio_n_layer1_data_in_read             : std_logic_vector(64-1 downto 0);                     -- data_in_read
+    signal w_pio_n_layer1_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
+    signal w_pio_n_layer1_data_out_write           : std_logic_vector(64-1 downto 0);                     -- data_out_write
+    signal w_pio_n_layer2_data_in_value            : std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+    signal w_pio_n_layer2_data_in_read             : std_logic_vector(64-1 downto 0);                     -- data_in_read
+    signal w_pio_n_layer2_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
+    signal w_pio_n_layer2_data_out_write           : std_logic_vector(64-1 downto 0);                     -- data_out_write
+    signal w_pio_n_layer3_data_in_value            : std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+    signal w_pio_n_layer3_data_in_read             : std_logic_vector(64-1 downto 0);                     -- data_in_read
+    signal w_pio_n_layer3_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
+    signal w_pio_n_layer3_data_out_write           : std_logic_vector(64-1 downto 0);                      -- data_out_write
 
 begin
 	
@@ -504,6 +534,64 @@ begin
         pwm_out   => LED(3 downto 3)    
     );
 	 
+    inst_pwm_50hz: entity work.pwm 
+    generic map(
+        sys_clk         => 50_000_000, --system clock frequency in Hz
+        pwm_freq        => 50,         --PWM switching frequency in Hz
+        bits_resolution => 8,          --bits of resolution setting the duty cycle
+        phases          => 1           --number of out : pwms and phases
+    )
+    port map (
+        clk       => FPGA_CLK1_50,
+        reset_n   => hps_fpga_reset_n,                             
+        ena       => '1',                               
+        duty      => r_pwm_duty_50hz,
+        pwm_out(0)=> w_pwm_50hz    
+    );
+
+
+    p_sync_50hz: process(FPGA_CLK1_50, hps_fpga_reset_n) is
+        variable v_dir : std_logic;
+    begin
+        if (hps_fpga_reset_n = '0') then
+            r_pwm_duty_50hz <= std_logic_vector(to_unsigned(12,8));
+            v_dir := '0';
+            r_esc0_dir <= '0';
+            r_esc1_dir <= '0';
+            r_lv_mux   <= (others=>'0');
+        elsif rising_edge(FPGA_CLK1_50) then
+            if dir /= v_dir then
+                r_pwm_duty_50hz <= std_logic_vector(unsigned(r_pwm_duty_50hz)+1);
+
+                if unsigned(r_pwm_duty_50hz) = 12 then
+                    r_esc0_dir <= not r_esc0_dir;
+                    r_esc1_dir <= not r_esc1_dir;
+                end if;
+
+                if unsigned(r_pwm_duty_50hz) = 17 then
+                    r_pwm_duty_50hz <= std_logic_vector(to_unsigned(12,8));
+                end if;
+
+                r_lv_mux <= std_logic_vector(unsigned(r_lv_mux)+1);
+            end if;
+            v_dir := dir; 
+
+        end if;
+    end process;
+
+    lv_mux <= r_lv_mux;
+
+    buzzer <= not KEY(0);
+    
+    esc0_pwm <= w_pwm_50hz;
+    esc1_pwm <= w_pwm_50hz;
+
+    s <= (others=>w_pwm_50hz);
+
+    
+    esc0_dir <= r_esc0_dir;
+    esc1_dir <= r_esc1_dir;
+
 	 
     p_async: process(SW,dir,r_m0_dir,r_m1_dir,w_m0_pwm,w_m1_pwm,w_m2_pwm,w_m3_pwm,w_m4_pwm,w_m5_pwm) is
     begin
@@ -580,10 +668,7 @@ begin
                 m1_pwma <= not w_m1_pwm;
             end if;
         end if;
-
-
-
-	 end process;
+    end process;
 
 
     inst_pwm_m0: entity work.pwm 
@@ -695,7 +780,24 @@ begin
         QuadA     => qei1_a,                             
         QuadB     => qei1_b,                               
         CounterValue => w_qei1_cnt
-    );	 		
+    );	 	
+
+    inst_qei2: entity work.QuadratureCounterPorts 
+    port map (
+        clock     => FPGA_CLK1_50,
+        QuadA     => qei2_a,                             
+        QuadB     => qei2_b,                               
+        CounterValue => w_qei2_cnt
+    );	 
+
+    inst_qei3: entity work.QuadratureCounterPorts 
+    port map (
+        clock     => FPGA_CLK1_50,
+        QuadA     => qei3_a,                             
+        QuadB     => qei3_b,                               
+        CounterValue => w_qei3_cnt
+    );	 
+	
 
     led_red <= r_led_red;
     
@@ -704,6 +806,8 @@ begin
         if rising_edge(FPGA_CLK1_50) then
             r_qei0_cnt <= w_qei0_cnt;
             r_qei1_cnt <= w_qei1_cnt;
+            r_qei2_cnt <= w_qei2_cnt;
+            r_qei3_cnt <= w_qei3_cnt;
 
             if w_qei0_cnt /= r_qei0_cnt and unsigned(w_qei0_cnt) = 0 then
                 r_led_red <= not r_led_red;
@@ -712,6 +816,15 @@ begin
             if w_qei1_cnt /= r_qei1_cnt and unsigned(w_qei1_cnt) = 0 then
                 r_led_red <= not r_led_red;                
             end if; 
+
+            if w_qei2_cnt /= r_qei2_cnt and unsigned(w_qei2_cnt) = 0 then
+                r_led_red <= not r_led_red;                
+            end if; 
+
+            if w_qei3_cnt /= r_qei3_cnt and unsigned(w_qei3_cnt) = 0 then
+                r_led_red <= not r_led_red;                
+            end if; 
+
         end if;
     end process;
 
@@ -876,43 +989,41 @@ begin
 
     inst_m0_pid_rv : component system
     port map (
-        clk_clk                => FPGA_CLK1_50,
-        reset_reset_n          => hps_fpga_reset_n,
-		pio_0_in_port          => w_m0_pio_0_in,
-        pio_0_out_port         => w_m0_pio_0_out,
-		pio_1_in_port          => (others=>'0'),
-        pio_1_out_port         => open,
-		pio_2_in_port          => (others=>'0'),
-        pio_2_out_port         => open,
-		pio_3_in_port          => (others=>'0'),
-        pio_3_out_port         => open,
-		pio_4_in_port          => (others=>'0'),
-        pio_4_out_port         => open,
-		pio_5_in_port          => (others=>'0'),
-        pio_5_out_port         => open
+        clk_clk                 => FPGA_CLK1_50,
+        reset_reset_n           => hps_fpga_reset_n,
+        pio_data_in_value(32-1 downto 0) => w_m0_pio_0_in,  --   pio.data_in_value
+        pio_data_in_read        => open,   --      .data_in_read
+        pio_data_out_value(32-1 downto 0)  => w_m0_pio_0_out, --      .data_out_value
+        pio_data_out_write      => open --      .data_out_write
     );
 
     inst_m1_pid_rv : component system
     port map (
-        clk_clk                => FPGA_CLK1_50,
-        reset_reset_n          => hps_fpga_reset_n,
-		pio_0_in_port          => w_m1_pio_0_in,
-        pio_0_out_port         => w_m1_pio_0_out,
-		pio_1_in_port          => (others=>'0'),
-        pio_1_out_port         => open,
-		pio_2_in_port          => (others=>'0'),
-        pio_2_out_port         => open,
-		pio_3_in_port          => (others=>'0'),
-        pio_3_out_port         => open,
-		pio_4_in_port          => (others=>'0'),
-        pio_4_out_port         => open,
-		pio_5_in_port          => (others=>'0'),
-        pio_5_out_port         => open
+        clk_clk                 => FPGA_CLK1_50,
+        reset_reset_n           => hps_fpga_reset_n,
+        pio_data_in_value(32-1 downto 0) => w_m1_pio_0_in,  --   pio.data_in_value
+        pio_data_in_read        => open,   --      .data_in_read
+        pio_data_out_value(32-1 downto 0)  => w_m1_pio_0_out, --      .data_out_value
+        pio_data_out_write      => open --      .data_out_write
     );
 
 
+    w_odometry_pio_in <= w_qei1_cnt & w_qei0_cnt;
+
+    inst_odometry_rv : component system
+    port map (
+        clk_clk                => FPGA_CLK1_50,
+        reset_reset_n          => hps_fpga_reset_n,
+        pio_data_in_value(32-1 downto 0) => w_odometry_pio_in,  --   pio.data_in_value
+        pio_data_in_read        => open,   --      .data_in_read
+        pio_data_out_value      => open, --      .data_out_value
+        pio_data_out_write      => open --      .data_out_write
+    );
 
 
+    w_pio_n_layer1_data_in_value <= w_pio_n_layer1_data_out_value;
+    w_pio_n_layer2_data_in_value <= not w_pio_n_layer2_data_out_value;
+    w_pio_n_layer3_data_in_value <= w_pio_n_layer2_data_out_value;
 ----=======================================================
 ----  Structural coding
 ----=======================================================
@@ -922,13 +1033,20 @@ begin
 	    clk_clk                               =>  FPGA_CLK1_50 ,                               --                            clkclk
 	    reset_reset_n                         =>  '1' ,                         --                          resetreset_n
 
-	    -- FPGA PARTITION
-	    button_pio_external_connection_export(2-1 downto 0) =>  KEY , -- button_pio_external_connectionexport
-	    button_pio_external_connection_export(4-1 downto 2) =>  (others=>'0') , -- button_pio_external_connectionexport
+            pio_n_layer1_data_in_value            => w_pio_n_layer1_data_in_value,            --    pio_n_layer1.data_in_value
+            pio_n_layer1_data_in_read             => w_pio_n_layer1_data_in_read,             --                .data_in_read
+            pio_n_layer1_data_out_value           => w_pio_n_layer1_data_out_value,           --                .data_out_value
+            pio_n_layer1_data_out_write           => w_pio_n_layer1_data_out_write,           --                .data_out_write
+            pio_n_layer2_data_in_value            => w_pio_n_layer2_data_in_value,            --    pio_n_layer2.data_in_value
+            pio_n_layer2_data_in_read             => w_pio_n_layer2_data_in_read,             --                .data_in_read
+            pio_n_layer2_data_out_value           => w_pio_n_layer2_data_out_value,           --                .data_out_value
+            pio_n_layer2_data_out_write           => w_pio_n_layer2_data_out_write,           --                .data_out_write
+            pio_n_layer3_data_in_value            => w_pio_n_layer3_data_in_value,            --    pio_n_layer3.data_in_value
+            pio_n_layer3_data_in_read             => w_pio_n_layer3_data_in_read,             --                .data_in_read
+            pio_n_layer3_data_out_value           => w_pio_n_layer3_data_out_value,           --                .data_out_value
+            pio_n_layer3_data_out_write           => w_pio_n_layer3_data_out_write,            --                .data_out_write
 
-	    dipsw_pio_external_connection_export  =>  SW ,  --  dipsw_pio_external_connectionexport
-	    hps_0_h2f_reset_reset_n               =>  hps_fpga_reset_n ,               --                hps_0_h2f_resetreset_n
-	    --led_pio_external_connection_export    =>  LED ,    --    led_pio_external_connectionexport
+
 
 	    -- HPS ETHERNET
 	    hps_0_hps_io_hps_io_emac1_inst_TX_CLK =>  HPS_ENET_GTX_CLK    ,   --                             hps_0_hps_iohps_io_emac1_inst_TX_CLK
