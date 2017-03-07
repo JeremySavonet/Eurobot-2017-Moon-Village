@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="hps_fpga" kind="hps_fpga" version="1.0" fabric="QSYS">
  <!-- Format version 16.1 196 (Future versions may contain additional information.) -->
- <!-- 2017.03.06.14:46:14 -->
+ <!-- 2017.03.07.01:21:06 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1488807973</value>
+  <value>1488846065</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -71465,6 +71465,14 @@ the requested settings for a module instance. -->
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
+  <parameter name="ByteEnable">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -71987,12 +71995,6 @@ parameters are a RESULT of the module parameters. -->
     <role>chipselect</role>
    </port>
    <port>
-    <name>avl_mm_write</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>write</role>
-   </port>
-   <port>
     <name>avl_mm_readdata</name>
     <direction>Output</direction>
     <width>32</width>
@@ -72003,6 +72005,12 @@ parameters are a RESULT of the module parameters. -->
     <direction>Input</direction>
     <width>1</width>
     <role>read</role>
+   </port>
+   <port>
+    <name>avl_mm_writebyteenable</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>writebyteenable</role>
    </port>
   </interface>
  </module>
@@ -72017,6 +72025,14 @@ the requested settings for a module instance. -->
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
+  <parameter name="ByteEnable">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -72539,12 +72555,6 @@ parameters are a RESULT of the module parameters. -->
     <role>chipselect</role>
    </port>
    <port>
-    <name>avl_mm_write</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>write</role>
-   </port>
-   <port>
     <name>avl_mm_readdata</name>
     <direction>Output</direction>
     <width>32</width>
@@ -72555,6 +72565,12 @@ parameters are a RESULT of the module parameters. -->
     <direction>Input</direction>
     <width>1</width>
     <role>read</role>
+   </port>
+   <port>
+    <name>avl_mm_writebyteenable</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>writebyteenable</role>
    </port>
   </interface>
  </module>
@@ -72569,6 +72585,14 @@ the requested settings for a module instance. -->
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
+  <parameter name="ByteEnable">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -73091,12 +73115,6 @@ parameters are a RESULT of the module parameters. -->
     <role>chipselect</role>
    </port>
    <port>
-    <name>avl_mm_write</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>write</role>
-   </port>
-   <port>
     <name>avl_mm_readdata</name>
     <direction>Output</direction>
     <width>32</width>
@@ -73107,6 +73125,12 @@ parameters are a RESULT of the module parameters. -->
     <direction>Input</direction>
     <width>1</width>
     <role>read</role>
+   </port>
+   <port>
+    <name>avl_mm_writebyteenable</name>
+    <direction>Input</direction>
+    <width>4</width>
+    <role>writebyteenable</role>
    </port>
   </interface>
  </module>
@@ -73123,7 +73147,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1488807973</value>
+   <value>1488846065</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -73143,7 +73167,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1488807973</value>
+   <value>1488846065</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -73159,7 +73183,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1488807973</value>
+   <value>1488846065</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
