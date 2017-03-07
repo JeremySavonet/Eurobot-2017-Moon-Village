@@ -8,6 +8,7 @@ use     work.uart_pkg.all;
 use     work.spi_master_pkg.all;
 use     work.qei_pkg.all;
 use     work.pwm_pkg.all;
+use     work.debounce_pkg.all;
 
 entity robot_layer_1 is
     generic (
@@ -228,28 +229,6 @@ architecture rtl of robot_layer_1 is
     signal r_ad0_drdy  : std_logic;
     signal r_ad0_en    : std_logic;
 
-	 
---    signal r_m0_duty : std_logic_vector(16-1 downto 0);
---    signal r_m0_dir  : std_logic;
-
---    signal r_m1_duty : std_logic_vector(16-1 downto 0);
---    signal r_m1_dir  : std_logic;
-
-
---    signal w_m0_pwm : std_logic;
---    signal w_m1_pwm : std_logic;
---    signal w_m2_pwm : std_logic;
---    signal w_m3_pwm : std_logic;
---    signal w_m4_pwm : std_logic;
---    signal w_m5_pwm : std_logic;
-
-    signal r_esc0_dir       : std_logic;
-    signal r_esc1_dir       : std_logic;
-
-
-
-    signal w_pwm_50hz       : std_logic;
-    signal r_pwm_duty_50hz  : std_logic_vector(8-1 downto 0);
 
     constant MSG_SIZE : natural := 1+2+4*2+2+2;
 
@@ -264,19 +243,34 @@ architecture rtl of robot_layer_1 is
 
     constant VOLTAGE_COUNT : natural := 4;
     constant REG_VOLTAGE_OFFSET : natural := 2;
+
     signal r_voltage      : int24_t(VOLTAGE_COUNT-1 downto 0); 
     signal r_lv_mux       : std_logic_vector(2-1 downto 0);
     signal r_voltage_cnt  : std_logic_vector(2-1 downto 0); 
---    signal r_pid_state     : std_logic;
 
     constant REG_BUZZER_OFFSET : natural := 6;
 
     signal r_buzzer            : std_logic;
     signal w_buzzer_override   : std_logic;
+    signal w_buzzer_out        : std_logic;
+
+    constant REG_IO_OFFSET : natural := 7;
+    constant IO_COUNT : natural := 4;
+
+    signal w_input_in      : std_logic_vector(IO_COUNT-1 downto 0);
+    signal w_input_override: std_logic_vector(IO_COUNT-1 downto 0);
+    signal w_input_value   : std_logic_vector(IO_COUNT-1 downto 0);
+
+    signal w_output_value  : std_logic_vector(IO_COUNT-1 downto 0);
+    signal w_output_override: std_logic_vector(IO_COUNT-1 downto 0);
+    signal w_output_out    : std_logic_vector(IO_COUNT-1 downto 0);
+
+
 begin
 	
     w_reset_n <= not reset;
 
+    --! we return for read the same written data, expect for some bytes (noted masked) where we compute the value internally
     g_reg: for i in 0 to w_regs_data_in_value_mask'length-1 generate
         regs_data_in_value((i+1)*8-1 downto i*8) <= regs_data_out_value((i+1)*8-1 downto i*8) when w_regs_data_in_value_mask(i) = '0' else w_regs_data_in_value((i+1)*8-1 downto i*8);
     end generate;
@@ -370,17 +364,14 @@ begin
 
     b_buzzer: block
         signal w_reg     : std_logic_vector(32-1 downto 0);
-        signal w_buzzer  : std_logic;
     begin
         w_reg <= regs_data_out_value((REG_BUZZER_OFFSET+1)*32-1 downto REG_BUZZER_OFFSET*32);
 
         w_buzzer_override <= w_reg(8);
 
-        w_buzzer <= r_buzzer when w_buzzer_override = '0' else w_reg(0);
+        w_buzzer_out <= r_buzzer when w_buzzer_override = '0' else w_reg(0);
 
-        buzzer <= w_buzzer;
-
-        w_regs_data_in_value((REG_BUZZER_OFFSET+1)*32-1 downto REG_BUZZER_OFFSET*32) <= X"0000" & X"00" & "0000000" & w_buzzer;  
+        w_regs_data_in_value((REG_BUZZER_OFFSET+1)*32-1 downto REG_BUZZER_OFFSET*32) <= X"0000" & X"00" & "0000000" & w_buzzer_out;  
         w_regs_data_in_value_mask((REG_BUZZER_OFFSET+1)*4-1 downto REG_BUZZER_OFFSET*4) <= "0001";
 
         g_voltage_mux: for i in 0 to VOLTAGE_COUNT-1 generate
@@ -389,6 +380,65 @@ begin
             w_regs_data_in_value_mask(((i+1)+REG_VOLTAGE_OFFSET)*4-1 downto (i+REG_VOLTAGE_OFFSET)*4) <= (others=>'1');
         end generate;
     end block;
+
+    buzzer <= w_buzzer_out;
+
+
+    w_input_in(0) <= io_0;
+    w_input_in(1) <= io_1;
+    w_input_in(2) <= io_4;
+    w_input_in(3) <= io_5;
+
+    b_io: block
+        signal w_input_in_filtered   : std_logic_vector(IO_COUNT-1 downto 0);
+
+        signal w_input_value_reg     : std_logic_vector(32-1 downto 0);
+        signal w_input_override_reg  : std_logic_vector(32-1 downto 0);
+
+        signal w_output_value_reg     : std_logic_vector(32-1 downto 0);
+        signal w_output_override_reg  : std_logic_vector(32-1 downto 0);
+    begin
+     
+
+        w_input_value_reg    <= regs_data_out_value(((0+1)+REG_IO_OFFSET)*32-1 downto (0+REG_IO_OFFSET)*32);
+        w_input_override_reg <= regs_data_out_value(((1+1)+REG_IO_OFFSET)*32-1 downto (1+REG_IO_OFFSET)*32);
+
+        w_output_value_reg    <= regs_data_out_value(((2+1)+REG_IO_OFFSET)*32-1 downto (2+REG_IO_OFFSET)*32);
+        w_output_override_reg <= regs_data_out_value(((3+1)+REG_IO_OFFSET)*32-1 downto (3+REG_IO_OFFSET)*32);
+
+
+        w_regs_data_in_value_mask(((2+1)+REG_IO_OFFSET)*4-1 downto (2+REG_IO_OFFSET)*4) <= (others=>'1');
+
+        g_io: for i in 0 to IO_COUNT-1 generate
+        begin
+            inst_in_filter: debounce
+            generic map(
+                counter_size  => 19 --counter size (19 bits gives 10.5ms with 50MHz clock)
+            ) 
+            port map(
+                clk     => clk,
+                button  => w_input_in(i),
+                result  => w_input_in_filtered(i)
+            );
+
+            w_input_override(i) <= w_input_override_reg(i*8);
+            w_input_value(i) <= w_input_in_filtered(i) when w_input_override(i) = '0' else w_input_value_reg(i*8);
+
+            w_output_override(i) <= w_output_override_reg(i*8);
+            w_output_out(i)      <= w_output_value(i) when w_output_override(i) = '0' else w_output_value_reg(i*8);
+
+            w_regs_data_in_value((2+REG_IO_OFFSET)*32+(i+1)*8-1 downto (2+REG_IO_OFFSET)*32+i*8) <= "0000000" & w_output_value(i);
+
+        end generate;
+
+    end block;
+
+
+    io_2 <= w_output_out(0);
+    io_3 <= w_output_out(1);
+    io_6 <= w_output_out(2);
+    io_7 <= w_output_out(3);
+
 
 
 
@@ -673,39 +723,6 @@ begin
 
     --w_m0_pio_0_in <= r_pid_state & "0000000" & w_ad0_rx_data(24-1 downto  0);
     --w_m1_pio_0_in <= r_pid_state & "0000000" & w_ad0_rx_data(48-1 downto 24);
-
-
-
---    p_sync_pid: process(clk, w_reset_n) is
---        variable v: integer;
---    begin
---        if (w_reset_n = '0') then
---            r_m0_duty <= (others=>'0');
---            r_m0_dir  <= '0';
-
---            r_m1_duty <= (others=>'0');
---            r_m1_dir  <= '0';
---        elsif rising_edge(clk) then
---            v := to_integer(signed(w_m0_pio_0_out));
---            if v >= 0 then
---                r_m0_duty <= std_logic_vector(to_unsigned(abs(v),16));
---                r_m0_dir <= '1';
---            elsif v < 0 then
---                r_m0_duty <= std_logic_vector(to_unsigned(abs(v),16));
---                r_m0_dir <= '0';
---            end if;
-
---            v := to_integer(signed(w_m1_pio_0_out));
---            if v >= 0 then
---                r_m1_duty <= std_logic_vector(to_unsigned(abs(v),16));
---                r_m1_dir <= '0';
---            elsif v < 0 then
---                r_m1_duty <= std_logic_vector(to_unsigned(abs(v),16));
---                r_m1_dir <= '1';
---            end if;
-
---        end if;
---    end process;
 
 
 end architecture;

@@ -1384,6 +1384,8 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[26] -
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[27] -to debug_io|gnd -section_id debug_io
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[28] -to debug_io|gnd -section_id debug_io
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[30] -to debug_io|gnd -section_id debug_io
+set_global_assignment -name VHDL_FILE debounce_pkg.vhd
+set_global_assignment -name VHDL_FILE debounce.vhd
 set_global_assignment -name VHDL_FILE robot_layer_1_pkg.vhd
 set_global_assignment -name VHDL_FILE robot_layer_1.vhd
 set_global_assignment -name VHDL_FILE pwm_pkg.vhd
