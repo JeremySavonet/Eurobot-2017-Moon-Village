@@ -265,6 +265,8 @@ architecture rtl of robot_layer_1 is
     signal w_output_override: std_logic_vector(IO_COUNT-1 downto 0);
     signal w_output_out    : std_logic_vector(IO_COUNT-1 downto 0);
 
+    constant REG_STATE_CONFIG_OFFSET : natural := 1;
+    signal w_sim_mode : std_logic;
 
 begin
 	
@@ -384,10 +386,11 @@ begin
     buzzer <= w_buzzer_out;
 
 
-    w_input_in(0) <= io_0;
-    w_input_in(1) <= io_1;
-    w_input_in(2) <= io_4;
-    w_input_in(3) <= io_5;
+    w_input_in(0) <= io_0 when w_sim_mode = '0' else SW(0);
+    w_input_in(1) <= io_1 when w_sim_mode = '0' else SW(1);
+    w_input_in(2) <= io_4 when w_sim_mode = '0' else SW(2);
+    w_input_in(3) <= io_5 when w_sim_mode = '0' else SW(3);
+
 
     b_io: block
         signal w_input_in_filtered   : std_logic_vector(IO_COUNT-1 downto 0);
@@ -407,6 +410,7 @@ begin
         w_output_override_reg <= regs_data_out_value(((3+1)+REG_IO_OFFSET)*32-1 downto (3+REG_IO_OFFSET)*32);
 
 
+        w_regs_data_in_value_mask(((0+1)+REG_IO_OFFSET)*4-1 downto (0+REG_IO_OFFSET)*4) <= (others=>'1');
         w_regs_data_in_value_mask(((2+1)+REG_IO_OFFSET)*4-1 downto (2+REG_IO_OFFSET)*4) <= (others=>'1');
 
         g_io: for i in 0 to IO_COUNT-1 generate
@@ -424,9 +428,13 @@ begin
             w_input_override(i) <= w_input_override_reg(i*8);
             w_input_value(i) <= w_input_in_filtered(i) when w_input_override(i) = '0' else w_input_value_reg(i*8);
 
+            --! to be completed by Layer 2 signals
+            w_output_value(i) <= '0';
+
             w_output_override(i) <= w_output_override_reg(i*8);
             w_output_out(i)      <= w_output_value(i) when w_output_override(i) = '0' else w_output_value_reg(i*8);
 
+            w_regs_data_in_value((0+REG_IO_OFFSET)*32+(i+1)*8-1 downto (0+REG_IO_OFFSET)*32+i*8) <= "0000000" & w_input_value(i);
             w_regs_data_in_value((2+REG_IO_OFFSET)*32+(i+1)*8-1 downto (2+REG_IO_OFFSET)*32+i*8) <= "0000000" & w_output_value(i);
 
         end generate;
@@ -434,10 +442,23 @@ begin
     end block;
 
 
+
     io_2 <= w_output_out(0);
     io_3 <= w_output_out(1);
     io_6 <= w_output_out(2);
     io_7 <= w_output_out(3);
+
+
+
+    b_state_config: block
+        signal w_reg   : std_logic_vector(32-1 downto 0);
+    begin
+        w_reg    <= regs_data_out_value(((0+1)+REG_STATE_CONFIG_OFFSET)*32-1 downto (0+REG_STATE_CONFIG_OFFSET)*32);
+        
+        w_sim_mode <= w_reg(8);
+    end block;
+
+
 
 
 
@@ -490,12 +511,16 @@ begin
     end generate;
 
     LED(0) <= w_motor_out(0) when w_motor_dir(0) = '0' else not w_motor_out(0);
-    LED(1) <= not w_motor_out(0) when w_motor_dir(0) = '0' else w_motor_out(0);
-    LED(2) <= w_motor_out(1) when w_motor_dir(1) = '0' else not w_motor_out(1);
-    LED(3) <= w_motor_out(2) when w_motor_dir(2) = '0' else not w_motor_out(2);
-    LED(4) <= w_motor_out(3) when w_motor_dir(3) = '0' else not w_motor_out(3);
-    LED(5) <= w_motor_out(4) when w_motor_dir(4) = '0' else not w_motor_out(4);
-    LED(6) <= w_motor_out(5) when w_motor_dir(5) = '0' else not w_motor_out(5);
+    LED(1) <= w_motor_out(1) when w_motor_dir(1) = '0' else not w_motor_out(1);
+    LED(2) <= w_motor_out(2) when w_motor_dir(2) = '0' else not w_motor_out(2);
+    LED(3) <= w_motor_out(3) when w_motor_dir(3) = '0' else not w_motor_out(3);
+
+
+    LED(4) <= w_output_out(0);
+    LED(5) <= w_output_out(1);
+    LED(6) <= w_output_out(2);
+    LED(7) <= w_output_out(3);
+
 
     m0_pwma  <= w_motor_out(0) and not w_motor_dir(0);
     m0_pwmb  <= w_motor_out(0) and w_motor_dir(0);
@@ -634,6 +659,8 @@ begin
         signal r_qei_z  : std_logic;
         signal r2_qei_z : std_logic;
         signal r_ref    : std_logic;
+
+        signal r_qei_value_simu : std_logic_vector(16-1 downto 0);
     begin
 
         w_regs_data_in_value(((i+1)+REG_QEI_OFFSET)*32-1 downto (i+REG_QEI_OFFSET)*32) <= "0000000" & w_qei_override(i) & "0000000" & w_qei_ref(i) & w_qei_value(i);
@@ -652,8 +679,44 @@ begin
             QuadB     => w_qei_b(i),                               
             CounterValue => w_cnt
         );	 	
+        
+        p_async: process(w_sim_mode,r_qei_value_simu,w_cnt,w_qei_override,w_reg) is
+        begin
+            if w_sim_mode = '0' then
+                if w_qei_override(i) = '0' then
+                    w_qei_value(i) <= w_cnt;
+                else
+                    w_qei_value(i) <= w_reg(16-1 downto 0);
+                end if;
+            else
+                if w_qei_override(i) = '0' then
+                    w_qei_value(i) <= r_qei_value_simu;
+                else
+                    w_qei_value(i) <= w_reg(16-1 downto 0);
+                end if;
+            end if;
+        end process;
 
-        w_qei_value(i) <= w_cnt when w_qei_override(i) = '0' else w_reg(16-1 downto 0);
+
+        p_sync_simu: process(clk,reset) is
+        begin
+            if reset = '1' then
+                r_qei_value_simu <= (others=>'0');
+            elsif rising_edge(clk) then
+                if unsigned(abs(signed(w_motor_value(i)))) >= 16384 then
+                    if w_motor_dir(i) = '0' then
+                        r_qei_value_simu <= std_logic_vector(unsigned(r_qei_value_simu)+1);
+                    else
+                        r_qei_value_simu <= std_logic_vector(unsigned(r_qei_value_simu)-1);
+                    end if;
+                end if;
+            
+                if w_sim_mode = '0' then
+                    r_qei_value_simu <= (others=>'0');
+                end if;
+                
+            end if;
+        end process;
     
         p_sync: process(clk,reset) is
         begin
