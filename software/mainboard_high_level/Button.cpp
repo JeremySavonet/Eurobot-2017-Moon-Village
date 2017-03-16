@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include "hps_0.h"
+#include "hps_arm.h"
 
 #include "Button.hpp"
 
@@ -14,7 +14,7 @@ Button::Button( MemoryManager& manager,
     , _name( name )
     , _isPressed( false )
 {
-    _buttonMap = _memoryManager.mapModuleToMemory( CUSTOM_LEDS_0_BASE );
+    //_buttonMap = _memoryManager.mapModuleToMemory( CUSTOM_LEDS_0_BASE );
 }
 
 Button::~Button()

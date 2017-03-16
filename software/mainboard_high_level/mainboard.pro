@@ -3,7 +3,7 @@ QT -= gui
 
 CONFIG += c++11
 
-TARGET = custom_led_cpp
+TARGET = mainboard
 CONFIG += console
 CONFIG -= app_bundle
 
@@ -14,8 +14,9 @@ SOURCES += main.cpp \
            MemoryManager.cpp \
            Button.cpp \
            Action.cpp \
-    GameManager.cpp \
-    FunnyAction.cpp
+           GameManager.cpp \
+           FunnyAction.cpp \
+    Layer1Manager.cpp
 
 HEADERS += \
     Led.hpp \
@@ -23,7 +24,13 @@ HEADERS += \
     Action.hpp \
     Button.hpp \
     GameManager.hpp \
-    FunnyAction.hpp
+    FunnyAction.hpp \
+    LayerManager.hpp \
+    ItemRegister.hpp \
+    Layer1.hpp \
+    Layer2.hpp \
+    Layer3.hpp \
+    Layer1Manager.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

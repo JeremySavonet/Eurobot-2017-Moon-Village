@@ -2,14 +2,23 @@
 
 #include <stdlib.h>
 
-#include <memory>
+#include <QMap>
+#include <QDebug>
+#include <QThread>
 
 #include <QCoreApplication>
-#include <QTimer>
 
-#include "GameManager.hpp"
-#include "Led.hpp"
+#include "hps_arm.h" // For our base address
+
+#include "Layer1.hpp"
+
+#include "LayerManager.hpp"
 #include "MemoryManager.hpp"
+
+#define ADD_REGISTER( name, layerRegister ) \
+    {                                       \
+        name, layerRegister                 \
+    }
 
 using namespace WestBot;
 
@@ -17,22 +26,46 @@ int main( int argc, char *argv[] )
 {
     QCoreApplication app(argc, argv);
 
-    // Manage the LW_BRIDGE FOR US
+    // Manage the LW_BRIDGE
     MemoryManager manager;
 
-    // La tirette
-    Button::Ptr fireStarter =
-        std::make_shared< Button >( manager, "fireStarter" );
+    // Create our layer manager
+    LayerManager< Layer1_t > layerManager( manager, PIO_N_LAYER1_BASE );
 
-    // Create a simple manager (Led peripheral)
-    Led ledManager( manager );
+    // Then configure:
+    layerManager.write( 1 * 4, 32, 0xffffffff );
+    qDebug() << "READ REG" << 1 << ":" << QString::number( layerManager.read( 1 * 4, 32 ), 16 );
 
-    // General manager for strat.
-    // Manage a state machine to process game actions.
-    GameManager gameManager( fireStarter );
+    layerManager.write( 10 * 4, 32, 0x01010101 );
+    qDebug() << "READ REG" << 10 << ":" << QString::number( layerManager.read( 10 * 4, 32 ), 16 );
 
-    // Simply turn on LED_1
-    ledManager.turnOn( 1 );
 
+    while( 1 )
+    {
+        layerManager.write( 9 * 4, 32, 0x01010101 );
+        QThread::msleep( 1000 );
+        layerManager.write( 9 * 4, 32, 0x00000000 );
+        QThread::msleep( 1000 );
+
+        qDebug() << "READ SW - REG 7:" << layerManager.read( 7 * 4, 32 );
+    }
+
+    /*layerManager.write( 9 * 4, 32, 0x01010101 );
+    layerManager.write( 8 * 4, 32, 0x01010101 );
+
+    for( int i = 0; i < 64; i++ )
+    {
+        qDebug() << "READ REG" << i << ":" << QString::number( layerManager.read( i * 4, 32 ), 16 );
+    }
+
+    //qDebug() << "READ REG" << 10 << ":" << QString::number( layerManager.read( 10 * 4, 32 ), 16 );
+
+    // Handle button changes
+    while( 1 )
+    {
+        qDebug() << "READ SW - REG 7:" << layerManager.read( 7 * 4, 32 );
+        QThread::msleep( 100 );
+    }
+*/
     return app.exec();
 }
