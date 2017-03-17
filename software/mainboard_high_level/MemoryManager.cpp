@@ -10,8 +10,6 @@
 
 #include <QDebug>
 
-#include "hps_0.h"
-
 #include "MemoryManager.hpp"
 
 using namespace WestBot;

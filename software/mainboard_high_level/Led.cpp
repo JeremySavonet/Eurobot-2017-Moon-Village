@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include "hps_0.h"
+#include "hps_arm.h"
 
 #include "Led.hpp"
 
@@ -9,7 +9,7 @@ using namespace WestBot;
 Led::Led( MemoryManager& manager )
     : _memoryManager( manager )
 {
-    _ledMap = _memoryManager.mapModuleToMemory( CUSTOM_LEDS_0_BASE );
+    //_ledMap = _memoryManager.mapModuleToMemory( CUSTOM_LEDS_0_BASE );
 }
 
 Led::~Led()
