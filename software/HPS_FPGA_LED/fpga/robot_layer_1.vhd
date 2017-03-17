@@ -570,7 +570,7 @@ begin
         inst_pwm_servo: pwm 
         generic map(
             sys_clk         => CLK_FREQUENCY_HZ, --system clock frequency in Hz
-            pwm_freq        => 62_500,     --PWM switching frequency in Hz
+            pwm_freq        => 62,     --PWM switching frequency in Hz
             bits_resolution => w_duty'length,         --bits of resolution setting the duty cycle
             phases          => 1           --number of out : pwms and phases
         )
@@ -595,8 +595,8 @@ begin
 
         w_reg <= regs_data_out_value(((i+1)+REG_ESC_OFFSET)*32-1 downto (i+REG_ESC_OFFSET)*32);
 
-        w_esc_enabled(i) <= w_reg(8);
-        w_esc_override(i) <= w_reg(16);
+        w_esc_enabled(i) <= w_reg(16);
+        w_esc_override(i) <= w_reg(24);
 
         w_esc_value(i) <= w_reg(16-1 downto 0) when w_esc_override(i) = '1' else (others=>'0');
 
@@ -605,7 +605,7 @@ begin
         inst_pwm_esc: pwm 
         generic map(
             sys_clk         => CLK_FREQUENCY_HZ,   --system clock frequency in Hz
-            pwm_freq        => 62_500,             --PWM switching frequency in Hz
+            pwm_freq        => 62,             --PWM switching frequency in Hz
             bits_resolution => w_duty'length,      --bits of resolution setting the duty cycle
             phases          => 1                   --number of out : pwms and phases
         )

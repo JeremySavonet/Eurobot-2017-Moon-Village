@@ -389,7 +389,7 @@ begin
 
 
     --led(8-1 downto 4) <= w_ledg_out(4-1 downto 0);
-
+	buzzer <= '0';
 
     inst_layer_1: entity work.robot_layer_1
     generic map (
@@ -527,7 +527,7 @@ begin
 
         --------- MGMT -----------
         lv_mux    => lv_mux,
-        buzzer    => buzzer,
+        buzzer    => open,
 
 	    ----------/ NANO SOC LED --------/
 	    LED                 => LED,
@@ -585,6 +585,8 @@ begin
 	    clk_clk                               =>  FPGA_CLK1_50 ,                               --                            clkclk
 	    reset_reset_n                         =>  '1' ,                         --                          resetreset_n
 
+		 hps_arm_h2f_reset_reset_n => hps_fpga_reset_n,
+		 
             pio_n_layer1_data_in_value            => w_pio_n_layer1_data_in_value,            --    pio_n_layer1.data_in_value
             pio_n_layer1_data_in_read             => w_pio_n_layer1_data_in_read,             --                .data_in_read
             pio_n_layer1_data_out_value           => w_pio_n_layer1_data_out_value,           --                .data_out_value
