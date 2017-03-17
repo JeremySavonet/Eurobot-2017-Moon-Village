@@ -5,10 +5,10 @@
 
 namespace WestBot {
 
-typedef struct
+typedef struct Layer2
 {
     uint32_t registers[ 64 ];
-} __attribute__((packed)) Layer2;
+} __attribute__((packed)) Layer2_t;
 
 }
 

@@ -59,7 +59,6 @@ public:
         return data;
     }
 
-    // For now, only write the 32 bits of the register
     void write( uint32_t offset, uint32_t size, uint32_t data )
     {
         switch( size )

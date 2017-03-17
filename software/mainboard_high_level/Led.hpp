@@ -14,6 +14,14 @@ namespace WestBot {
 class Led
 {
 public:
+    enum class LedType
+    {
+        Blue,
+        Other1,
+        Other2,
+        Other3
+    };
+
     using Ptr = std::shared_ptr< Led >;
 
     Led( MemoryManager& manager );

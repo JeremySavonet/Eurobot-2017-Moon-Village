@@ -15,8 +15,7 @@ SOURCES += main.cpp \
            Button.cpp \
            Action.cpp \
            GameManager.cpp \
-           FunnyAction.cpp \
-    Layer1Manager.cpp
+           FunnyAction.cpp
 
 HEADERS += \
     Led.hpp \
@@ -29,8 +28,7 @@ HEADERS += \
     ItemRegister.hpp \
     Layer1.hpp \
     Layer2.hpp \
-    Layer3.hpp \
-    Layer1Manager.hpp
+    Layer3.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

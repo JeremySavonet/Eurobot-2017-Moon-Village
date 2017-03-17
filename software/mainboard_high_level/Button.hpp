@@ -19,6 +19,14 @@ class Button : public QObject
     Q_OBJECT
 
 public:
+    enum class ButtonType
+    {
+        Tirette,
+        Color,
+        Au,
+        Other
+    };
+
     using Ptr = std::shared_ptr< Button >;
 
     Button( MemoryManager& manager,

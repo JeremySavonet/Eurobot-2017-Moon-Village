@@ -10,8 +10,10 @@
 
 #include "hps_arm.h" // For our base address
 
+#include "Button.hpp"
 #include "Layer1.hpp"
-
+#include "Layer2.hpp"
+#include "Layer3.hpp"
 #include "LayerManager.hpp"
 #include "MemoryManager.hpp"
 
@@ -30,42 +32,72 @@ int main( int argc, char *argv[] )
     MemoryManager manager;
 
     // Create our layer manager
-    LayerManager< Layer1_t > layerManager( manager, PIO_N_LAYER1_BASE );
+    LayerManager< Layer1_t > layer1Manager( manager, PIO_N_LAYER1_BASE );
+    LayerManager< Layer2_t > layer2Manager( manager, PIO_N_LAYER2_BASE );
+    LayerManager< Layer3_t > layer3Manager( manager, PIO_N_LAYER3_BASE );
 
-    // Then configure:
-    layerManager.write( 1 * 4, 32, 0xffffffff );
-    qDebug() << "READ REG" << 1 << ":" << QString::number( layerManager.read( 1 * 4, 32 ), 16 );
+    // Read layer 1 registers
+    qDebug() << "Layer 1 registers:";
+    qDebug() << "==================";
 
-    layerManager.write( 10 * 4, 32, 0x01010101 );
-    qDebug() << "READ REG" << 10 << ":" << QString::number( layerManager.read( 10 * 4, 32 ), 16 );
+    for( int i = 0; i < 64; ++i )
+    {
+        qDebug()
+            << "Read register" << i << ":"
+            << QString::number( layer1Manager.read( i * 4, 32 ), 16 );
+    }
 
+    // Read layer 2 registers
+    qDebug() << "Layer 2 registers:";
+    qDebug() << "==================";
 
+    for( int i = 0; i < 64; ++i )
+    {
+        qDebug()
+            << "Read register" << i << ":"
+            << QString::number( layer2Manager.read( i * 4, 32 ), 16 );
+    }
+
+    // Read layer 3 registers
+    qDebug() << "Layer 3 registers:";
+    qDebug() << "==================";
+
+    for( int i = 0; i < 64; ++i )
+    {
+        qDebug()
+            << "Read register" << i << ":"
+            << QString::number( layer3Manager.read( i * 4, 32 ), 16 );
+    }
+
+    // ================= //
+    // TEST API USE CASE //
+    // ================= //
+    Button button( manager, "Test" );
+
+    connect(
+        & button,
+        & Button::handleEvents,
+        this,
+        notifyButtonChanged );
+
+    notifyButtonChanged( type )
+    {
+        if( type == AU )
+        {
+
+        }
+        else
+        {
+
+        }
+        ...
+    }
+
+    // DO NOTHING
     while( 1 )
     {
-        layerManager.write( 9 * 4, 32, 0x01010101 );
-        QThread::msleep( 1000 );
-        layerManager.write( 9 * 4, 32, 0x00000000 );
-        QThread::msleep( 1000 );
-
-        qDebug() << "READ SW - REG 7:" << layerManager.read( 7 * 4, 32 );
+        QThread::msleep( 500 );
     }
 
-    /*layerManager.write( 9 * 4, 32, 0x01010101 );
-    layerManager.write( 8 * 4, 32, 0x01010101 );
-
-    for( int i = 0; i < 64; i++ )
-    {
-        qDebug() << "READ REG" << i << ":" << QString::number( layerManager.read( i * 4, 32 ), 16 );
-    }
-
-    //qDebug() << "READ REG" << 10 << ":" << QString::number( layerManager.read( 10 * 4, 32 ), 16 );
-
-    // Handle button changes
-    while( 1 )
-    {
-        qDebug() << "READ SW - REG 7:" << layerManager.read( 7 * 4, 32 );
-        QThread::msleep( 100 );
-    }
-*/
     return app.exec();
 }
