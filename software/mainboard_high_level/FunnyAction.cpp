@@ -12,6 +12,7 @@ FunnyAction::FunnyAction()
 
 void FunnyAction::execute()
 {
+    emit complete();
 }
 
 void FunnyAction::skip()

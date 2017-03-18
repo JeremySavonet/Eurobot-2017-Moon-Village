@@ -10,6 +10,9 @@
 
 namespace WestBot {
 
+/*!
+ * \brief The Action class is a base class of all system actions.
+ */
 class Action : public QObject
 {
     Q_OBJECT
@@ -17,7 +20,10 @@ class Action : public QObject
 public:
     using Ptr = std::shared_ptr< Action >;
 
-    enum State
+    /*!
+     * \brief List of available state of an action.
+     */
+    enum class State
     {
         Pending = 0,
         Running,
@@ -26,10 +32,19 @@ public:
         Flushed
     };
 
+    /*!
+     * \brief Constructor of Action.
+     * \param name Name of the action.
+     * \param parent Parent class for lifetime management.
+     */
     Action( const QString& name,
             QObject* parent = nullptr );
     ~Action() override = default;
 
+    /*!
+     * \brief Allow to get the action name.
+     * \return Return a QString.
+     */
     const QString& name() const;
 
     virtual void execute();

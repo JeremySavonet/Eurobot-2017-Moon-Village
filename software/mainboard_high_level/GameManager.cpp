@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include <QDebug>
 #include <QState>
 #include <QString>
 
@@ -13,15 +12,41 @@ using namespace WestBot;
 
 namespace
 {
-    const int GAME_DURATION = 90 * 1000; // 90s
+    const int GAME_DURATION = 10 * 1000; // 90s
     const int ACTION_TIMEOUT = 500; // 500ms
 }
 
-GameManager::GameManager( const Button::Ptr& fireStarter,
-                          QObject* parent )
+QDebug operator<<( QDebug debug, GameManager::Color color )
+{
+    switch( color )
+    {
+    case GameManager::Color::Unknown:
+        debug << "Unknown";
+        break;
+
+    case GameManager::Color::Red:
+        debug << "Red";
+        break;
+
+    case GameManager::Color::Blue:
+        debug << "Blue";
+        break;
+    }
+    return debug;
+}
+
+GameManager::GameManager(
+    Input::Ptr startButton,
+    Input::Ptr colorButton,
+    Input::Ptr stopButton,
+    QObject* parent )
     : QObject( parent )
     , _stateMachine( this )
-    , _fireStarter( fireStarter )
+    , _startButton( startButton )
+    , _colorButton( colorButton )
+    , _stopButton( stopButton )
+    , _color( GameManager::Color::Unknown )
+
 {
     _gameTimer.setSingleShot( true );
 
@@ -50,12 +75,18 @@ GameManager::GameManager( const Button::Ptr& fireStarter,
             emit doFunnyAction();
         } );
 
-    // Connect the fire starter
+
     connect(
-        _fireStarter.get(),
-        & Button::pressed,
+        _startButton.get(),
+        & Input::stateChanged,
         this,
-        & GameManager::started );
+        [ this ]( const Input::Value& value )
+        {
+            if( value == Input::Value::ON )
+            {
+                emit started();
+            }
+        } );
 
     createStateMachine();
     _stateMachine.start();
@@ -235,10 +266,18 @@ QState* GameManager::createCheckGameColorState( QState* parent )
         state,
         & QState::exited,
         this,
-        []()
+        [ this ]()
         {
-            // XXX: Get the color button state
-            qDebug() << "Exit check color state. Color for the game is:";
+            if( _colorButton->digitalRead() == Input::Value::OFF )
+            {
+                _color = GameManager::Color::Blue;
+            }
+            else
+            {
+                _color = GameManager::Color::Red;
+            }
+
+            qDebug() << "Exit check color state. Color for the game is:" << _color;
         } );
 
     return state;
@@ -380,15 +419,18 @@ QState* GameManager::createFunnyActionState( QState* parent )
         state,
         & QState::entered,
         this,
-        []()
+        [ this ]()
         {
             qDebug() << "Enter funny action state";
             const auto funnyAction = std::make_shared< FunnyAction >();
 
-            // XXX: Connect lambda
-            funnyAction->execute();
+            connect(
+                funnyAction.get(),
+                & Action::complete,
+                this,
+                & GameManager::funnyActionDone );
 
-            // XXX: Call the funny action execute command
+            funnyAction->execute();
         } );
 
     connect(

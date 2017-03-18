@@ -10,25 +10,25 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-           Led.cpp \
            MemoryManager.cpp \
-           Button.cpp \
            Action.cpp \
            GameManager.cpp \
-           FunnyAction.cpp
+           FunnyAction.cpp \
+    Memory.cpp \
+    Input.cpp \
+    ItemRegister.cpp \
+    Output.cpp
 
 HEADERS += \
-    Led.hpp \
     MemoryManager.hpp \
     Action.hpp \
-    Button.hpp \
     GameManager.hpp \
     FunnyAction.hpp \
-    LayerManager.hpp \
     ItemRegister.hpp \
-    Layer1.hpp \
-    Layer2.hpp \
-    Layer3.hpp
+    Memory.hpp \
+    Input.hpp \
+    Layer.hpp \
+    Output.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

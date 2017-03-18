@@ -3,13 +3,14 @@
 #ifndef WESTBOT_GAMEMANAGER_HPP_
 #define WESTBOT_GAMEMANAGER_HPP_
 
+#include <QDebug>
 #include <QList>
 #include <QObject>
 #include <QStateMachine>
 #include <QTimer>
 
 #include "Action.hpp"
-#include "Button.hpp"
+#include "Input.hpp"
 
 class QState;
 class QString;
@@ -21,8 +22,18 @@ class GameManager : public QObject
     Q_OBJECT
 
 public:
-    GameManager( const Button::Ptr& fireStarter,
+    enum class Color
+    {
+        Unknown,
+        Red,
+        Blue
+    };
+
+    GameManager( Input::Ptr startButton,
+                 Input::Ptr colorButton,
+                 Input::Ptr stopButton,
                  QObject* parent = nullptr );
+
     ~GameManager() override;
 
     void pushAction( const Action::Ptr& action );
@@ -70,8 +81,11 @@ private:
     QStateMachine _stateMachine;
     QTimer _gameTimer;
     QTimer _actionTimeoutTimer;
-    Button::Ptr _fireStarter;
     QList< Action::Ptr > _actions;
+    Input::Ptr _startButton;
+    Input::Ptr _colorButton;
+    Input::Ptr _stopButton;
+    Color _color;
 };
 
 }
