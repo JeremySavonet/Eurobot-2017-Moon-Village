@@ -97,7 +97,7 @@ int main( int argc, char *argv[] )
     pwm0Override.write( 0x01 );
 
     ItemRegister pwm0( layer1, 12 * 4, 16 );
-    pwm0.write( 32000 );
+    pwm0.write( 17000 );
 
     // Buttons
     Input::Ptr tirette = std::make_shared< Input >( inputRegister, Input::InputType::Start, "Tirette" );
@@ -112,31 +112,26 @@ int main( int argc, char *argv[] )
 
     GameManager game( tirette, color, arretUrgence );
 
+    ItemRegister reg5( layer2, 5 * 4, 32 );
+    ItemRegister reg6( layer2, 6 * 4, 32 );
+    ItemRegister reg7( layer2, 7 * 4, 32 );
+
+    reg5.writeFloat( 270.0 );
+    reg6.writeFloat( 72.5 );
+    reg7.writeFloat( 72.5 );
+
+    ItemRegister reg13Val( layer2, 13 * 4 + 2, 16 );
+    ItemRegister reg14Val1( layer2, 14 * 4, 16 );
+    ItemRegister reg14Val2( layer2, 14 * 4 + 2, 16 );
+
     while(1)
     {
+        qDebug() << "REG 13" << reg13Val.read();
+        qDebug() << "REG 14 VAL 1" << reg14Val1.read();
+        qDebug() << "REG 14 VAL 2" << reg14Val2.read();
+
         QCoreApplication::processEvents();
     }
-
-    /*
-    while( 1 )
-    {
-        qDebug() << "Tirette:" << tirette->digitalRead();
-        qDebug() << "Color:" << color->digitalRead();
-        qDebug() << "AU:" << arretUrgence->digitalRead();
-
-        led.digitalWrite( Output::Value::ON );
-        io1.digitalWrite( Output::Value::OFF );
-        io2.digitalWrite( Output::Value::ON );
-        io3.digitalWrite( Output::Value::OFF );
-        QThread::msleep( 250 );
-
-        led.digitalWrite( Output::Value::OFF );
-        io1.digitalWrite( Output::Value::ON );
-        io2.digitalWrite( Output::Value::OFF );
-        io3.digitalWrite( Output::Value::ON );
-        QThread::msleep( 250 );
-    }
-    */
 
     return app.exec();
 }
