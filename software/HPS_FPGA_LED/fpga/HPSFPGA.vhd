@@ -10,8 +10,10 @@ library ieee;
 use     ieee.std_logic_1164.all;
 use     ieee.numeric_std.all;
 
-
-
+library work;
+use     work.types_pkg.all;
+use     work.robot_layer_1_pkg.all;
+use     work.robot_layer_2_pkg.all;
 
 entity hpsfpga is
     port (
@@ -384,6 +386,14 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_pio_n_layer3_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
     signal w_pio_n_layer3_data_out_write           : std_logic_vector(64-1 downto 0);                      -- data_out_write
 
+
+
+    signal w_motor_value    : int16_t(6-1 downto 0);
+    signal w_motor_current  : int24_t(6-1 downto 0);
+    signal w_motor_fault    : std_logic_vector(6-1 downto 0);
+    signal w_qei_value      : int16_t(4-1 downto 0);
+    signal w_qei_ref        : std_logic_vector(4-1 downto 0);
+ 
 begin
 
 
@@ -391,7 +401,7 @@ begin
     --led(8-1 downto 4) <= w_ledg_out(4-1 downto 0);
 	buzzer <= '0';
 
-    inst_layer_1: entity work.robot_layer_1
+    inst_layer_1: robot_layer_1
     generic map (
         CLK_FREQUENCY_HZ => 50_000_000,
         RegCnt => 64
@@ -533,10 +543,61 @@ begin
 	    LED                 => LED,
 
 	    ----------/ NANO SOC SW --------/
-	    SW                  => SW
+	    SW                  => SW,
+
+        ---------------------------------
+        -------- TO/FROM LAYER 2 --------
+        ---------------------------------
+
+        motor_value   => w_motor_value,
+        motor_current => w_motor_current,
+        motor_fault   => w_motor_fault,
+
+        qei_value     => w_qei_value,
+        qei_ref       => w_qei_ref
+
+    );
+
+    inst_layer_2: robot_layer_2
+    generic map (
+        CLK_FREQUENCY_HZ => 50_000_000,
+        RegCnt => 64
+    )
+    port map (
+        clk     => FPGA_CLK1_50,
+        reset   => not hps_fpga_reset_n,
+
+        regs_data_in_value      => w_pio_n_layer2_data_in_value,
+        regs_data_in_read       => w_pio_n_layer2_data_in_read,              
+        regs_data_out_value     => w_pio_n_layer2_data_out_value,
+        regs_data_out_write     => w_pio_n_layer2_data_out_write,
+
+        ---------------------------------
+        -------- TO/FROM LAYER 1 --------
+        ---------------------------------
+
+        motor_value   => w_motor_value,
+        motor_current => w_motor_current,
+        motor_fault   => w_motor_fault,
+
+        qei_value     => w_qei_value,
+        qei_ref       => w_qei_ref
+
+        ---------------------------------
+        -------- TO/FROM LAYER 3 --------
+        ---------------------------------
+
 
 
     );
+
+    --signal w_pio_n_layer2_data_in_value            : std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
+    --signal w_pio_n_layer2_data_in_read             : std_logic_vector(64-1 downto 0);                     -- data_in_read
+    --signal w_pio_n_layer2_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
+    --signal w_pio_n_layer2_data_out_write           : std_logic_vector(64-1 downto 0);                     -- data_out_write
+
+
+
 
 
 --    inst_m0_pid_rv : component system
@@ -574,7 +635,7 @@ begin
 
 
     --w_pio_n_layer1_data_in_value <= w_pio_n_layer1_data_out_value;
-    w_pio_n_layer2_data_in_value <= not w_pio_n_layer2_data_out_value;
+--    w_pio_n_layer2_data_in_value <= not w_pio_n_layer2_data_out_value;
     w_pio_n_layer3_data_in_value <= w_pio_n_layer3_data_out_value;
 ----=======================================================
 ----  Structural coding

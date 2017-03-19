@@ -9,6 +9,8 @@ use     work.spi_master_pkg.all;
 use     work.qei_pkg.all;
 use     work.pwm_pkg.all;
 use     work.debounce_pkg.all;
+use     work.types_pkg.all;
+use     work.robot_layer_1_pkg.all;
 
 entity robot_layer_1 is
     generic (
@@ -151,7 +153,23 @@ entity robot_layer_1 is
 	    LED                 : out   std_logic_vector(8-1 downto 0);
 
 	    ----------/ NANO SOC SW --------/
-	    SW                  : in    std_logic_vector(4-1 downto 0)
+	    SW                  : in    std_logic_vector(4-1 downto 0);
+
+
+
+        ---------------------------------
+        -------- TO/FROM LAYER 2 --------
+        ---------------------------------
+
+        motor_value   : in  int16_t(MOTOR_COUNT-1 downto 0);
+        motor_current : out int24_t(MOTOR_COUNT-1 downto 0);
+        motor_fault   : out std_logic_vector(MOTOR_COUNT-1 downto 0);
+
+        qei_value     : out int16_t(QEI_COUNT-1 downto 0);
+        qei_ref       : out  std_logic_vector(QEI_COUNT-1 downto 0)
+
+
+
     );
 end entity;
 
@@ -160,20 +178,12 @@ architecture rtl of robot_layer_1 is
     signal w_reset_n : std_logic;
 
 
-
-    type int8_t   is array (natural range<>) of std_logic_vector(8 -1 downto 0);
-    type int16_t  is array (natural range<>) of std_logic_vector(16-1 downto 0);
-    type int24_t  is array (natural range<>) of std_logic_vector(24-1 downto 0);
-    
-
-    
-
     signal w_regs_data_in_value      : std_logic_vector(RegCnt*32-1 downto 0);
     signal w_regs_data_in_value_mask : std_logic_vector(RegCnt*4-1 downto 0) := (others=>'0');
 
 
 
-    constant MOTOR_COUNT : natural := 6;
+    --constant MOTOR_COUNT : natural := 6;
 
     constant REG_MOTOR_OFFSET           : natural := 12;
     constant REG_MOTOR_CURRENT_OFFSET   : natural := REG_MOTOR_OFFSET+MOTOR_COUNT;
@@ -208,7 +218,7 @@ architecture rtl of robot_layer_1 is
     signal w_esc_dir      : std_logic_vector(ESC_COUNT-1 downto 0);
 
     constant REG_QEI_OFFSET : natural := 24;
-    constant QEI_COUNT : natural := 4;
+    --constant QEI_COUNT : natural := 4;
 
     signal w_qei_a          : std_logic_vector(QEI_COUNT-1 downto 0);
     signal w_qei_b          : std_logic_vector(QEI_COUNT-1 downto 0);
@@ -351,7 +361,7 @@ begin
                 r_voltage_cnt <= std_logic_vector(unsigned(r_voltage_cnt)+1);
                 if r_voltage_cnt = (r_voltage_cnt'range=>'1') then
                     r_lv_mux <= std_logic_vector(unsigned(r_lv_mux)+1);
-                    r_voltage(to_integer(unsigned(r_lv_mux))) <= w_ad0_rx_data(7*24-1 downto 6*24);
+                    r_voltage(to_integer(unsigned(r_lv_mux))) <= w_ad0_rx_data(8*24-1 downto 7*24);
                 end if;
             end if;
             
@@ -470,6 +480,18 @@ begin
     w_motor_current(4) <= w_ad0_rx_data(5*24-1 downto 4*24);
     w_motor_current(5) <= w_ad0_rx_data(6*24-1 downto 5*24);
 
+    motor_current <= w_motor_current;
+
+    motor_fault(0) <= m01_fault;
+    motor_fault(1) <= m01_fault;
+    motor_fault(2) <= m2345_fault;
+    motor_fault(3) <= m2345_fault;
+    motor_fault(4) <= m2345_fault;
+    motor_fault(5) <= m2345_fault;
+
+    w_regs_data_in_value(((0+1)+REG_MOTOR_OFFSET-1)*32-1 downto (0+REG_MOTOR_OFFSET-1)*32) <= X"0000" & "0000000" & m2345_fault & "0000000" & m01_fault;
+    w_regs_data_in_value_mask(((0+1)+REG_MOTOR_OFFSET-1)*4-1 downto (0+REG_MOTOR_OFFSET-1)*4) <= (others=>'1');
+
 
 
     g_motor: for i in 0 to MOTOR_COUNT-1 generate
@@ -485,7 +507,7 @@ begin
         w_motor_invert(i) <= w_reg(16);
         w_motor_override(i) <= w_reg(24);
 
-        w_motor_value(i) <= w_reg(16-1 downto 0) when w_motor_override(i) = '1' else (others=>'0');
+        w_motor_value(i) <= w_reg(16-1 downto 0) when w_motor_override(i) = '1' else motor_value(i);
 
 
 
@@ -541,17 +563,22 @@ begin
     m5_pwmb  <= w_motor_out(5) and w_motor_dir(5);
 
 
-    p_sync_reset: process(clk, w_reset_n) is
+    b_blk_motor: block
+        signal w_reg : std_logic_vector(32-1 downto 0);
     begin
-        if (w_reset_n = '0') then
-            m01_resetn <= '0';
-            m2345_resetn <= '0';
-        elsif rising_edge(clk) then
-            m01_resetn <= '1';
-            m2345_resetn <= '1';
-        end if;
-    end process;
+        w_reg <= regs_data_out_value(((0+1)+REG_MOTOR_OFFSET-1)*32-1 downto (0+REG_MOTOR_OFFSET-1)*32);
 
+        p_sync_reset: process(clk, w_reset_n) is
+        begin
+            if (w_reset_n = '0') then
+                m01_resetn <= '0';
+                m2345_resetn <= '0';
+            elsif rising_edge(clk) then
+                m01_resetn <= '1' and not w_reg(0);
+                m2345_resetn <= '1' and not w_reg(8);
+            end if;
+        end process;
+    end block;
 
     g_servo: for i in 0 to SERVO_COUNT-1 generate
         signal w_duty : std_logic_vector(12-1 downto 0);
@@ -565,19 +592,19 @@ begin
 
         w_servo_value(i) <= w_reg(8-1 downto 0) when w_servo_override(i) = '1' else (others=>'0');
 
-        w_duty <= std_logic_vector(to_unsigned(256,w_duty'length)+unsigned(w_servo_value(i)))(w_duty'range);
+        w_duty <= std_logic_vector(to_unsigned(256,w_duty'length)+unsigned(w_servo_value(i)))(w_duty'range) when w_servo_enabled(i) = '1' else (others=>'0');
 
         inst_pwm_servo: pwm 
         generic map(
-            sys_clk         => CLK_FREQUENCY_HZ, --system clock frequency in Hz
-            pwm_freq        => 62,     --PWM switching frequency in Hz
+            sys_clk         => CLK_FREQUENCY_HZ*2, --system clock frequency in Hz
+            pwm_freq        => 625*2/10,     --PWM switching frequency in Hz
             bits_resolution => w_duty'length,         --bits of resolution setting the duty cycle
             phases          => 1           --number of out : pwms and phases
         )
         port map (
             clk       => clk,
             reset_n   => w_reset_n,                             
-            ena       => w_servo_enabled(i),                               
+            ena       => '1',         
             duty      => w_duty,
             pwm_out(0)=> w_servo_out(i)
         );
@@ -600,19 +627,19 @@ begin
 
         w_esc_value(i) <= w_reg(16-1 downto 0) when w_esc_override(i) = '1' else (others=>'0');
 
-        w_duty <= std_logic_vector(to_unsigned(256,w_duty'length)+unsigned(abs(signed(w_esc_value(i)))))(w_duty'range);
+        w_duty <= std_logic_vector(to_unsigned(256,w_duty'length)+unsigned(abs(signed(w_esc_value(i)))))(w_duty'range) when w_esc_enabled(i) = '1' else (others=>'0');
 
         inst_pwm_esc: pwm 
         generic map(
-            sys_clk         => CLK_FREQUENCY_HZ,   --system clock frequency in Hz
-            pwm_freq        => 62,             --PWM switching frequency in Hz
+            sys_clk         => CLK_FREQUENCY_HZ*2,   --system clock frequency in Hz
+            pwm_freq        => 625*2/10,             --PWM switching frequency in Hz
             bits_resolution => w_duty'length,      --bits of resolution setting the duty cycle
             phases          => 1                   --number of out : pwms and phases
         )
         port map (
             clk       => clk,
             reset_n   => w_reset_n,                             
-            ena       => w_esc_enabled(i),                               
+            ena       => '1',                               
             duty      => w_duty,
             pwm_out(0)=> w_esc_out(i)
         );
@@ -652,6 +679,8 @@ begin
 
 
 
+    qei_value <= w_qei_value;
+    qei_ref   <= w_qei_ref;
 
     g_qei: for i in 0 to QEI_COUNT-1 generate
         signal w_reg    : std_logic_vector(32-1 downto 0);

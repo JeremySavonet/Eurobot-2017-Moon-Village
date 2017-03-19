@@ -18,4 +18,4 @@ rm de2-test.elf.qex
 cp de2-test.elf.qex ../../HPS_FPGA_LED/fpga/test.hex
 quartus_cdb --update_mif ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
 quartus_asm ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
-
+quartus_cpf -c -o bitstream_compression=on ../..//HPS_FPGA_LED/fpga/output_files/HPSFPGA.sof ../..//HPS_FPGA_LED/fpga/output_files/soc_system.rbf
