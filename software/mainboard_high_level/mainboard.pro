@@ -9,26 +9,29 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp \
-           MemoryManager.cpp \
-           Action.cpp \
-           GameManager.cpp \
-           FunnyAction.cpp \
-    Memory.cpp \
-    Input.cpp \
-    ItemRegister.cpp \
-    Output.cpp
+INCLUDEPATH += include
+
+SOURCES += src/Action.cpp \
+           src/FunnyAction.cpp \
+           src/GameManager.cpp \
+           src/Input.cpp \
+           src/ItemRegister.cpp \
+           src/main.cpp \
+           src/Memory.cpp \
+           src/MemoryManager.cpp \
+           src/Output.cpp
 
 HEADERS += \
-    MemoryManager.hpp \
-    Action.hpp \
-    GameManager.hpp \
-    FunnyAction.hpp \
-    ItemRegister.hpp \
-    Memory.hpp \
-    Input.hpp \
-    Layer.hpp \
-    Output.hpp
+    include/WestBot/Action.hpp \
+    include/WestBot/Common.hpp \
+    include/WestBot/FunnyAction.hpp \
+    include/WestBot/GameManager.hpp \
+    include/WestBot/Input.hpp \
+    include/WestBot/ItemRegister.hpp \
+    include/WestBot/Layer.hpp \
+    include/WestBot/Memory.hpp \
+    include/WestBot/MemoryManager.hpp \
+    include/WestBot/Output.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include <error.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-#include "MemoryManager.hpp"
+#include <WestBot/MemoryManager.hpp>
 
 using namespace WestBot;
 
@@ -42,7 +42,7 @@ uint32_t* MemoryManager::mapModuleToMemory( uint32_t moduleBaseAddress )
 {
     // Set the moduleMap to the correct offset within the RAM
     // (moduleBaseAddress need to be in "hps_0.h")
-     return ( uint32_t* )( _lwBridgeMap + moduleBaseAddress );
+    return ( uint32_t* )( (uint32_t*)_lwBridgeMap + moduleBaseAddress );
 }
 
 // Private Methods

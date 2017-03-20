@@ -5,10 +5,10 @@
 
 #include <memory>
 
-#include <QDebug>
 #include <QObject>
 #include <QString>
 
+#include "Common.hpp"
 #include "ItemRegister.hpp"
 
 class QTimer;
@@ -27,30 +27,14 @@ public:
     using Ptr = std::shared_ptr< Input >;
 
     /*!
-     * \brief List of available InputType.
-     */
-    enum class InputType
-    {
-        Start,
-        Color,
-        Stop,
-    };
-
-    enum class Value
-    {
-        OFF = 0,
-        ON
-    };
-
-    /*!
      * \brief Constructor of Input.
      * \param inputRegister A reference to the input register.
-     * \param inputType Type of the input object.
      * \param name Name of the input object.
      */
-    Input( const ItemRegister& inputRegister,
-           InputType type,
-           const QString& name );
+    Input( const ItemRegister& inputRegister, const QString& name );
+    /*!
+    * \brief Destructor.
+    */
     ~Input() override = default;
 
     /*!
@@ -64,21 +48,23 @@ public:
      * \return Return a value from the enum state.
      *
      */
-    Value digitalRead();
+    DigitalValue digitalRead();
 
+    /*!
+    * \brief Check the input state and update it's internal state.
+    */
     void check();
 
 signals:
     /*!
      * \brief Notify of a stateChanged off the input.
      */
-    void stateChanged( const Value& value );
+    void stateChanged( const DigitalValue& value );
 
 private:
     ItemRegister _inputRegister;
-    InputType _type;
     QString _name;
-    Value _digitalValue;
+    DigitalValue _digitalValue;
     QTimer* _eventTimer;
 };
 

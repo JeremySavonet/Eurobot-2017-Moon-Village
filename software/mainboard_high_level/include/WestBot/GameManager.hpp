@@ -3,13 +3,13 @@
 #ifndef WESTBOT_GAMEMANAGER_HPP_
 #define WESTBOT_GAMEMANAGER_HPP_
 
-#include <QDebug>
 #include <QList>
 #include <QObject>
 #include <QStateMachine>
 #include <QTimer>
 
 #include "Action.hpp"
+#include "Common.hpp"
 #include "Input.hpp"
 
 class QState;
@@ -22,13 +22,6 @@ class GameManager : public QObject
     Q_OBJECT
 
 public:
-    enum class Color
-    {
-        Unknown,
-        Red,
-        Blue
-    };
-
     GameManager( Input::Ptr startButton,
                  Input::Ptr colorButton,
                  Input::Ptr stopButton,

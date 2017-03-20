@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-#include "Memory.hpp"
+#include <WestBot/Memory.hpp>
 
 using namespace WestBot;
 

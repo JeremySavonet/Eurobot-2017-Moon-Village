@@ -3,10 +3,12 @@
 #ifndef WESTBOT_OUTPUT_HPP_
 #define WESTBOT_OUTPUT_HPP_
 
-#include <QDebug>
+#include <memory>
+
 #include <QObject>
 #include <QString>
 
+#include "Common.hpp"
 #include "ItemRegister.hpp"
 
 namespace WestBot {
@@ -20,35 +22,14 @@ class Output : public QObject
     Q_OBJECT
 
 public:
-    /*!
-     * \brief List of available Output type.
-     */
-    enum class OutputType
-    {
-        Led,
-        IO1,
-        IO2,
-        IO3
-    };
-
-    /*!
-     * \brief List of available value.
-     */
-    enum class Value
-    {
-        OFF = 0,
-        ON
-    };
+    using Ptr = std::shared_ptr< Output >;
 
     /*!
      * \brief Constructor of Output.
      * \param outputRegister A reference to the output register.
-     * \param type Type of the output object.
      * \param name Name of the output object.
      */
-    Output( const ItemRegister& outputRegister,
-            OutputType type,
-            const QString& name );
+    Output( const ItemRegister& outputRegister, const QString& name );
     ~Output() override = default;
 
     /*!
@@ -61,17 +42,14 @@ public:
      * \brief Write digital value on IO.
      * \param val The value to be written.
      */
-    void digitalWrite( Value val );
-    Value digitalRead();
+    void digitalWrite( DigitalValue val );
+    DigitalValue digitalRead();
 
 private:
     ItemRegister _outputRegister;
-    OutputType _type;
     QString _name;
-    Value _digitalValue;
+    DigitalValue _digitalValue;
 };
-
-    QDebug operator<<( QDebug debug, Output::Value value );
 
 }
 

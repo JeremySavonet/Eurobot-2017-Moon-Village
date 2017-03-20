@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include "Action.hpp"
+#include <WestBot/Action.hpp>
 
 using namespace WestBot;
 
