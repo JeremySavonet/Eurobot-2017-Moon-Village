@@ -1,12 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-//#define WESTBOT_TARGET
-
-#ifdef WESTBOT_TARGET
-#include <error.h>
-#else
 #include <cerrno>
-#endif
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -48,11 +42,7 @@ uint32_t* MemoryManager::mapModuleToMemory( uint32_t moduleBaseAddress )
 {
     // Set the moduleMap to the correct offset within the RAM
     // (moduleBaseAddress need to be in "hps_0.h")
-#ifdef WESTBOT_TARGET
-    return ( uint32_t* )( _lwBridgeMap + moduleBaseAddress );
-#else
     return ( uint32_t* )( (uint32_t*)_lwBridgeMap + moduleBaseAddress );
-#endif
 }
 
 // Private Methods
