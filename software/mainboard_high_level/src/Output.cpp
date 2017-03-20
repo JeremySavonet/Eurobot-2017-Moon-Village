@@ -11,7 +11,7 @@ Output::Output(
     : _outputRegister( outputRegister )
     , _type( type )
     , _name( name )
-    , _digitalValue( Output::Value::OFF )
+    , _digitalValue( DigitalValue::OFF )
 {
     digitalRead();
 }
@@ -21,9 +21,9 @@ const QString& Output::name() const
     return _name;
 }
 
-void Output::digitalWrite( Value val )
+void Output::digitalWrite( DigitalValue val )
 {
-    if( val == Output::Value::ON )
+    if( val == DigitalValue::ON )
     {
         _outputRegister.write( 0x01 );
     }
@@ -33,29 +33,16 @@ void Output::digitalWrite( Value val )
     }
 }
 
-Output::Value Output::digitalRead()
+DigitalValue Output::digitalRead()
 {
     if( _outputRegister.read() == 0x01 )
     {
-        _digitalValue = Output::Value::ON;
+        _digitalValue = DigitalValue::ON;
     }
     else
     {
-        _digitalValue = Output::Value::OFF;
+        _digitalValue = DigitalValue::OFF;
     }
-}
 
-QDebug operator<<( QDebug debug, Output::Value value )
-{
-    switch( value )
-    {
-    case Output::Value::OFF:
-        debug << "Output::OFF";
-        break;
-
-    case Output::Value::ON:
-        debug << "Output::ON";
-        break;
-    }
-    return debug;
+    return _digitalValue;
 }

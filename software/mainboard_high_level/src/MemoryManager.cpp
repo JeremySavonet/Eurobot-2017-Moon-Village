@@ -48,7 +48,11 @@ uint32_t* MemoryManager::mapModuleToMemory( uint32_t moduleBaseAddress )
 {
     // Set the moduleMap to the correct offset within the RAM
     // (moduleBaseAddress need to be in "hps_0.h")
-     return ( uint32_t* )( _lwBridgeMap + moduleBaseAddress );
+#ifdef WESTBOT_TARGET
+    return ( uint32_t* )( _lwBridgeMap + moduleBaseAddress );
+#else
+    return ( uint32_t* )( (uint32_t*)_lwBridgeMap + moduleBaseAddress );
+#endif
 }
 
 // Private Methods

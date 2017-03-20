@@ -22,8 +22,6 @@
 
 using namespace WestBot;
 
-QDebug operator<<( QDebug debug, Input::Value value );
-
 int main( int argc, char *argv[] )
 {
     QCoreApplication app(argc, argv);
@@ -134,19 +132,4 @@ int main( int argc, char *argv[] )
     }
 
     return app.exec();
-}
-
-QDebug operator<<( QDebug debug, Input::Value value )
-{
-    switch( value )
-    {
-    case Input::Value::OFF:
-        debug << "OFF";
-        break;
-
-    case Input::Value::ON:
-        debug << "ON";
-        break;
-    }
-    return debug;
 }

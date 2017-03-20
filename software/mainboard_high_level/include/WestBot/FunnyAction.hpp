@@ -14,7 +14,13 @@ class FunnyAction : public Action
 public:
     using Ptr = std::shared_ptr< FunnyAction >;
 
+    /*!
+    * \brief Constructor of FunnyAction.
+    */
     FunnyAction();
+    /*!
+    * \brief Destructor.
+    */
     ~FunnyAction() override = default;
 
     virtual void execute() override;

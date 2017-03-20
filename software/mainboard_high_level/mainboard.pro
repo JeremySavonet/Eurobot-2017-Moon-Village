@@ -11,25 +11,26 @@ TEMPLATE = app
 
 INCLUDEPATH += include
 
-SOURCES += src/main.cpp \
-           src/MemoryManager.cpp \
-           src/Action.cpp \
-           src/GameManager.cpp \
+SOURCES += src/Action.cpp \
            src/FunnyAction.cpp \
-           src/Memory.cpp \
+           src/GameManager.cpp \
            src/Input.cpp \
            src/ItemRegister.cpp \
+           src/main.cpp \
+           src/Memory.cpp \
+           src/MemoryManager.cpp \
            src/Output.cpp
 
 HEADERS += \
-    include/WestBot/MemoryManager.hpp \
     include/WestBot/Action.hpp \
-    include/WestBot/GameManager.hpp \
+    include/WestBot/Common.hpp \
     include/WestBot/FunnyAction.hpp \
-    include/WestBot/ItemRegister.hpp \
-    include/WestBot/Memory.hpp \
+    include/WestBot/GameManager.hpp \
     include/WestBot/Input.hpp \
+    include/WestBot/ItemRegister.hpp \
     include/WestBot/Layer.hpp \
+    include/WestBot/Memory.hpp \
+    include/WestBot/MemoryManager.hpp \
     include/WestBot/Output.hpp
 
 # The following define makes your compiler emit warnings if you use

@@ -20,7 +20,7 @@ Input::Input(
     : _inputRegister( inputRegister )
     , _type( type )
     , _name( name )
-    , _digitalValue( Input::Value::OFF )
+    , _digitalValue( DigitalValue::OFF )
 {
     _eventTimer = new QTimer( this );
 
@@ -40,7 +40,7 @@ const QString& Input::name() const
     return _name;
 }
 
-Input::Value Input::digitalRead()
+DigitalValue Input::digitalRead()
 {
     check();
     return _digitalValue;
@@ -48,7 +48,7 @@ Input::Value Input::digitalRead()
 
 void Input::check()
 {
-    Input::Value tmpVal;
+    DigitalValue tmpVal;
 
     switch( _type )
     {
@@ -56,11 +56,11 @@ void Input::check()
     {
         if( ( _inputRegister.read() & MASK_START_INPUT ) == MASK_START_INPUT )
         {
-           tmpVal = Input::Value::ON;
+           tmpVal = DigitalValue::ON;
         }
         else
         {
-            tmpVal = Input::Value::OFF;
+            tmpVal = DigitalValue::OFF;
         }
     }
         break;
@@ -69,11 +69,11 @@ void Input::check()
     {
         if( ( _inputRegister.read() & MASK_COLOR_INPUT ) == MASK_COLOR_INPUT )
         {
-            tmpVal = Input::Value::ON;
+            tmpVal = DigitalValue::ON;
         }
         else
         {
-            tmpVal = Input::Value::OFF;
+            tmpVal = DigitalValue::OFF;
         }
     }
         break;
@@ -82,11 +82,11 @@ void Input::check()
     {
         if( ( _inputRegister.read() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
         {
-            tmpVal = Input::Value::ON;
+            tmpVal = DigitalValue::ON;
         }
         else
         {
-            tmpVal = Input::Value::OFF;
+            tmpVal = DigitalValue::OFF;
         }
     }
         break;

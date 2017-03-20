@@ -16,25 +16,6 @@ namespace
     const int ACTION_TIMEOUT = 500; // 500ms
 }
 
-QDebug operator<<( QDebug debug, GameManager::Color color )
-{
-    switch( color )
-    {
-    case GameManager::Color::Unknown:
-        debug << "Unknown";
-        break;
-
-    case GameManager::Color::Red:
-        debug << "Red";
-        break;
-
-    case GameManager::Color::Blue:
-        debug << "Blue";
-        break;
-    }
-    return debug;
-}
-
 GameManager::GameManager(
     Input::Ptr startButton,
     Input::Ptr colorButton,
@@ -45,7 +26,7 @@ GameManager::GameManager(
     , _startButton( startButton )
     , _colorButton( colorButton )
     , _stopButton( stopButton )
-    , _color( GameManager::Color::Unknown )
+    , _color( Color::Unknown )
 
 {
     _gameTimer.setSingleShot( true );
@@ -80,9 +61,9 @@ GameManager::GameManager(
         _startButton.get(),
         & Input::stateChanged,
         this,
-        [ this ]( const Input::Value& value )
+        [ this ]( const DigitalValue& value )
         {
-            if( value == Input::Value::ON )
+            if( value == DigitalValue::ON )
             {
                 emit started();
             }
@@ -268,16 +249,18 @@ QState* GameManager::createCheckGameColorState( QState* parent )
         this,
         [ this ]()
         {
-            if( _colorButton->digitalRead() == Input::Value::OFF )
+            if( _colorButton->digitalRead() == DigitalValue::OFF )
             {
-                _color = GameManager::Color::Blue;
+                _color = Color::Blue;
             }
             else
             {
-                _color = GameManager::Color::Red;
+                _color = Color::Red;
             }
 
-            qDebug() << "Exit check color state. Color for the game is:" << _color;
+            qDebug()
+                << "Exit check color state. Color for the game is:"
+                << _color;
         } );
 
     return state;

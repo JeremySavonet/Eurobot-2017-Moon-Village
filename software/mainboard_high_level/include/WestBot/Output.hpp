@@ -3,10 +3,10 @@
 #ifndef WESTBOT_OUTPUT_HPP_
 #define WESTBOT_OUTPUT_HPP_
 
-#include <QDebug>
 #include <QObject>
 #include <QString>
 
+#include "Common.hpp"
 #include "ItemRegister.hpp"
 
 namespace WestBot {
@@ -32,15 +32,6 @@ public:
     };
 
     /*!
-     * \brief List of available value.
-     */
-    enum class Value
-    {
-        OFF = 0,
-        ON
-    };
-
-    /*!
      * \brief Constructor of Output.
      * \param outputRegister A reference to the output register.
      * \param type Type of the output object.
@@ -61,17 +52,15 @@ public:
      * \brief Write digital value on IO.
      * \param val The value to be written.
      */
-    void digitalWrite( Value val );
-    Value digitalRead();
+    void digitalWrite( DigitalValue val );
+    DigitalValue digitalRead();
 
 private:
     ItemRegister _outputRegister;
     OutputType _type;
     QString _name;
-    Value _digitalValue;
+    DigitalValue _digitalValue;
 };
-
-    QDebug operator<<( QDebug debug, Output::Value value );
 
 }
 

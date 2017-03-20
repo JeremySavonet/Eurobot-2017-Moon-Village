@@ -5,10 +5,10 @@
 
 #include <memory>
 
-#include <QDebug>
 #include <QObject>
 #include <QString>
 
+#include "Common.hpp"
 #include "ItemRegister.hpp"
 
 class QTimer;
@@ -34,12 +34,7 @@ public:
         Start,
         Color,
         Stop,
-    };
-
-    enum class Value
-    {
-        OFF = 0,
-        ON
+        Unused
     };
 
     /*!
@@ -51,6 +46,9 @@ public:
     Input( const ItemRegister& inputRegister,
            InputType type,
            const QString& name );
+    /*!
+    * \brief Destructor.
+    */
     ~Input() override = default;
 
     /*!
@@ -64,21 +62,24 @@ public:
      * \return Return a value from the enum state.
      *
      */
-    Value digitalRead();
+    DigitalValue digitalRead();
 
+    /*!
+    * \brief Check the input state and update it's internal state.
+    */
     void check();
 
 signals:
     /*!
      * \brief Notify of a stateChanged off the input.
      */
-    void stateChanged( const Value& value );
+    void stateChanged( const DigitalValue& value );
 
 private:
     ItemRegister _inputRegister;
     InputType _type;
     QString _name;
-    Value _digitalValue;
+    DigitalValue _digitalValue;
     QTimer* _eventTimer;
 };
 

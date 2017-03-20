@@ -23,9 +23,6 @@ public:
         Other
     };
 
-    Q_DECLARE_FLAGS
-
-
     InputManager();
     ~InputManager() override;
 
