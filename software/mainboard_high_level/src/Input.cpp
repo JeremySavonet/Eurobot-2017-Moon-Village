@@ -91,6 +91,20 @@ void Input::check()
     }
         break;
 
+    case Input::InputType::Unused:
+    {
+        if( ( _inputRegister.read() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
+        {
+            tmpVal = DigitalValue::ON;
+        }
+        else
+        {
+            tmpVal = DigitalValue::OFF;
+        }
+    }
+        break;
+
+
     }
 
     if( tmpVal != _digitalValue )
