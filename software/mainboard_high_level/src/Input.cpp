@@ -6,19 +6,8 @@
 
 using namespace WestBot;
 
-namespace
-{
-    const int MASK_START_INPUT = 0x00000001;
-    const int MASK_COLOR_INPUT = 0x00000100;
-    const int MASK_STOP_INPUT = 0x00010000;
-}
-
-Input::Input(
-    const ItemRegister& inputRegister,
-    Input::InputType type,
-    const QString& name )
+Input::Input( const ItemRegister& inputRegister, const QString& name )
     : _inputRegister( inputRegister )
-    , _type( type )
     , _name( name )
     , _digitalValue( DigitalValue::OFF )
 {
@@ -50,61 +39,13 @@ void Input::check()
 {
     DigitalValue tmpVal;
 
-    switch( _type )
+    if( _inputRegister.read< uint32_t >() == 0x01 )
     {
-    case Input::InputType::Start:
-    {
-        if( ( _inputRegister.read< uint32_t >() & MASK_START_INPUT ) == MASK_START_INPUT )
-        {
-           tmpVal = DigitalValue::ON;
-        }
-        else
-        {
-            tmpVal = DigitalValue::OFF;
-        }
+       tmpVal = DigitalValue::ON;
     }
-        break;
-
-    case Input::InputType::Color:
+    else
     {
-        if( ( _inputRegister.read< uint32_t >() & MASK_COLOR_INPUT ) == MASK_COLOR_INPUT )
-        {
-            tmpVal = DigitalValue::ON;
-        }
-        else
-        {
-            tmpVal = DigitalValue::OFF;
-        }
-    }
-        break;
-
-    case Input::InputType::Stop:
-    {
-        if( ( _inputRegister.read< uint32_t >() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
-        {
-            tmpVal = DigitalValue::ON;
-        }
-        else
-        {
-            tmpVal = DigitalValue::OFF;
-        }
-    }
-        break;
-
-    case Input::InputType::Unused:
-    {
-        if( ( _inputRegister.read< uint32_t >() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
-        {
-            tmpVal = DigitalValue::ON;
-        }
-        else
-        {
-            tmpVal = DigitalValue::OFF;
-        }
-    }
-        break;
-
-
+        tmpVal = DigitalValue::OFF;
     }
 
     if( tmpVal != _digitalValue )

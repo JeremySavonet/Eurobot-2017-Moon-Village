@@ -4,12 +4,8 @@
 
 using namespace WestBot;
 
-Output::Output(
-    const ItemRegister& outputRegister,
-    OutputType type,
-    const QString& name )
+Output::Output( const ItemRegister& outputRegister, const QString& name )
     : _outputRegister( outputRegister )
-    , _type( type )
     , _name( name )
     , _digitalValue( DigitalValue::OFF )
 {

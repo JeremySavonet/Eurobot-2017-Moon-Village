@@ -27,25 +27,11 @@ public:
     using Ptr = std::shared_ptr< Input >;
 
     /*!
-     * \brief List of available InputType.
-     */
-    enum class InputType
-    {
-        Start,
-        Color,
-        Stop,
-        Unused
-    };
-
-    /*!
      * \brief Constructor of Input.
      * \param inputRegister A reference to the input register.
-     * \param inputType Type of the input object.
      * \param name Name of the input object.
      */
-    Input( const ItemRegister& inputRegister,
-           InputType type,
-           const QString& name );
+    Input( const ItemRegister& inputRegister, const QString& name );
     /*!
     * \brief Destructor.
     */
@@ -77,7 +63,6 @@ signals:
 
 private:
     ItemRegister _inputRegister;
-    InputType _type;
     QString _name;
     DigitalValue _digitalValue;
     QTimer* _eventTimer;
