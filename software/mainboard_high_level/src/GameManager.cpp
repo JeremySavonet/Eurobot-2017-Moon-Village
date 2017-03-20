@@ -69,6 +69,18 @@ GameManager::GameManager(
             }
         } );
 
+    connect(
+        _stopButton.get(),
+        & Input::stateChanged,
+        this,
+        [ this ]( const DigitalValue& value )
+        {
+            if( value == DigitalValue::ON )
+            {
+                emit stopped();
+            }
+        } );
+
     createStateMachine();
     _stateMachine.start();
 }

@@ -3,6 +3,8 @@
 #ifndef WESTBOT_ITEMREGISTER_HPP_
 #define WESTBOT_ITEMREGISTER_HPP_
 
+#include <memory>
+
 #include "Memory.hpp"
 
 namespace WestBot {
@@ -13,6 +15,8 @@ namespace WestBot {
 class ItemRegister
 {
 public:
+    using Ptr = std::shared_ptr< ItemRegister >;
+
     /*!
     * \brief Construct an ItemRegister.
     *

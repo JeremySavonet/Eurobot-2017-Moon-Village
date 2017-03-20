@@ -6,7 +6,7 @@
 
 using namespace WestBot;
 
-Input::Input( const ItemRegister& inputRegister, const QString& name )
+Input::Input( const ItemRegister::Ptr& inputRegister, const QString& name )
     : _inputRegister( inputRegister )
     , _name( name )
     , _digitalValue( DigitalValue::OFF )
@@ -39,7 +39,7 @@ void Input::check()
 {
     DigitalValue tmpVal;
 
-    if( _inputRegister.read< uint32_t >() == 0x01 )
+    if( _inputRegister->read< uint32_t >() == 0x01 )
     {
        tmpVal = DigitalValue::ON;
     }

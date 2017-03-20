@@ -9,6 +9,7 @@
 #ifdef DEBUG
 #include <QDebug>
 #endif
+#include <QMap>
 #include <QThread>
 
 #include <hps_arm.h> // For our base address
@@ -19,6 +20,11 @@
 #include <WestBot/Memory.hpp>
 #include <WestBot/MemoryManager.hpp>
 #include <WestBot/Output.hpp>
+
+#define ADD_REGISTER( name, layerRegister ) \
+    {                                       \
+        name, layerRegister                 \
+    }
 
 using namespace WestBot;
 
@@ -34,99 +40,84 @@ int main( int argc, char *argv[] )
     Memory layer2( memoryManager, PIO_N_LAYER2_BASE );
     Memory layer3( memoryManager, PIO_N_LAYER3_BASE );
 
-#ifdef DEBUG
-    // Read layer 1 registers
-    qDebug() << "Layer 1 registers:";
-    qDebug() << "==================";
-
-    for( int i = 0; i < 64; ++i )
+    static QMap< QString, ItemRegister::Ptr > layer1Registers
     {
-        qDebug()
-            << "Read register" << i << ":"
-            << QString::number( layer1.read( i * 4, 32 ), 16 );
-    }
-
-    // Read layer 2 registers
-    qDebug() << "Layer 2 registers:";
-    qDebug() << "==================";
-
-    for( int i = 0; i < 64; ++i )
-    {
-        qDebug()
-            << "Read register" << i << ":"
-            << QString::number( layer2.read( i * 4, 32 ), 16 );
-    }
-
-    // Read layer 3 registers
-    qDebug() << "Layer 3 registers:";
-    qDebug() << "==================";
-
-    for( int i = 0; i < 64; ++i )
-    {
-        qDebug()
-            << "Read register" << i << ":"
-            << QString::number( layer3.read( i * 4, 32 ), 16 );
-    }
-#endif
+        ADD_REGISTER(
+            "Reset",
+            std::make_shared< ItemRegister >( layer1, 0, 32 ) ),
+        ADD_REGISTER(
+            "Simu",
+            std::make_shared< ItemRegister >( layer1, 1 * 4, 32 ) ),
+        ADD_REGISTER(
+            "Tirette",
+            std::make_shared< ItemRegister >( layer1, 7 * 4, 8 ) ),
+        ADD_REGISTER(
+            "Color",
+            std::make_shared< ItemRegister >( layer1, 7 * 4 + 1, 8 ) ),
+        ADD_REGISTER(
+            "AU",
+            std::make_shared< ItemRegister >( layer1, 7 * 4 + 2, 8 ) ),
+        ADD_REGISTER(
+            "In3",
+            std::make_shared< ItemRegister >( layer1, 7 * 4 + 3, 8 ) ),
+        ADD_REGISTER(
+            "InputOverride",
+            std::make_shared< ItemRegister >( layer1, 8 * 4, 32 ) ),
+        ADD_REGISTER(
+            "Led",
+            std::make_shared< ItemRegister >( layer1, 9 * 4, 8 ) ),
+        ADD_REGISTER(
+            "Out1",
+            std::make_shared< ItemRegister >( layer1, 9 * 4 + 1, 8 ) ),
+        ADD_REGISTER(
+            "Out2",
+            std::make_shared< ItemRegister >( layer1, 9 * 4 + 2, 8 ) ),
+        ADD_REGISTER(
+            "Out3",
+            std::make_shared< ItemRegister >( layer1, 9 * 4 + 3, 8 ) ),
+        ADD_REGISTER(
+            "OutputOverride",
+            std::make_shared< ItemRegister >( layer1, 10, 32 ) )
+    };
 
 #ifdef SIMU
-    ItemRegister configStateRegister(
-        layer1,
-        1 * 4,
-        32 );
-
-    configStateRegister.write( 0xffffffff );
+    layer1Registers[ "Simu" ]->write( 0xffffffff );
 #endif
 
-    // INPUT REGISTER
-    ItemRegister inputRegister( layer1, 7 * 4, 32 );
-
-    // OUTOUT REGISTER
-    ItemRegister outputOverride( layer1, 10 * 4, 32 );
-    outputOverride.write( 0x01010101 );
-
-    ItemRegister outputLedRegister( layer1, 9 * 4, 8 );
-    ItemRegister outputIO1Register( layer1, 9 * 4 + 1, 8 );
-    ItemRegister outputIO2Register( layer1, 9 * 4 + 2, 8 );
-    ItemRegister outputIO3Register( layer1, 9 * 4 + 3, 8 );
-
-    // M0
-    ItemRegister pwm0Override( layer1, 12 * 4 + 3, 8 );
-    pwm0Override.write( 0x01 );
-
-    ItemRegister pwm0( layer1, 12 * 4, 16 );
-    pwm0.write( 17000 );
+    layer1Registers[ "OutputOverride" ]->write( 0x01010101 );
 
     // Buttons
-    Input::Ptr tirette = std::make_shared< Input >( inputRegister, Input::InputType::Start, "Tirette" );
-    Input::Ptr color = std::make_shared< Input >( inputRegister, Input::InputType::Color, "Color" );
-    Input::Ptr arretUrgence = std::make_shared< Input >( inputRegister, Input::InputType::Stop, "AU" );
+    Input::Ptr tirette =
+        std::make_shared< Input >( layer1Registers[ "Tirette" ], "Tirette" );
+    Input::Ptr color =
+        std::make_shared< Input >( layer1Registers[ "Color" ], "Color" );
+    Input::Ptr arretUrgence =
+        std::make_shared< Input >( layer1Registers[ "AU" ], "AU" );
 
     // Leds
-    Output led( outputLedRegister, Output::OutputType::Led, "Led" );
-    Output io1( outputIO1Register, Output::OutputType::IO1, "IO1" );
-    Output io2( outputIO2Register, Output::OutputType::IO2, "IO2" );
-    Output io3( outputIO3Register, Output::OutputType::IO3, "IO3" );
+    Output led( layer1Registers[ "Led" ], "Led" );
+    Output io1( layer1Registers[ "Out1" ], "IO1" );
+    Output io2( layer1Registers[ "Out2" ], "IO2" );
+    Output io3( layer1Registers[ "Out3" ], "IO3" );
 
     GameManager game( tirette, color, arretUrgence );
 
-    ItemRegister reg5( layer2, 5 * 4, 32 );
-    ItemRegister reg6( layer2, 6 * 4, 32 );
-    ItemRegister reg7( layer2, 7 * 4, 32 );
-
-    reg5.write( 270.0f );
-    reg6.write( 72.5f );
-    reg7.write( 72.5f );
-
-    ItemRegister reg13Val( layer2, 13 * 4 + 2, 16 );
-    ItemRegister reg14Val1( layer2, 14 * 4, 16 );
-    ItemRegister reg14Val2( layer2, 14 * 4 + 2, 16 );
-
     while(1)
     {
-        qDebug() << "REG 13" << reg13Val.read< int32_t >();
-        qDebug() << "REG 14 VAL 1" << reg14Val1.read< int32_t >();
-        qDebug() << "REG 14 VAL 2" << reg14Val2.read< int32_t >();
+        qDebug() << "TIRETTE:" << tirette->digitalRead();
+        qDebug() << "COLOR:" << color->digitalRead();
+        qDebug() << "AU:" << arretUrgence->digitalRead();
+
+        led.digitalWrite( DigitalValue::ON );
+        io1.digitalWrite( DigitalValue::OFF );
+        io2.digitalWrite( DigitalValue::ON );
+        io3.digitalWrite( DigitalValue::OFF );
+        QThread::msleep( 250 );
+        led.digitalWrite( DigitalValue::OFF );
+        io1.digitalWrite( DigitalValue::ON );
+        io2.digitalWrite( DigitalValue::OFF );
+        io3.digitalWrite( DigitalValue::ON );
+        QThread::msleep( 250 );
 
         QCoreApplication::processEvents();
     }

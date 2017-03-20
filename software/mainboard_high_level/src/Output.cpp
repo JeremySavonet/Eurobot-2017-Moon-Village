@@ -4,7 +4,7 @@
 
 using namespace WestBot;
 
-Output::Output( const ItemRegister& outputRegister, const QString& name )
+Output::Output( const ItemRegister::Ptr& outputRegister, const QString& name )
     : _outputRegister( outputRegister )
     , _name( name )
     , _digitalValue( DigitalValue::OFF )
@@ -21,17 +21,17 @@ void Output::digitalWrite( DigitalValue val )
 {
     if( val == DigitalValue::ON )
     {
-        _outputRegister.write( 0x01 );
+        _outputRegister->write( 0x01 );
     }
     else
     {
-        _outputRegister.write( 0x00 );
+        _outputRegister->write( 0x00 );
     }
 }
 
 DigitalValue Output::digitalRead()
 {
-    if( _outputRegister.read< uint32_t >() == 0x01 )
+    if( _outputRegister->read< uint32_t >() == 0x01 )
     {
         _digitalValue = DigitalValue::ON;
     }

@@ -31,7 +31,7 @@ public:
      * \param inputRegister A reference to the input register.
      * \param name Name of the input object.
      */
-    Input( const ItemRegister& inputRegister, const QString& name );
+    Input( const ItemRegister::Ptr& inputRegister, const QString& name );
     /*!
     * \brief Destructor.
     */
@@ -62,7 +62,7 @@ signals:
     void stateChanged( const DigitalValue& value );
 
 private:
-    ItemRegister _inputRegister;
+    ItemRegister::Ptr _inputRegister;
     QString _name;
     DigitalValue _digitalValue;
     QTimer* _eventTimer;

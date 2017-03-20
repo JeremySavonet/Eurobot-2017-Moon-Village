@@ -29,7 +29,7 @@ public:
      * \param outputRegister A reference to the output register.
      * \param name Name of the output object.
      */
-    Output( const ItemRegister& outputRegister, const QString& name );
+    Output( const ItemRegister::Ptr& outputRegister, const QString& name );
     ~Output() override = default;
 
     /*!
@@ -46,7 +46,7 @@ public:
     DigitalValue digitalRead();
 
 private:
-    ItemRegister _outputRegister;
+    ItemRegister::Ptr _outputRegister;
     QString _name;
     DigitalValue _digitalValue;
 };
