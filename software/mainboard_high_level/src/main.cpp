@@ -11,14 +11,14 @@
 #endif
 #include <QThread>
 
-#include "hps_arm.h" // For our base address
+#include <hps_arm.h> // For our base address
 
-#include "GameManager.hpp"
-#include "Input.hpp"
-#include "ItemRegister.hpp"
-#include "Memory.hpp"
-#include "MemoryManager.hpp"
-#include "Output.hpp"
+#include <WestBot/GameManager.hpp>
+#include <WestBot/Input.hpp>
+#include <WestBot/ItemRegister.hpp>
+#include <WestBot/Memory.hpp>
+#include <WestBot/MemoryManager.hpp>
+#include <WestBot/Output.hpp>
 
 using namespace WestBot;
 

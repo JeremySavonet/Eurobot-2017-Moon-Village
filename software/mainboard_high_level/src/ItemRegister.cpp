@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include "ItemRegister.hpp"
+#include <WestBot/ItemRegister.hpp>
 
 using namespace WestBot;
 

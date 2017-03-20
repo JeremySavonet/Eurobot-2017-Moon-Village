@@ -1,6 +1,12 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
+//#define WESTBOT_TARGET
+
+#ifdef WESTBOT_TARGET
 #include <error.h>
+#else
+#include <cerrno>
+#endif
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -10,7 +16,7 @@
 
 #include <QDebug>
 
-#include "MemoryManager.hpp"
+#include <WestBot/MemoryManager.hpp>
 
 using namespace WestBot;
 

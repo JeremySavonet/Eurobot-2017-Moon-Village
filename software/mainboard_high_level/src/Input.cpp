@@ -2,7 +2,7 @@
 
 #include <QTimer>
 
-#include "Input.hpp"
+#include <WestBot/Input.hpp>
 
 using namespace WestBot;
 

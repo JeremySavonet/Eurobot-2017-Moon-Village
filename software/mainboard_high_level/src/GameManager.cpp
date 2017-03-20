@@ -5,8 +5,8 @@
 #include <QState>
 #include <QString>
 
-#include "FunnyAction.hpp"
-#include "GameManager.hpp"
+#include <WestBot/FunnyAction.hpp>
+#include <WestBot/GameManager.hpp>
 
 using namespace WestBot;
 
