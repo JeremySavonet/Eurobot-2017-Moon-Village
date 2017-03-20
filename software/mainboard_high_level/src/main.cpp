@@ -114,9 +114,9 @@ int main( int argc, char *argv[] )
     ItemRegister reg6( layer2, 6 * 4, 32 );
     ItemRegister reg7( layer2, 7 * 4, 32 );
 
-    reg5.writeFloat( 270.0 );
-    reg6.writeFloat( 72.5 );
-    reg7.writeFloat( 72.5 );
+    reg5.write( 270.0f );
+    reg6.write( 72.5f );
+    reg7.write( 72.5f );
 
     ItemRegister reg13Val( layer2, 13 * 4 + 2, 16 );
     ItemRegister reg14Val1( layer2, 14 * 4, 16 );
@@ -124,9 +124,9 @@ int main( int argc, char *argv[] )
 
     while(1)
     {
-        qDebug() << "REG 13" << reg13Val.read();
-        qDebug() << "REG 14 VAL 1" << reg14Val1.read();
-        qDebug() << "REG 14 VAL 2" << reg14Val2.read();
+        qDebug() << "REG 13" << reg13Val.read< int32_t >();
+        qDebug() << "REG 14 VAL 1" << reg14Val1.read< int32_t >();
+        qDebug() << "REG 14 VAL 2" << reg14Val2.read< int32_t >();
 
         QCoreApplication::processEvents();
     }

@@ -35,7 +35,7 @@ void Output::digitalWrite( DigitalValue val )
 
 DigitalValue Output::digitalRead()
 {
-    if( _outputRegister.read() == 0x01 )
+    if( _outputRegister.read< uint32_t >() == 0x01 )
     {
         _digitalValue = DigitalValue::ON;
     }

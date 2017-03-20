@@ -16,20 +16,14 @@ void ItemRegister::write( uint32_t data )
     _layer.write( _offset, _size, data );
 }
 
-void ItemRegister::writeFloat( float data )
+void ItemRegister::write( float data )
 {
     uint32_t* tmp = ( uint32_t* )( & data );
     _layer.write( _offset, _size, *tmp );
 }
 
-uint32_t ItemRegister::read() const
+void ItemRegister::write( int32_t data )
 {
-    return _layer.read( _offset, _size );
-}
-
-float ItemRegister::readFloat() const
-{
-    uint32_t val = _layer.read( _offset, _size );
-    float* tmp = ( float* )( & val );
-    return *tmp;
+    uint32_t* tmp = ( uint32_t* )( & data );
+    _layer.write( _offset, _size, *tmp );
 }

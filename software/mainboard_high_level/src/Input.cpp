@@ -54,7 +54,7 @@ void Input::check()
     {
     case Input::InputType::Start:
     {
-        if( ( _inputRegister.read() & MASK_START_INPUT ) == MASK_START_INPUT )
+        if( ( _inputRegister.read< uint32_t >() & MASK_START_INPUT ) == MASK_START_INPUT )
         {
            tmpVal = DigitalValue::ON;
         }
@@ -67,7 +67,7 @@ void Input::check()
 
     case Input::InputType::Color:
     {
-        if( ( _inputRegister.read() & MASK_COLOR_INPUT ) == MASK_COLOR_INPUT )
+        if( ( _inputRegister.read< uint32_t >() & MASK_COLOR_INPUT ) == MASK_COLOR_INPUT )
         {
             tmpVal = DigitalValue::ON;
         }
@@ -80,7 +80,7 @@ void Input::check()
 
     case Input::InputType::Stop:
     {
-        if( ( _inputRegister.read() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
+        if( ( _inputRegister.read< uint32_t >() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
         {
             tmpVal = DigitalValue::ON;
         }
@@ -93,7 +93,7 @@ void Input::check()
 
     case Input::InputType::Unused:
     {
-        if( ( _inputRegister.read() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
+        if( ( _inputRegister.read< uint32_t >() & MASK_STOP_INPUT ) == MASK_STOP_INPUT )
         {
             tmpVal = DigitalValue::ON;
         }

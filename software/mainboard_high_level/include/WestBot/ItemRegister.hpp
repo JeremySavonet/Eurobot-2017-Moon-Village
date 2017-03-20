@@ -27,26 +27,32 @@ public:
     *
     * \param data The float value to be written.
     */
-    void writeFloat( float data );
+    void write( float data );
     /*!
     * \brief Write a unsigned value in the register.
     *
     * \param data The uint value to be written.
     */
     void write( uint32_t data );
+    /*!
+    * \brief Write a signed value in the register.
+    *
+    * \param data The int value to be written.
+    */
+    void write( int32_t data );
 
     /*!
-    * \brief Read a unsigned int value in the register.
+    * \brief Read a template value in the register.
     *
-    * \return Return an unsigned int value.
+    * \return Return the value in template format.
     */
-    uint32_t read() const;
-    /*!
-    * \brief Read a float value in the register.
-    *
-    * \return Return a float value.
-    */
-    float readFloat() const;
+    template< typename T >
+    T read() const
+    {
+        uint32_t val = _layer.read( _offset, _size );
+        T* tmp = ( T* )( & val );
+        return *tmp;
+    }
 
 private:
     Memory _layer;
