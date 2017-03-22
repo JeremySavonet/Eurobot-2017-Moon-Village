@@ -14,6 +14,9 @@
 
 #include <hps_arm.h> // For our base address
 
+#include <Defines.hpp>
+
+#include <WestBot/Configuration.hpp>
 #include <WestBot/GameManager.hpp>
 #include <WestBot/Input.hpp>
 #include <WestBot/ItemRegister.hpp>
@@ -26,11 +29,30 @@
         name, layerRegister                 \
     }
 
+namespace
+{
+    WESTBOT_STR( CONFIGURATION_PATH, "config.ini" );
+}
+
 using namespace WestBot;
 
 int main( int argc, char *argv[] )
 {
     QCoreApplication app(argc, argv);
+
+    // Load the configuration manager
+    Configuration configurationManager( CONFIGURATION_PATH );
+
+    QObject::connect(
+        & configurationManager,
+        & Configuration::configurationChanged,
+        [ &configurationManager ]()
+        {
+            qDebug() << "Update layers according to configuration changes";
+            configurationManager.load();
+        } );
+
+    configurationManager.load();
 
     // Manage the LW_BRIDGE
     MemoryManager memoryManager;
