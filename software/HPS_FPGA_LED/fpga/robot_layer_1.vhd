@@ -126,10 +126,10 @@ entity robot_layer_1 is
         i2c1_reset   : out   std_logic;
 
         --------- SPI ----------
-        spi0_sclk    : out std_logic;
-        spi0_mosi    : out std_logic;
+        spi0_sclk    : in  std_logic;
+        spi0_mosi    : in  std_logic;
         spi0_miso    : in  std_logic;
-        spi0_ss      : out std_logic;
+        spi0_ss      : in  std_logic;
 
         spi1_sclk    : out std_logic;
         spi1_mosi    : out std_logic;
@@ -196,7 +196,7 @@ architecture rtl of robot_layer_1 is
     signal w_motor_dir      : std_logic_vector(MOTOR_COUNT-1 downto 0);
 
 
-    constant REG_SERVO_OFFSET : natural := 28;
+    constant REG_SERVO_OFFSET : natural := 29;
 
     constant SERVO_COUNT : natural := 8;
 
@@ -207,7 +207,7 @@ architecture rtl of robot_layer_1 is
     signal w_servo_out      : std_logic_vector(SERVO_COUNT-1 downto 0);
 
 
-    constant REG_ESC_OFFSET : natural := 44;
+    constant REG_ESC_OFFSET : natural := 45;
     constant ESC_COUNT : natural := 2;
 
     signal w_esc_value    : int16_t(ESC_COUNT-1 downto 0);
@@ -676,7 +676,9 @@ begin
     w_qei_b(3) <= qei3_b;
     w_qei_z(3) <= qei3_z;
 
-
+    w_qei_a(4) <= spi0_sclk;
+    w_qei_b(4) <= spi0_ss;
+    w_qei_z(4) <= spi0_mosi;
 
 
     qei_value <= w_qei_value;

@@ -8,7 +8,7 @@ use     work.types_pkg.all;
 package robot_layer_2_pkg is
 
     constant MOTOR_COUNT : natural := 6;
-    constant QEI_COUNT   : natural := 4;
+    constant QEI_COUNT   : natural := 4+1;
 
     component robot_layer_2 is
     generic (

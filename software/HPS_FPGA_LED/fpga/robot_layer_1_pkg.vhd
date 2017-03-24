@@ -8,7 +8,7 @@ use     work.types_pkg.all;
 package robot_layer_1_pkg is
 
     constant MOTOR_COUNT : natural := 6;
-    constant QEI_COUNT   : natural := 4;
+    constant QEI_COUNT   : natural := 4+1;
 
     component robot_layer_1 is
     generic (
@@ -124,10 +124,10 @@ package robot_layer_1_pkg is
         i2c1_reset   : out   std_logic;
 
         --------- SPI ----------
-        spi0_sclk    : out std_logic;
-        spi0_mosi    : out std_logic;
+        spi0_sclk    : in  std_logic;
+        spi0_mosi    : in  std_logic;
         spi0_miso    : in  std_logic;
-        spi0_ss      : out std_logic;
+        spi0_ss      : in  std_logic;
 
         spi1_sclk    : out std_logic;
         spi1_mosi    : out std_logic;

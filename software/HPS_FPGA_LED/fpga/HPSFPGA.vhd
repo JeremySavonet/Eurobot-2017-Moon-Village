@@ -143,10 +143,10 @@ entity hpsfpga is
     i2c1_reset   : out   std_logic;
 
     --------- SPI ----------
-    spi0_sclk    : out std_logic;
-    spi0_mosi    : out std_logic;
+    spi0_sclk    : in  std_logic;
+    spi0_mosi    : in  std_logic;
     spi0_miso    : in  std_logic;
-    spi0_ss      : out std_logic;
+    spi0_ss      : in  std_logic;
 
     spi1_sclk    : out std_logic;
     spi1_mosi    : out std_logic;
@@ -391,8 +391,8 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_motor_value    : int16_t(6-1 downto 0);
     signal w_motor_current  : int24_t(6-1 downto 0);
     signal w_motor_fault    : std_logic_vector(6-1 downto 0);
-    signal w_qei_value      : int16_t(4-1 downto 0);
-    signal w_qei_ref        : std_logic_vector(4-1 downto 0);
+    signal w_qei_value      : int16_t(5-1 downto 0);
+    signal w_qei_ref        : std_logic_vector(5-1 downto 0);
  
 begin
 

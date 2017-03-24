@@ -5,7 +5,7 @@ use IEEE.numeric_std.all;
 entity pio_n is
     generic (
         RegCnt : positive := 256;
-        ByteEnable: natural := 0
+        ByteEnable: boolean := false
     );
     port (
         clk                     : in  std_logic                       := '0';             --    clk.clk
