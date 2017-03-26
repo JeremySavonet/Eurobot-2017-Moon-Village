@@ -14,7 +14,7 @@ make clean
 make
 
 cd ../../tools/
-rm de2-test.elf.qex
+rm orca.elf.qex
 ./elf2hex.sh ../software/generic/orca.elf
 cp orca.elf.qex ../../HPS_FPGA_LED/fpga/test.hex
 quartus_cdb --update_mif ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
