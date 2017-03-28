@@ -82,15 +82,24 @@ GameManager::GameManager(
         } );
 
     createStateMachine();
-    _stateMachine.start();
 }
 
 GameManager::~GameManager()
 {
-    _stateMachine.stop();
+    stop();
 }
 
 // Public methods
+void GameManager::start()
+{
+    _stateMachine.start();
+}
+
+void GameManager::stop()
+{
+    _stateMachine.stop();
+}
+
 void GameManager::pushAction( const Action::Ptr& action )
 {
     qDebug() << "Pushing action:" << action->name() << "in the queue";

@@ -12,26 +12,33 @@ TEMPLATE = app
 INCLUDEPATH += include
 
 SOURCES += src/Action.cpp \
+           src/Configuration.cpp \
            src/FunnyAction.cpp \
            src/GameManager.cpp \
+           src/Hal.cpp \
            src/Input.cpp \
            src/ItemRegister.cpp \
-           src/main.cpp \
            src/Memory.cpp \
            src/MemoryManager.cpp \
-           src/Output.cpp
+           src/Output.cpp \
+           src/SystemManager.cpp \
+           src/main.cpp
 
 HEADERS += \
+    include/Defines.hpp \
     include/WestBot/Action.hpp \
     include/WestBot/Common.hpp \
+    include/WestBot/Configuration.hpp \
     include/WestBot/FunnyAction.hpp \
     include/WestBot/GameManager.hpp \
+    include/WestBot/Hal.hpp \
     include/WestBot/Input.hpp \
     include/WestBot/ItemRegister.hpp \
     include/WestBot/Layer.hpp \
     include/WestBot/Memory.hpp \
     include/WestBot/MemoryManager.hpp \
-    include/WestBot/Output.hpp
+    include/WestBot/Output.hpp \
+    include/WestBot/SystemManager.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

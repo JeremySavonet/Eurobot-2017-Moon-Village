@@ -29,6 +29,9 @@ public:
 
     ~GameManager() override;
 
+    void start();
+    void stop();
+
     void pushAction( const Action::Ptr& action );
     void clearActionQueue();
 
