@@ -14,7 +14,6 @@ INCLUDEPATH += include
 SOURCES += src/Action.cpp \
            src/Configuration.cpp \
            src/FunnyAction.cpp \
-           src/GameManager.cpp \
            src/Hal.cpp \
            src/Input.cpp \
            src/ItemRegister.cpp \
@@ -31,7 +30,6 @@ HEADERS += \
     include/WestBot/Common.hpp \
     include/WestBot/Configuration.hpp \
     include/WestBot/FunnyAction.hpp \
-    include/WestBot/GameManager.hpp \
     include/WestBot/Hal.hpp \
     include/WestBot/Input.hpp \
     include/WestBot/ItemRegister.hpp \

@@ -3,6 +3,10 @@
 #ifndef WESTBOT_HAL_HPP_
 #define WESTBOT_HAL_HPP_
 
+#include <QMap>
+#include <QString>
+
+#include "ItemRegister.hpp"
 #include "MemoryManager.hpp"
 
 namespace WestBot {
@@ -15,8 +19,12 @@ public:
 
     void init();
 
+    ItemRegister::Ptr itemWithId( const QString& id );
+    QMap< QString, ItemRegister::Ptr >& items();
+
 private:
     MemoryManager _memoryManager;
+    QMap< QString, ItemRegister::Ptr > _registersMap;
 };
 
 }

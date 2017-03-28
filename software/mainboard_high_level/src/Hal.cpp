@@ -7,6 +7,11 @@
 #include <WestBot/Hal.hpp>
 #include <WestBot/Memory.hpp>
 
+#define ADD_REGISTER( name, layerRegister ) \
+    {                                       \
+        name, layerRegister                 \
+    }
+
 using namespace WestBot;
 
 Hal::Hal()
@@ -25,4 +30,14 @@ void Hal::init()
     Memory layer3( _memoryManager, PIO_N_LAYER3_BASE );
 
     qInfo() << "Successfully initialized Hal module";
+}
+
+ItemRegister::Ptr Hal::itemWithId( const QString& id )
+{
+    return _registersMap.value( id );
+}
+
+QMap< QString, ItemRegister::Ptr >& Hal::items()
+{
+    return _registersMap;
 }

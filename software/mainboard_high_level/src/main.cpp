@@ -40,8 +40,11 @@ int main( int argc, char *argv[] )
     hal.init(); // Open the FPGA memory and load our module
 
     // Init the System manager
-    SystemManager system;
-    system.init(); // Start the state machine
+    SystemManager system( hal );
+    system.init(); // Create the state machine
+
+    // Here we are BITCHESSSSSS !!!
+    system.start(); // Start the state machine
 
     while( 1 )
     {
