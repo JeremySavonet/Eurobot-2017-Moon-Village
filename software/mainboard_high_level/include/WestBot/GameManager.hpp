@@ -50,6 +50,8 @@ signals:
 
     void funnyActionDone();
 
+    void hardStop();
+
 private:
     void createStateMachine();
 
@@ -72,6 +74,9 @@ private:
 
     // Fallback state when an error occured
     QState* createErrorState( QState* parent );
+
+    // Hard stop state when AU button is pushed
+    QState* createHardStopState( QState* parent );
 
 private:
     QStateMachine _stateMachine;

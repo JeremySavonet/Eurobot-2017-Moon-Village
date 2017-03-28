@@ -77,7 +77,7 @@ GameManager::GameManager(
         {
             if( value == DigitalValue::ON )
             {
-                emit stopped();
+                emit hardStop();
             }
         } );
 
@@ -137,6 +137,8 @@ void GameManager::createStateMachine()
     QState* stopGameState = createStopGameState( & _stateMachine );
 
     QState* errorState = createErrorState( & _stateMachine );
+
+    QState* hardStopState = createHardStopState( & _stateMachine );
 
     // Add state transitions
     initialState->addTransition( checkGameColorState );
@@ -219,6 +221,42 @@ void GameManager::createStateMachine()
         this,
         & GameManager::error,
         errorState );
+
+    // Hard stop fallback
+    checkGameColorState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
+
+    startGameState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
+
+    waitForActionState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
+
+    executeActionState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
+
+    cancelActionState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
+
+    funnyActionState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
+
+    stopGameState->addTransition(
+        this,
+        & GameManager::hardStop,
+        hardStopState );
 
     _stateMachine.setInitialState( initialState );
 }
@@ -490,3 +528,21 @@ QState* GameManager::createErrorState( QState* parent )
 
     return state;
 }
+
+// Hard stop state when AU button is pushed
+QState* GameManager::createHardStopState( QState* parent )
+{
+    QState* state = new QState( parent );
+
+    connect(
+        state,
+        & QState::entered,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Enter hard stop state";
+        } );
+
+    return state;
+}
+
