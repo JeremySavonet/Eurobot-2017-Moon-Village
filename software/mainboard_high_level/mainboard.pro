@@ -21,6 +21,7 @@ SOURCES += src/Action.cpp \
            src/Memory.cpp \
            src/MemoryManager.cpp \
            src/Output.cpp \
+           src/StrategyManager.cpp \
            src/SystemManager.cpp \
            src/main.cpp
 
@@ -38,6 +39,7 @@ HEADERS += \
     include/WestBot/Memory.hpp \
     include/WestBot/MemoryManager.hpp \
     include/WestBot/Output.hpp \
+    include/WestBot/StrategyManager.hpp \
     include/WestBot/SystemManager.hpp
 
 # The following define makes your compiler emit warnings if you use
