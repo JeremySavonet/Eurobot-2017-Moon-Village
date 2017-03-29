@@ -48,18 +48,3 @@ void Configuration::save()
     Q_UNUSED( settings );
     // XXX: Implement
 }
-
-const Layer1Config_t& Configuration::layer1Configuration() const
-{
-    return _layer1Configuration;
-}
-
-const Layer2Config_t& Configuration::layer2Configuration() const
-{
-    return _layer2Configuration;
-}
-
-const Layer3Config_t& Configuration::layer3Configuration() const
-{
-    return _layer3Configuration;
-}
