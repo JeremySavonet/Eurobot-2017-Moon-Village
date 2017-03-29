@@ -3,8 +3,10 @@
 #ifndef WESTBOT_CONFIGURATION_HPP_
 #define WESTBOT_CONFIGURATION_HPP_
 
+#include <QMap>
 #include <QObject>
 #include <QString>
+#include <QVariant>
 
 class QFileSystemWatcher;
 
@@ -22,13 +24,17 @@ public:
     void save();
 
     const QString& filename() const;
-
+    
+    const QMap< QString, QVariant >& settings() const;
+    QMap< QString, QVariant >& mutableSettings();
+    
 signals:
     void configurationChanged();
 
 private:
     QFileSystemWatcher* _watcher;
     QString _configurationFilePath;
+    QMap< QString, QVariant > _settings;
 };
 
 }

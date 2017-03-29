@@ -3,8 +3,14 @@
 #include <QDebug>
 #include <QFileSystemWatcher>
 #include <QSettings>
+#include <QStringList>
 
 #include <WestBot/Configuration.hpp>
+
+#define ADD_SETTING( setting, value ) \
+    {                                 \
+        setting, value                \
+    }
 
 using namespace WestBot;
 
@@ -37,14 +43,25 @@ const QString& Configuration::filename() const
 
 void Configuration::load()
 {
+    // Open the ini configuration file.
     QSettings settings( _configurationFilePath, QSettings::IniFormat );
-    Q_UNUSED( settings );
-    // XXX: TODO get all the settings from the ini file
+    
+    // Purge settings
+    _settings.clear();
+    
+    const QStringList& childKeys = settings.allKeys();
+    for( const auto& key : keys )
+    {
+        _settings.insert( key, settings.value( key ) );
+    }
 }
 
 void Configuration::save()
 {
     QSettings settings( _configurationFilePath, QSettings::IniFormat );
-    Q_UNUSED( settings );
-    // XXX: Implement
+        
+    for( auto it = _settings.constBegin(); it != _settings.constEnd(); ++it )
+    {
+        settings.setValue( it.key(), it.value() );
+    }
 }
