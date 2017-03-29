@@ -13,6 +13,7 @@ INCLUDEPATH += include
 
 SOURCES += src/Action.cpp \
            src/Configuration.cpp \
+           src/ConfigurationTcpServer.cpp \
            src/FunnyAction.cpp \
            src/Hal.cpp \
            src/Input.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     include/WestBot/Action.hpp \
     include/WestBot/Common.hpp \
     include/WestBot/Configuration.hpp \
+    include/WestBot/ConfigurationTcpServer.hpp \
     include/WestBot/FunnyAction.hpp \
     include/WestBot/Hal.hpp \
     include/WestBot/Input.hpp \
