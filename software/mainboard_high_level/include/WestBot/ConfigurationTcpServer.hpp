@@ -38,9 +38,9 @@ private:
 
 private:
     QHash< QObject*, SocketPtr > _clients;
-    Configuration _configurationManager;
+    Configuration& _configurationManager;
 };
 
 }
 
-#endif WESTBOT_CONFIGURATIONTCPSERVER_HPP_
+#endif // WESTBOT_CONFIGURATIONTCPSERVER_HPP_

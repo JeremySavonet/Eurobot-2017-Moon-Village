@@ -36,7 +36,10 @@ void ConfigurationTcpServer::incomingConnection( qintptr socketDescriptor )
         tcpSocket.get(),
         & QTcpSocket::connected,
         this,
-        & ConfigurationTcpServer::sendConfiguration );
+        [ this, tcpSocket ]()
+        {
+            sendConfiguration( tcpSocket );
+        } );
 
     connect(
         tcpSocket.get(),
@@ -51,7 +54,10 @@ void ConfigurationTcpServer::incomingConnection( qintptr socketDescriptor )
         tcpSocket.get(),
         & QTcpSocket::readyRead,
         this,
-        & ConfigurationTcpServer::parseData );
+        [ this, tcpSocket ]()
+        {
+            parseData( tcpSocket );
+        } );
 
 }
 
@@ -62,21 +68,21 @@ void ConfigurationTcpServer::disconnectClient( const SocketPtr& socket )
 
 void ConfigurationTcpServer::parseData( const SocketPtr& socket )
 {
-    qDebug() << socket.readAll();
+    qDebug() << socket->readAll();
 }
 
 void ConfigurationTcpServer::sendConfiguration( const SocketPtr& socket )
 {
-    socket.write( "Connected to WestBot Server\r\n" );
-    socket.flush();
-    socket.waitForBytesWritten( 3000 );
+    socket->write( "Connected to WestBot Server\r\n" );
+    socket->flush();
+    socket->waitForBytesWritten( 3000 );
 
     const QHash< QString, QVariant > conf = _configurationManager.settings();
     for( auto it = conf.constBegin(); it != conf.constEnd(); ++it )
     {
         QString message = "PARAM " % it.key() % ' ' % it.value().toString();
-        socket.write( message.toLatin1() );
-        socket.flush();
+        socket->write( message.toLatin1() );
+        socket->flush();
 
         qDebug() << "Byte written:" << message.toLatin1();
     }

@@ -20,6 +20,7 @@ Configuration::Configuration( const QString& filename )
         this,
         [ this ] ( const QString& filename )
         {
+            Q_UNUSED( filename )
             emit configurationChanged();
         } );
 }
@@ -44,7 +45,7 @@ void Configuration::load()
     _settings.clear();
 
     const QStringList& childKeys = settings.allKeys();
-    for( const auto& key : keys )
+    for( const auto& key : childKeys )
     {
         _settings.insert( key, settings.value( key ) );
     }
@@ -60,12 +61,12 @@ void Configuration::save()
     }
 }
 
-const QMap< QString, QVariant >& Configuration::settings() const
+const QHash< QString, QVariant >& Configuration::settings() const
 {
     return _settings;
 }
 
-QMap< QString, QVariant >& Configuration::mutableSettings()
+QHash< QString, QVariant >& Configuration::mutableSettings()
 {
     return _settings;
 }
