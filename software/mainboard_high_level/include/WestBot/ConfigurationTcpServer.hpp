@@ -10,6 +10,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
+#include "Configuration.hpp"
+
 namespace WestBot {
 
 class ConfigurationTcpServer : public QTcpServer
@@ -19,7 +21,8 @@ class ConfigurationTcpServer : public QTcpServer
 public:
     using SocketPtr = std::shared_ptr< QTcpSocket >;
 
-    ConfigurationTcpServer( QObject* parent = nullptr );
+    ConfigurationTcpServer( Configuration& configurationManager,
+                            QObject* parent = nullptr );
 
     void disconnectClient( const SocketPtr& socket );
 
@@ -31,9 +34,11 @@ protected:
 
 private:
     void parseData( const SocketPtr& socket );
+    void sendConfiguration( const SocketPtr& socket );
 
 private:
     QHash< QObject*, SocketPtr > _clients;
+    Configuration _configurationManager;
 };
 
 }

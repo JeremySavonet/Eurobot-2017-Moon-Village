@@ -1,16 +1,10 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#include <QDebug>
 #include <QFileSystemWatcher>
 #include <QSettings>
 #include <QStringList>
 
 #include <WestBot/Configuration.hpp>
-
-#define ADD_SETTING( setting, value ) \
-    {                                 \
-        setting, value                \
-    }
 
 using namespace WestBot;
 
@@ -45,10 +39,10 @@ void Configuration::load()
 {
     // Open the ini configuration file.
     QSettings settings( _configurationFilePath, QSettings::IniFormat );
-    
+
     // Purge settings
     _settings.clear();
-    
+
     const QStringList& childKeys = settings.allKeys();
     for( const auto& key : keys )
     {
@@ -59,9 +53,19 @@ void Configuration::load()
 void Configuration::save()
 {
     QSettings settings( _configurationFilePath, QSettings::IniFormat );
-        
+
     for( auto it = _settings.constBegin(); it != _settings.constEnd(); ++it )
     {
         settings.setValue( it.key(), it.value() );
     }
+}
+
+const QMap< QString, QVariant >& Configuration::settings() const
+{
+    return _settings;
+}
+
+QMap< QString, QVariant >& Configuration::mutableSettings()
+{
+    return _settings;
 }

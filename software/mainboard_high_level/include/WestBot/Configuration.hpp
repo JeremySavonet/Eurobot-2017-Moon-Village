@@ -24,10 +24,10 @@ public:
     void save();
 
     const QString& filename() const;
-    
+
     const QMap< QString, QVariant >& settings() const;
     QMap< QString, QVariant >& mutableSettings();
-    
+
 signals:
     void configurationChanged();
 

@@ -1,14 +1,19 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
 #include <QDebug>
+#include <QHash>
 #include <QString>
+#include <QStringBuilder>
+#include <QVariant>
 
 #include <WestBot/ConfigurationTcpServer.hpp>
 
 using namespace WestBot;
 
-ConfigurationTcpServer::ConfigurationTcpServer( QObject* parent )
+ConfigurationTcpServer::ConfigurationTcpServer(
+    Configuration& configurationManager, QObject* parent )
     : QTcpServer( parent )
+    , _configurationManager( configurationManager )
 {
 }
 
@@ -29,6 +34,12 @@ void ConfigurationTcpServer::incomingConnection( qintptr socketDescriptor )
 
     connect(
         tcpSocket.get(),
+        & QTcpSocket::connected,
+        this,
+        & ConfigurationTcpServer::sendConfiguration );
+
+    connect(
+        tcpSocket.get(),
         & QTcpSocket::disconnected,
         this,
         [ this, tcpSocket ]()
@@ -42,9 +53,6 @@ void ConfigurationTcpServer::incomingConnection( qintptr socketDescriptor )
         this,
         & ConfigurationTcpServer::parseData );
 
-    tcpSocket->write( "Connected to WestBot Server\r\n" );
-    tcpSocket->flush();
-    tcpSocket->waitForBytesWritten( 3000 );
 }
 
 void ConfigurationTcpServer::disconnectClient( const SocketPtr& socket )
@@ -55,4 +63,23 @@ void ConfigurationTcpServer::disconnectClient( const SocketPtr& socket )
 void ConfigurationTcpServer::parseData( const SocketPtr& socket )
 {
     qDebug() << socket.readAll();
+}
+
+void ConfigurationTcpServer::sendConfiguration( const SocketPtr& socket )
+{
+    socket.write( "Connected to WestBot Server\r\n" );
+    socket.flush();
+    socket.waitForBytesWritten( 3000 );
+
+    const QHash< QString, QVariant > conf = _configurationManager.settings();
+    for( auto it = conf.constBegin(); it != conf.constEnd(); ++it )
+    {
+        QString message = "PARAM " % it.key() % ' ' % it.value().toString();
+        socket.write( message.toLatin1() );
+        socket.flush();
+
+        qDebug() << "Byte written:" << message.toLatin1();
+    }
+
+    qDebug() << "Send configuration done";
 }

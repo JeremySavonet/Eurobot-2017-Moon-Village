@@ -35,6 +35,9 @@ int main( int argc, char *argv[] )
 
     configurationManager.load();
 
+    // Start the tcp configuration server
+    ConfigurationTcpServer configurationServer( configurationManager );
+
     // Init the Hardware Abstraction Layer
     Hal hal;
     hal.init(); // Open the FPGA memory and load our module
