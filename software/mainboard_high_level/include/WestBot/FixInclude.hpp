@@ -1,18 +1,16 @@
-#ifndef FIXINCLUDE_H
-#define FIXINCLUDE_H
+// Copyright (c) 2016-2017 All Rights Reserved WestBot
+
+#ifndef WESTBOT_FIXINCLUDE_HPP_
+#define WESTBOT_FIXINCLUDE_HPP_
 
 #include <QGraphicsPixmapItem>
-#include <QDir>
-#include <list>
+#include <QList>
+#include <QPair>
 
-using namespace std;
+namespace WestBot {
 
 #ifndef NULL
 #define NULL 0
-#endif
-
-#ifndef UINT
-#define UINT unsigned int
 #endif
 
 enum ToSetState
@@ -57,70 +55,65 @@ enum AncestorDirection
 
 class SearchNode
 {
+public:
+    NodeType type;
 
-    public:
+    uint originX;
+    uint originY;
+    double h;
+    uint g;
+    uint expandCost;
+    double cost;
+    double pathCost;
 
-        NodeType type;
-
-        UINT originX;
-        UINT originY;
-        double h;
-        UINT g;
-        UINT expandCost;
-        double cost;
-        double pathCost;
-
-        SearchNode();
-        ~SearchNode();
+    SearchNode();
+    ~SearchNode();
 };
 
 class PathNode
 {
+public:
+    uint x;
+    uint y;
 
-    public:
-
-        UINT x;
-        UINT y;
-
-        PathNode();
-        ~PathNode();
+    PathNode();
+    ~PathNode();
 };
 
 class NodeState
 {
+public:
+    uint x;
+    uint y;
 
-    public:
+    NodeType state;
 
-        UINT x;
-        UINT y;
+    AncestorDirection ancestor;
 
-        NodeType state;
-
-        AncestorDirection ancestor;
-
-        NodeState();
-        NodeState(UINT x, UINT y, NodeType state);
-        ~NodeState();
+    NodeState();
+    NodeState( uint x, uint y, NodeType state );
+    ~NodeState();
 };
 
 class MapNode
 {
+public:
+    NodeType type;
 
-    public:
-        NodeType type;
+    uint expandCost;
 
-        UINT expandCost;
-
-        QGraphicsPixmapItem pixmapItem;
+    QGraphicsPixmapItem pixmapItem;
 };
 
 struct RunResources
 {
-    class MapNode **map;
-    list<pair<UINT, UINT> > *path;
-    list<list<NodeState> > *steps;
-    pair<UINT, UINT> start;
-    pair<UINT, UINT> end;
+    class MapNode** map;
+    QList< QPair< uint, uint> >* path;
+    QList< QList< NodeState > >* steps;
+    QPair< uint, uint > start;
+    QPair< uint, uint > end;
 };
 
-#endif // FIXINCLUDE_H
+}
+
+#endif // WESTBOT_FIXINCLUDE_HPP_
