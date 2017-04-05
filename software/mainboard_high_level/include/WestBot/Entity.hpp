@@ -19,7 +19,7 @@ public:
     /*!
      * \brief List of available entity type.
      */
-    public class Type
+    enum class Type
     {
         NONE,
         ENNEMI,
@@ -28,7 +28,7 @@ public:
         ROCHE_LUNAIRE
     };
 
-    Entity( Type type = Type::NONE, int x, int y, QObject* parent = nullptr );
+    Entity( int x, int y, Type type = Type::NONE, QObject* parent = nullptr );
     ~Entity() override = default;
 
     /*!
@@ -73,7 +73,7 @@ signals:
     void updated();
 
 private:
-    int _type;
+    Type _type;
     QPoint _position;
 };
 

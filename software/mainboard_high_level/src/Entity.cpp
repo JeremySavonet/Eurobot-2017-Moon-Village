@@ -1,10 +1,10 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-using namespace WestBot;
-
 #include <WestBot/Entity.hpp>
 
-Entity::Entity( Entity::Type type, int x, int y, QObject* parent )
+using namespace WestBot;
+
+Entity::Entity( int x, int y, Entity::Type type, QObject* parent )
     : QObject( parent )
     , _type( type )
     , _position( x, y )
