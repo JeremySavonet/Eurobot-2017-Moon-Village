@@ -26,6 +26,8 @@ public:
 
     void disconnectClient( const SocketPtr& socket );
 
+    void showConnectionInformation() const;
+
 signals:
     void error( QTcpSocket::SocketError socketError );
 

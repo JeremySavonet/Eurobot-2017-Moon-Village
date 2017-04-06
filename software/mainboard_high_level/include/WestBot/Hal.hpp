@@ -8,6 +8,7 @@
 
 #include "ItemRegister.hpp"
 #include "MemoryManager.hpp"
+#include <WestBot/Memory.hpp>
 
 namespace WestBot {
 
@@ -24,6 +25,9 @@ public:
 
 private:
     MemoryManager _memoryManager;
+    Memory _layer1;
+    Memory _layer2;
+    Memory _layer3;
     QMap< QString, ItemRegister::Ptr > _registersMap;
 };
 

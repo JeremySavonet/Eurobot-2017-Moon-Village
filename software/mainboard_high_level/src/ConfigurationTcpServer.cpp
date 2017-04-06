@@ -2,6 +2,8 @@
 
 #include <QDebug>
 #include <QHash>
+#include <QList>
+#include <QNetworkInterface>
 #include <QString>
 #include <QStringBuilder>
 #include <QVariant>
@@ -64,6 +66,39 @@ void ConfigurationTcpServer::incomingConnection( qintptr socketDescriptor )
 void ConfigurationTcpServer::disconnectClient( const SocketPtr& socket )
 {
     _clients.remove( socket.get() );
+}
+
+void ConfigurationTcpServer::showConnectionInformation() const
+{
+    if( isListening() )
+    {
+        QString ipAddress;
+        QList< QHostAddress > ipAddressesList = QNetworkInterface::allAddresses();
+
+        // use the first non-localhost IPv4 address
+        for( int i = 0; i < ipAddressesList.size(); ++i )
+        {
+            if( ipAddressesList.at( i ) != QHostAddress::LocalHost &&
+                    ipAddressesList.at( i ).toIPv4Address() )
+            {
+                ipAddress = ipAddressesList.at( i ).toString();
+                break;
+            }
+        }
+
+        // if we did not find one, use IPv4 localhost
+        if( ipAddress.isEmpty() )
+            ipAddress = QHostAddress( QHostAddress::LocalHost).toString();
+        {
+            qDebug()
+                << "The server is running on\n\nIP:" << ipAddress << "\nport:"
+                << serverPort();
+        }
+    }
+    else
+    {
+        qDebug() << "No client bound on server.";
+    }
 }
 
 void ConfigurationTcpServer::parseData( const SocketPtr& socket )
