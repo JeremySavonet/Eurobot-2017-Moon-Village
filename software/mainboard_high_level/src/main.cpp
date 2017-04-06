@@ -7,15 +7,12 @@
 #include <QHostAddress>
 #include <QThread>
 
-#include <hps_arm.h> // For our base address
-
 #include <Defines.hpp>
 
-#include <WestBot/Input.hpp>
-#include <WestBot/Output.hpp>
 #include <WestBot/Configuration.hpp>
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
+#include <WestBot/Output.hpp>
 #include <WestBot/SystemManager.hpp>
 
 namespace
@@ -68,9 +65,23 @@ int main( int argc, char *argv[] )
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
 
+#ifdef SIMU
+    hal.itemWithId( "CONFIG" )->write( 0xffffffff );
+#endif
+
+    // Leds: Here just for an example
+    Output led( hal.itemWithId( "OUT1" ), "Led" );
+    Output io1( hal.itemWithId( "OUT2" ), "IO1" );
+
     while( 1 )
     {
+        led.digitalWrite( DigitalValue::ON );
+        io1.digitalWrite( DigitalValue::OFF );
         QThread::msleep( 250 );
+        led.digitalWrite( DigitalValue::OFF );
+        io1.digitalWrite( DigitalValue::ON );
+        QThread::msleep( 250 );
+
         QCoreApplication::processEvents();
     }
 

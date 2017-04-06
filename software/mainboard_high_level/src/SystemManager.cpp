@@ -20,6 +20,9 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     : QObject( parent )
     , _hal( hal )
     , _stateMachine( this )
+    , _startButton( new Input(_hal.itemWithId( "IN1"), "Tirette" ) )
+    , _colorButton( new Input(_hal.itemWithId( "IN2"), "Color" ) )
+    , _stopButton( new Input( _hal.itemWithId( "IN3"), "AU" ) )
     , _color( Color::Unknown )
     , _systemMode( SystemManager::SystemMode::Full )
 {
@@ -72,6 +75,10 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             if( value == DigitalValue::ON )
             {
                 emit hardStop();
+            }
+            else
+            {
+                emit reArming();
             }
         } );
 }
@@ -264,6 +271,11 @@ void SystemManager::createStateMachine()
         this,
         & SystemManager::hardStop,
         hardStopState );
+
+    hardStopState->addTransition(
+        this,
+        & SystemManager::reArming,
+        initialState );
 
     _stateMachine.setInitialState( initialState );
 }
@@ -547,6 +559,7 @@ QState* SystemManager::createHardStopState( QState* parent )
         this,
         [ this ]()
         {
+            _gameTimer.stop();
             qDebug() << "Enter hard stop state";
         } );
 

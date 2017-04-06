@@ -63,6 +63,7 @@ signals:
     void funnyActionDone();
 
     void hardStop();
+    void reArming();
 
 private:
     void createStateMachine();

@@ -9,11 +9,6 @@
 
 #include <WestBot/Hal.hpp>
 
-#define ADD_REGISTER( name, layerRegister ) \
-    {                                       \
-        name, layerRegister                 \
-    }
-
 using namespace WestBot;
 
 Hal::Hal()
@@ -65,35 +60,36 @@ void Hal::init()
 #endif
 
 #ifdef SIMU
-    ItemRegister configStateRegister( _layer1, 1 * 4, 32 );
-    configStateRegister.write( 0xffffffff );
+    ItemRegister::Ptr configStateRegister = std::make_shared< ItemRegister >( _layer1, 1 * 4, 32 );
+    _registersMap.insert( "CONFIG", configStateRegister );
 #endif
 
-    //// INPUT REGISTER
-    //ItemRegister::Ptr inputRegister1 = std::make_shared< ItemRegister >( layer1, 7 * 4, 8 );
-    //ItemRegister::Ptr inputRegister2 = std::make_shared< ItemRegister >( layer1, 7 * 4 + 1, 8 );
-    //ItemRegister::Ptr inputRegister3 = std::make_shared< ItemRegister >( layer1, 7 * 4 + 2, 8 );
+    // INPUT REGISTER
+    ItemRegister::Ptr inputRegister1 = std::make_shared< ItemRegister >( _layer1, 7 * 4, 8 );
+    ItemRegister::Ptr inputRegister2 = std::make_shared< ItemRegister >( _layer1, 7 * 4 + 1, 8 );
+    ItemRegister::Ptr inputRegister3 = std::make_shared< ItemRegister >( _layer1, 7 * 4 + 2, 8 );
 
-    //// OUTOUT REGISTER OVERRIDE
-    //ItemRegister outputOverride( layer1, 10 * 4, 32 );
-    //outputOverride.write( 0x01010101 );
+    _registersMap.insert( "IN1", inputRegister1 );
+    _registersMap.insert( "IN2", inputRegister2 );
+    _registersMap.insert( "IN3", inputRegister3 );
 
-    //ItemRegister::Ptr outputLedRegister = std::make_shared< ItemRegister >( layer1, 9 * 4, 8 );
-    //ItemRegister::Ptr outputIO1Register = std::make_shared< ItemRegister >( layer1, 9 * 4 + 1, 8 );
-    //ItemRegister::Ptr outputIO2Register = std::make_shared< ItemRegister >( layer1, 9 * 4 + 2, 8 );
-    //ItemRegister::Ptr outputIO3Register = std::make_shared< ItemRegister >( layer1, 9 * 4 + 3, 8 );
+    // OUTOUT REGISTER OVERRIDE
+    ItemRegister::Ptr outputOverride =  std::make_shared< ItemRegister >( _layer1, 10 * 4, 32 );
+    outputOverride->write( 0x01010101 );
+    _registersMap.insert( "OUTOVERRIDE", outputOverride );
 
-    //// Buttons
-    //Input tirette( inputRegister1, "Tirette" );
-    //Input color( inputRegister2, "Color" );
-    //Input arretUrgence ( inputRegister3, "AU" );
+    // OUTPUT REGISTER
+    ItemRegister::Ptr outputLedRegister = std::make_shared< ItemRegister >( _layer1, 9 * 4, 8 );
+    ItemRegister::Ptr outputIO1Register = std::make_shared< ItemRegister >( _layer1, 9 * 4 + 1, 8 );
+    ItemRegister::Ptr outputIO2Register = std::make_shared< ItemRegister >( _layer1, 9 * 4 + 2, 8 );
+    ItemRegister::Ptr outputIO3Register = std::make_shared< ItemRegister >( _layer1, 9 * 4 + 3, 8 );
 
-    //// Leds
-    //Output led( outputLedRegister, "Led" );
-    //Output io1( outputIO1Register, "IO1" );
-    //Output io2( outputIO2Register, "IO2" );
-    //Output io3( outputIO3Register, "IO3" );
+    _registersMap.insert( "OUT1", outputLedRegister );
+    _registersMap.insert( "OUT2", outputIO1Register );
+    _registersMap.insert( "OUT3", outputIO2Register );
+    _registersMap.insert( "OUT4", outputIO3Register );
 
+    // TODO: Need to insert all our register in the map
     qInfo() << "Successfully initialized Hal module";
 }
 
