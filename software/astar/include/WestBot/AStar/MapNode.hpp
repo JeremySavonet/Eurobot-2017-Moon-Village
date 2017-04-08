@@ -20,8 +20,6 @@ public:
     NodeType type;
 
     uint expandCost;
-
-    QGraphicsPixmapItem pixmapItem;
 };
 
 struct WESTBOT_ASTAR_EXPORT RunResources
