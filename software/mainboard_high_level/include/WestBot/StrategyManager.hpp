@@ -3,6 +3,10 @@
 #ifndef WESTBOT_STRATEGYMANAGER_HPP_
 #define WESTBOT_STRATEGYMANAGER_HPP_
 
+#include <QObject>
+
+#include "SystemManager.hpp"
+
 namespace WestBot
 {
 
@@ -10,11 +14,16 @@ namespace WestBot
 * \brief This class manage the robot strategy by handling data from FPGA
 *        and push action in the action queue of the game manager.
 */
-class StrategyManager
+class StrategyManager : public QObject
 {
 public:
-    StrategyManager();
-    ~StrategyManager();
+    StrategyManager(
+        SystemManager& systemManager,
+        QObject* parent = nullptr );
+    ~StrategyManager() override = default;
+
+private:
+    SystemManager& _systemManager;
 };
 
 }

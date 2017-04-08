@@ -358,6 +358,12 @@ QState* SystemManager::createStartGameState( QState* parent )
             _gameTimer.start( GAME_DURATION );
         } );
 
+    connect(
+        state,
+        & QState::exited,
+        this,
+        & SystemManager::readyForWar );
+
     return state;
 }
 

@@ -54,6 +54,8 @@ signals:
     void doFunnyAction();
     void systemInitialized();
 
+    void readyForWar();
+
     void executeAction();
     void actionQueueCleared();
 

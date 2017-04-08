@@ -20,6 +20,11 @@ Hal::Hal()
 
 Hal::~Hal()
 {
+    _layer1.reset();
+    _layer2.reset();
+    _layer3.reset();
+
+    _registersMap.clear();
 }
 
 void Hal::init()

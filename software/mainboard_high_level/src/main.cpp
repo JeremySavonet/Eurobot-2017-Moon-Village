@@ -13,6 +13,7 @@
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
 #include <WestBot/Output.hpp>
+#include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
 
 namespace
@@ -72,6 +73,8 @@ int main( int argc, char *argv[] )
     // Leds: Here just for an example
     Output led( hal.itemWithId( "OUT1" ), "Led" );
     Output io1( hal.itemWithId( "OUT2" ), "IO1" );
+
+    StrategyManager strategyManager( system );
 
     while( 1 )
     {

@@ -23,8 +23,6 @@ public:
     ItemRegister::Ptr itemWithId( const QString& id );
     QMap< QString, ItemRegister::Ptr >& items();
 
-    //ItemRegister::Ptr _in1;
-
 private:
     MemoryManager _memoryManager;
     Memory _layer1;
