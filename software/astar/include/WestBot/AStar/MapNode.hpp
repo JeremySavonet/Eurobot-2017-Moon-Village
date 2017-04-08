@@ -3,7 +3,6 @@
 #ifndef WESTBOT_ASTAR_MAPNODE_HPP_
 #define WESTBOT_ASTAR_MAPNODE_HPP_
 
-#include <QGraphicsPixmapItem>
 #include <QList>
 #include <QPair>
 
