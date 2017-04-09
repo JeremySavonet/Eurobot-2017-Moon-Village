@@ -13,17 +13,21 @@
 namespace WestBot {
 namespace AStar {
 
+template< typename T >
 class WESTBOT_ASTAR_EXPORT MapNode
 {
 public:
     NodeType type;
 
     uint expandCost;
+
+    T pixmapItem;
 };
 
+template< typename T >
 struct WESTBOT_ASTAR_EXPORT RunResources
 {
-    class MapNode** map;
+    class MapNode< T >** map;
     QList< QPair< uint, uint> >* path;
     QList< QList< NodeState > >* steps;
     QPair< uint, uint > start;

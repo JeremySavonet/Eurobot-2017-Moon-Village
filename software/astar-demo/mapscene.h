@@ -49,7 +49,7 @@ private:
 private:
     AStar astar;
 
-    MapNode** map;
+    MapNode< QGraphicsPixmapItem >** map;
 
     QList< QPair< uint, uint > > path;
     QList< QList< NodeState > > steps;

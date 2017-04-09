@@ -53,11 +53,11 @@ void MapScene::freeNodes()
         {
             if (map[i][j].expandCost != 1)
             {
-                //map[i][j].pixmapItem.setPixmap(dirtNodeImgPath);
+                map[i][j].pixmapItem.setPixmap(dirtNodeImgPath);
             }
             else
             {
-                //map[i][j].pixmapItem.setPixmap(freeNodeImgPath);
+                map[i][j].pixmapItem.setPixmap(freeNodeImgPath);
             }
         }
     }
@@ -91,10 +91,10 @@ void MapScene::setMap(uint mapWidth, uint mapHeight)
 
     if (mapWidth == 0 || mapHeight == 0) return;
 
-    map = new MapNode*[mapWidth];
+    map = new MapNode< QGraphicsPixmapItem >*[mapWidth];
 
     for (uint i = 0; i < mapWidth; i++)
-        map[i] = new MapNode[mapHeight];
+        map[i] = new MapNode< QGraphicsPixmapItem >[mapHeight];
 
     this->setSceneRect(0, 0, mapWidth, mapHeight);
 
@@ -103,10 +103,10 @@ void MapScene::setMap(uint mapWidth, uint mapHeight)
     {
         map[i][j].type = NodeType::WAYNODE;
         map[i][j].expandCost = 1;
-        //map[i][j].pixmapItem.setScale(itemScale);
-        //map[i][j].pixmapItem.setOffset(i*itemSize, j*itemSize);
-        //map[i][j].pixmapItem.setPixmap(QPixmap(freeNodeImgPath));
-        //this->addItem(&map[i][j].pixmapItem);
+        map[i][j].pixmapItem.setScale(itemScale);
+        map[i][j].pixmapItem.setOffset(i*itemSize, j*itemSize);
+        map[i][j].pixmapItem.setPixmap(QPixmap(freeNodeImgPath));
+        this->addItem(&map[i][j].pixmapItem);
     }
 
     astar.setMatrix(mapWidth, mapHeight);
@@ -127,7 +127,7 @@ void MapScene::drawPath()
     }
 
     for( auto pathIt = path.begin(); pathIt != path.end(); ++pathIt)
-        //map[pathIt->first][pathIt->second].pixmapItem.setPixmap(pathNodeImgPath);
+        map[pathIt->first][pathIt->second].pixmapItem.setPixmap(pathNodeImgPath);
 
     pathOnScreen = true;
 
@@ -141,8 +141,8 @@ void MapScene::reDrawStartEndNodes()
     start = astar.getStart();
     end = astar.getEnd();
 
-    //map[start.first][start.second].pixmapItem.setPixmap(startNodeImgPath);
-    //map[end.first][end.second].pixmapItem.setPixmap(endNodeImgPath);
+    map[start.first][start.second].pixmapItem.setPixmap(startNodeImgPath);
+    map[end.first][end.second].pixmapItem.setPixmap(endNodeImgPath);
 }
 
 void MapScene::obtainPath(bool saveChanges)
@@ -225,7 +225,7 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         for (uint j = initY; j <= finalY; j++)
         {
             map[i][j].type = NodeType::WALLNODE;
-            //map[i][j].pixmapItem.setPixmap(wallNodeImgPath);
+            map[i][j].pixmapItem.setPixmap(wallNodeImgPath);
             astar.setWall(i, j);
         }
     }
@@ -236,7 +236,7 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         {
             map[i][j].type = NodeType::WAYNODE;
             map[i][j].expandCost = 1;
-            //map[i][j].pixmapItem.setPixmap(freeNodeImgPath);
+            map[i][j].pixmapItem.setPixmap(freeNodeImgPath);
             astar.setWay(i, j);
             astar.setExpandCost(1, i, j);
         }
@@ -248,7 +248,7 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         {
             map[i][j].type = NodeType::WAYNODE;
             map[i][j].expandCost = 2;
-           // map[i][j].pixmapItem.setPixmap(dirtNodeImgPath);
+            map[i][j].pixmapItem.setPixmap(dirtNodeImgPath);
             astar.setWay(i, j);
             astar.setExpandCost(2, i, j);
         }
@@ -256,15 +256,15 @@ void MapScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     else if (toSetState == ToSetState::TOSETSTART)
     {
         point = astar.getStart();
-        //map[point.first][point.second].pixmapItem.setPixmap(freeNodeImgPath);
-        //map[finalX][finalY].pixmapItem.setPixmap(startNodeImgPath);
+        map[point.first][point.second].pixmapItem.setPixmap(freeNodeImgPath);
+        map[finalX][finalY].pixmapItem.setPixmap(startNodeImgPath);
         astar.setStart(finalX, finalY);
     }
     else
     {
         point = astar.getEnd();
-        //map[point.first][point.second].pixmapItem.setPixmap(freeNodeImgPath);
-        //map[finalX][finalY].pixmapItem.setPixmap(endNodeImgPath);
+        map[point.first][point.second].pixmapItem.setPixmap(freeNodeImgPath);
+        map[finalX][finalY].pixmapItem.setPixmap(endNodeImgPath);
         astar.setEnd(finalX, finalY);
     }
 
