@@ -24,6 +24,7 @@ SOURCES += src/Action.cpp \
            src/ItemRegister.cpp \
            src/Memory.cpp \
            src/MemoryManager.cpp \
+           src/MoveAction.cpp \
            src/Output.cpp \
            src/StrategyManager.cpp \
            src/SystemManager.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     include/WestBot/Layer.hpp \
     include/WestBot/Memory.hpp \
     include/WestBot/MemoryManager.hpp \
+    include/WestBot/MoveAction.hpp \
     include/WestBot/Output.hpp \
     include/WestBot/StrategyManager.hpp \
     include/WestBot/SystemManager.hpp \
