@@ -29,7 +29,7 @@ public:
     *
     * \return Return a pointer in the memory where the module is mapped.
     */
-    uint32_t* mapModuleToMemory( uint32_t moduleBaseAddress );
+    void* mapModuleToMemory( uint32_t moduleBaseAddress );
 
 private:
     /*!

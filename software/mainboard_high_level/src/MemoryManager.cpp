@@ -38,11 +38,11 @@ MemoryManager::~MemoryManager()
 }
 
 // Public
-uint32_t* MemoryManager::mapModuleToMemory( uint32_t moduleBaseAddress )
+void* MemoryManager::mapModuleToMemory( uint32_t moduleBaseAddress )
 {
     // Set the moduleMap to the correct offset within the RAM
     // (moduleBaseAddress need to be in "hps_0.h")
-    return ( uint32_t* )( (uint32_t*)_lwBridgeMap + moduleBaseAddress );
+    return ( void* )( ( char* )_lwBridgeMap + moduleBaseAddress );
 }
 
 // Private Methods
