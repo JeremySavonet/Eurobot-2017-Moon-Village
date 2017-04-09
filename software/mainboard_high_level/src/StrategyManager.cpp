@@ -55,3 +55,9 @@ void StrategyManager::toManhattan()
     qDebug() << "Changing heuristic to manhattan";
     _gameMap->setHeuristics( AStar::AStarHeuristics::manhattan );
 }
+
+
+void StrategyManager::dumpMap()
+{    
+    _gameMap->dumpMap();
+}

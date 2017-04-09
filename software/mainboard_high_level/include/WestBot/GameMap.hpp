@@ -3,11 +3,13 @@
 #ifndef WESTBOT_GAMEMAP_HPP_
 #define WESTBOT_GAMEMAP_HPP_
 
+#include <iostream>
 #include <memory>
 
-#include <QObject>
 #include <QList>
+#include <QObject>
 #include <QPair>
+#include <QString>
 
 #include <WestBot/AStar/AStar.hpp>
 #include <WestBot/AStar/MapNode.hpp>
@@ -32,6 +34,8 @@ public:
     void setEnd( uint x, uint y );
     void setToSetState( AStar::ToSetState toSetState );
 
+    void dumpMap();
+
 private:
     void freeNodes();
     void destroyMap();
@@ -42,7 +46,7 @@ private:
 private:
     AStar::AStar _astar;
 
-    AStar::MapNode** _map;
+    AStar::MapNode< QString >** _map;
 
     QList< QPair< uint, uint > > _path;
 

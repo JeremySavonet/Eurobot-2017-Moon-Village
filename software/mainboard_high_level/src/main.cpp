@@ -76,6 +76,13 @@ int main( int argc, char *argv[] )
 
     StrategyManager strategyManager( system );
 
+    strategyManager.buildMap();
+
+    strategyManager.buildPath();
+
+    // Just a quick dump of the map
+    strategyManager.dumpMap();
+
     while( 1 )
     {
         led.digitalWrite( DigitalValue::ON );

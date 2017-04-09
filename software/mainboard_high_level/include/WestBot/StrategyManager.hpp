@@ -4,6 +4,7 @@
 #define WESTBOT_STRATEGYMANAGER_HPP_
 
 #include <QObject>
+#include <QString>
 
 #include "GameMap.hpp"
 #include "SystemManager.hpp"
@@ -28,6 +29,8 @@ public:
 
     void toEuclidean();
     void toManhattan();
+
+    void dumpMap();
 
 private:
     SystemManager& _systemManager;
