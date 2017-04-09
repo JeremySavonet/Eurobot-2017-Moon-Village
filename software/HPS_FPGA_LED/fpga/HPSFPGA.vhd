@@ -14,6 +14,7 @@ library work;
 use     work.types_pkg.all;
 use     work.robot_layer_1_pkg.all;
 use     work.robot_layer_2_pkg.all;
+use     work.robot_layer_3_pkg.all;
 
 entity hpsfpga is
     port (
@@ -394,6 +395,32 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_qei_value      : int16_t(5-1 downto 0);
     signal w_qei_ref        : std_logic_vector(5-1 downto 0);
  
+    signal w_sum_m_dist    : std_logic_vector(32-1 downto 0);
+    signal w_sum_m_angle   : std_logic_vector(32-1 downto 0);
+
+    signal w_sum_c_dist    : std_logic_vector(32-1 downto 0);
+    signal w_sum_c_angle   : std_logic_vector(32-1 downto 0);
+
+
+    signal w_pos_valid     : std_logic;
+    signal w_pos_id        : std_logic_vector(8-1 downto 0);
+    signal w_pos_teta      : std_logic_vector(16-1 downto 0);
+    signal w_pos_x         : std_logic_vector(16-1 downto 0);
+    signal w_pos_y         : std_logic_vector(16-1 downto 0);
+    signal w_pos_sum_dist  : std_logic_vector(32-1 downto 0);
+    signal w_pos_sum_angle : std_logic_vector(32-1 downto 0);
+
+    signal w_dist_en       : std_logic;
+    signal w_dist_acc      : std_logic_vector(32-1 downto 0);
+    signal w_dist_speed    : std_logic_vector(32-1 downto 0);
+    signal w_dist_target   : std_logic_vector(32-1 downto 0);
+
+    signal w_angle_en      : std_logic;
+    signal w_angle_acc     : std_logic_vector(32-1 downto 0);
+    signal w_angle_speed   : std_logic_vector(32-1 downto 0);
+    signal w_angle_target  : std_logic_vector(32-1 downto 0);
+
+
 begin
 
 
@@ -581,62 +608,79 @@ begin
         motor_fault   => w_motor_fault,
 
         qei_value     => w_qei_value,
-        qei_ref       => w_qei_ref
+        qei_ref       => w_qei_ref,
 
         ---------------------------------
         -------- TO/FROM LAYER 3 --------
         ---------------------------------
+        sum_m_dist    => w_sum_m_dist,
+        sum_m_angle    => w_sum_m_angle,
+        sum_c_dist    => w_sum_c_dist,
+        sum_c_angle    => w_sum_c_angle,
 
+        pos_valid    => w_pos_valid,
+        pos_id    => w_pos_id,
+        pos_teta    => w_pos_teta,
+        pos_x    => w_pos_x,
+        pos_y    => w_pos_y,
+        pos_sum_dist    => w_pos_sum_dist,
+        pos_sum_angle    => w_pos_sum_angle,
 
+        dist_en    => w_dist_en,
+        dist_acc    => w_dist_acc,
+        dist_speed    => w_dist_speed,
+        dist_target    => w_dist_target,
+
+        angle_en    => w_angle_en,
+        angle_acc    => w_angle_acc,
+        angle_speed    => w_angle_speed,
+        angle_target    => w_angle_target
 
     );
 
-    --signal w_pio_n_layer2_data_in_value            : std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
-    --signal w_pio_n_layer2_data_in_read             : std_logic_vector(64-1 downto 0);                     -- data_in_read
-    --signal w_pio_n_layer2_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
-    --signal w_pio_n_layer2_data_out_write           : std_logic_vector(64-1 downto 0);                     -- data_out_write
 
+    inst_layer_3: robot_layer_3
+    generic map (
+        CLK_FREQUENCY_HZ => 50_000_000,
+        RegCnt => 64
+    )
+    port map (
+        clk     => FPGA_CLK1_50,
+        reset   => not hps_fpga_reset_n,
 
+        regs_data_in_value      => w_pio_n_layer3_data_in_value,
+        regs_data_in_read       => w_pio_n_layer3_data_in_read,              
+        regs_data_out_value     => w_pio_n_layer3_data_out_value,
+        regs_data_out_write     => w_pio_n_layer3_data_out_write,
 
+        ---------------------------------
+        -------- TO/FROM LAYER 2 --------
+        ---------------------------------
 
+        sum_m_dist    => w_sum_m_dist,
+        sum_m_angle    => w_sum_m_angle,
+        sum_c_dist    => w_sum_c_dist,
+        sum_c_angle    => w_sum_c_angle,
 
---    inst_m0_pid_rv : component system
---    port map (
---        clk_clk                 => FPGA_CLK1_50,
---        reset_reset_n           => hps_fpga_reset_n,
---        pio_data_in_value(32-1 downto 0) => w_m0_pio_0_in,  --   pio.data_in_value
---        pio_data_in_read        => open,   --      .data_in_read
---        pio_data_out_value(32-1 downto 0)  => w_m0_pio_0_out, --      .data_out_value
---        pio_data_out_write      => open --      .data_out_write
---    );
+        pos_valid    => w_pos_valid,
+        pos_id    => w_pos_id,
+        pos_teta    => w_pos_teta,
+        pos_x    => w_pos_x,
+        pos_y    => w_pos_y,
+        pos_sum_dist    => w_pos_sum_dist,
+        pos_sum_angle    => w_pos_sum_angle,
 
---    inst_m1_pid_rv : component system
---    port map (
---        clk_clk                 => FPGA_CLK1_50,
---        reset_reset_n           => hps_fpga_reset_n,
---        pio_data_in_value(32-1 downto 0) => w_m1_pio_0_in,  --   pio.data_in_value
---        pio_data_in_read        => open,   --      .data_in_read
---        pio_data_out_value(32-1 downto 0)  => w_m1_pio_0_out, --      .data_out_value
---        pio_data_out_write      => open --      .data_out_write
---    );
+        dist_en    => w_dist_en,
+        dist_acc    => w_dist_acc,
+        dist_speed    => w_dist_speed,
+        dist_target    => w_dist_target,
 
+        angle_en    => w_angle_en,
+        angle_acc    => w_angle_acc,
+        angle_speed    => w_angle_speed,
+        angle_target    => w_angle_target
 
-    --w_odometry_pio_in <= w_qei1_cnt & w_qei0_cnt;
-
---    inst_odometry_rv : component system
---    port map (
---        clk_clk                => FPGA_CLK1_50,
---        reset_reset_n          => hps_fpga_reset_n,
---        pio_data_in_value(32-1 downto 0) => w_odometry_pio_in,  --   pio.data_in_value
---        pio_data_in_read        => open,   --      .data_in_read
---        pio_data_out_value      => open, --      .data_out_value
---        pio_data_out_write      => open --      .data_out_write
---    );
-
-
-    --w_pio_n_layer1_data_in_value <= w_pio_n_layer1_data_out_value;
---    w_pio_n_layer2_data_in_value <= not w_pio_n_layer2_data_out_value;
-    w_pio_n_layer3_data_in_value <= w_pio_n_layer3_data_out_value;
+    );
 ----=======================================================
 ----  Structural coding
 ----=======================================================

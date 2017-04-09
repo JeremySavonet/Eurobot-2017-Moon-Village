@@ -33,11 +33,36 @@ package robot_layer_2_pkg is
         motor_fault   : in   std_logic_vector(MOTOR_COUNT-1 downto 0);
 
         qei_value     : in   int16_t(QEI_COUNT-1 downto 0);
-        qei_ref       : in   std_logic_vector(QEI_COUNT-1 downto 0)
+        qei_ref       : in   std_logic_vector(QEI_COUNT-1 downto 0);
 
         ---------------------------------
         -------- TO/FROM LAYER 3 --------
         ---------------------------------
+
+        sum_m_dist    : out std_logic_vector(32-1 downto 0);
+        sum_m_angle   : out std_logic_vector(32-1 downto 0);
+
+        sum_c_dist    : out std_logic_vector(32-1 downto 0);
+        sum_c_angle   : out std_logic_vector(32-1 downto 0);
+
+
+        pos_valid     : out std_logic;
+        pos_id        : out std_logic_vector(8-1 downto 0);
+        pos_teta      : out std_logic_vector(16-1 downto 0);
+        pos_x         : out std_logic_vector(16-1 downto 0);
+        pos_y         : out std_logic_vector(16-1 downto 0);
+        pos_sum_dist  : out std_logic_vector(32-1 downto 0);
+        pos_sum_angle : out std_logic_vector(32-1 downto 0);
+
+        dist_en       : in std_logic;
+        dist_acc      : in std_logic_vector(32-1 downto 0);
+        dist_speed    : in std_logic_vector(32-1 downto 0);
+        dist_target   : in std_logic_vector(32-1 downto 0);
+
+        angle_en      : in std_logic;
+        angle_acc     : in std_logic_vector(32-1 downto 0);
+        angle_speed   : in std_logic_vector(32-1 downto 0);
+        angle_target  : in std_logic_vector(32-1 downto 0)
 
     );   
     end component;

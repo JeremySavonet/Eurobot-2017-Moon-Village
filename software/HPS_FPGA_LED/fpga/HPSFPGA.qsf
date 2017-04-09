@@ -638,6 +638,8 @@ set_global_assignment -name OPTIMIZE_IOC_REGISTER_PLACEMENT_FOR_TIMING OFF
 set_global_assignment -name FITTER_AGGRESSIVE_ROUTABILITY_OPTIMIZATION NEVER
 set_global_assignment -name IO_PLACEMENT_OPTIMIZATION OFF
 set_global_assignment -name PROJECT_IP_REGENERATION_POLICY ALWAYS_REGENERATE_IP
+set_global_assignment -name VHDL_FILE robot_layer_3.vhd
+set_global_assignment -name VHDL_FILE robot_layer_3_pkg.vhd
 set_global_assignment -name QSYS_FILE hps_fpga.qsys
 set_global_assignment -name QSYS_FILE "../../orca/de2-115/system.qsys"
 set_global_assignment -name VHDL_FILE robot_layer_2_pkg.vhd
