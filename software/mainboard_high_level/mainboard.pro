@@ -15,6 +15,7 @@ INCLUDEPATH += include \
 LIBS += -L../astar/lib/ -lAStar
 
 SOURCES += src/Action.cpp \
+           src/Carrousel.cpp \
            src/Configuration.cpp \
            src/ConfigurationTcpServer.cpp \
            src/Entity.cpp \
@@ -29,11 +30,12 @@ SOURCES += src/Action.cpp \
            src/StrategyManager.cpp \
            src/SystemManager.cpp \
            src/main.cpp \
-           src/GameMap.cpp
+           src/GameMap.cpp \
 
 HEADERS += \
     include/Defines.hpp \
     include/WestBot/Action.hpp \
+    include/WestBot/Carrousel.hpp \
     include/WestBot/Common.hpp \
     include/WestBot/Configuration.hpp \
     include/WestBot/ConfigurationTcpServer.hpp \
@@ -49,7 +51,7 @@ HEADERS += \
     include/WestBot/Output.hpp \
     include/WestBot/StrategyManager.hpp \
     include/WestBot/SystemManager.hpp \
-    include/WestBot/GameMap.hpp
+    include/WestBot/GameMap.hpp \
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

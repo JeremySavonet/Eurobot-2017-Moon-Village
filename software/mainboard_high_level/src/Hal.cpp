@@ -94,6 +94,47 @@ void Hal::init()
     _registersMap.insert( "OUT3", outputIO2Register );
     _registersMap.insert( "OUT4", outputIO3Register );
 
+    ItemRegister::Ptr carrouselPeriod =
+        std::make_shared< ItemRegister >( _layer2, 37 * 4, 16 );
+    ItemRegister::Ptr carrouselEnable =
+        std::make_shared< ItemRegister >( _layer2, 38 * 4, 8 );
+    ItemRegister::Ptr carrouselState =
+        std::make_shared< ItemRegister >( _layer2, 38 * 4 + 1, 8 );
+    ItemRegister::Ptr carrouselKp =
+        std::make_shared< ItemRegister >( _layer2, 39 * 4, 32 );
+    ItemRegister::Ptr carrouselKi =
+        std::make_shared< ItemRegister >( _layer2, 40 * 4, 32 );
+    ItemRegister::Ptr carrouselKd =
+        std::make_shared< ItemRegister >( _layer2, 41 * 4, 32 );
+    ItemRegister::Ptr carrouselSpeed =
+        std::make_shared< ItemRegister >( _layer2, 42 * 4, 32 );
+    ItemRegister::Ptr carrouselAcc =
+        std::make_shared< ItemRegister >( _layer2, 43 * 4, 32 );
+    ItemRegister::Ptr carrouselSat =
+        std::make_shared< ItemRegister >( _layer2, 44 * 4, 32 );
+    ItemRegister::Ptr carrouselCurrentMeasure =
+        std::make_shared< ItemRegister >( _layer2, 45 * 4, 32 );
+    ItemRegister::Ptr carrouselCurrentTarget =
+        std::make_shared< ItemRegister >( _layer2, 46 * 4, 32 );
+    ItemRegister::Ptr carrouselCurrentOutputVal =
+        std::make_shared< ItemRegister >( _layer2, 47 * 4, 32 );
+    ItemRegister::Ptr carrouselLastRef =
+        std::make_shared< ItemRegister >( _layer2, 48 * 4, 32 );
+
+    _registersMap.insert( "CarrouselPeriod", carrouselPeriod );
+    _registersMap.insert( "CarrouselEnable", carrouselEnable );
+    _registersMap.insert( "CarrouselState", carrouselState );
+    _registersMap.insert( "CarrouselKp", carrouselKp );
+    _registersMap.insert( "CarrouselKi", carrouselKi );
+    _registersMap.insert( "CarrouselKd", carrouselKd );
+    _registersMap.insert( "CarrouselSpeed", carrouselSpeed );
+    _registersMap.insert( "CarrouselAcc", carrouselAcc );
+    _registersMap.insert( "CarrouselSat", carrouselSat );
+    _registersMap.insert( "CarrouselCurrentMeasure", carrouselCurrentMeasure );
+    _registersMap.insert( "CarrouselCurrentTarget", carrouselCurrentTarget );
+    _registersMap.insert( "CarrouselCurrentOutputVal", carrouselCurrentOutputVal );
+    _registersMap.insert( "CarrouselLastRef", carrouselLastRef );
+
     // TODO: Need to insert all our register in the map
     qInfo() << "Successfully initialized Hal module";
 }

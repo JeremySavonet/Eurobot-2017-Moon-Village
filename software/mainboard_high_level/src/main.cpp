@@ -9,6 +9,7 @@
 
 #include <Defines.hpp>
 
+#include <WestBot/Carrousel.hpp>
 #include <WestBot/Configuration.hpp>
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
@@ -74,14 +75,15 @@ int main( int argc, char *argv[] )
     Output led( hal.itemWithId( "OUT1" ), "Led" );
     Output io1( hal.itemWithId( "OUT2" ), "IO1" );
 
+    Carrousel carrousel( hal );
+
+    if( ! carrousel.init() )
+    {
+        qDebug() << "Carrousel initialization failed...";
+        return EXIT_FAILURE;
+    }
+
     StrategyManager strategyManager( system );
-
-    strategyManager.buildMap();
-
-    strategyManager.buildPath();
-
-    // Just a quick dump of the map
-    strategyManager.dumpMap();
 
     while( 1 )
     {
