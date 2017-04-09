@@ -31,12 +31,32 @@ StrategyManager::StrategyManager(
 
 void StrategyManager::buildMap()
 {
-    const uint width = 25;
-    const uint height = 25;
+    const uint width = 300; //300cm
+    const uint height = 200; //200cm
     const uint scale = 1;
 
     _gameMap->setScale( scale );
     _gameMap->setMap( width, height );
+
+    _gameMap->addElement( 20, 60, 6 );
+    _gameMap->addElement( 280, 60, 6 );
+
+    _gameMap->addElement( 100, 60, 6 );
+    _gameMap->addElement( 200, 60, 6 );
+
+    _gameMap->addElement( 50, 110, 6 );
+    _gameMap->addElement( 250, 110, 6 );
+
+    _gameMap->addElement( 50, 110, 6 );
+    _gameMap->addElement( 250, 110, 6 );
+
+    _gameMap->addElement( 90, 140, 6 );
+    _gameMap->addElement( 210, 140, 6 );
+
+    _gameMap->addElement( 80, 185, 6 );
+    _gameMap->addElement( 220, 185, 6 );
+
+    _gameMap->setStart( 0, 90 );
 }
 
 void StrategyManager::buildPath()

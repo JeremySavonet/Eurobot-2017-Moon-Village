@@ -32,7 +32,7 @@ void GameMap::freeNodes()
         {
             if( _map[ i ][ j ].expandCost != 1 )
             {
-                _map[i][j].pixmapItem = "x"; //setPixmap(dirtNodeImgPath);
+                _map[i][j].pixmapItem = "D"; //setPixmap(dirtNodeImgPath);
             }
             else
             {
@@ -105,7 +105,7 @@ void GameMap::drawPath()
 
     for( auto pathIt = _path.begin(); pathIt != _path.end(); ++pathIt )
     {
-        _map[pathIt->first][pathIt->second].pixmapItem = "u"; //setPixmap(pathNodeImgPath);
+        _map[pathIt->first][pathIt->second].pixmapItem = "X"; //setPixmap(pathNodeImgPath);
     }
 
     _pathOnScreen = true;
@@ -157,6 +157,36 @@ void GameMap::setEnd( uint x, uint y )
 void GameMap::setToSetState( AStar::ToSetState toSetState )
 {
     _toSetState = toSetState;
+}
+
+void GameMap::setElements()
+{
+    /*for( uint i = 0; i < _mapWidth; i++ )
+    for( uint j = 0; j < _mapHeight; j++ )
+    {
+        if( ( i < 108 && j < 37 ) || ( i > 192 && j < 37 ) )
+        {
+            _map[ i ][ j ].type = AStar::NodeType::WALLNODE;
+            _map[ i ][ j ].expandCost = 1;
+            _map[i][j].pixmapItem = "W";
+        }
+    }
+    */
+}
+
+void GameMap::addElement( uint x, uint y, uint size )
+{
+    for( int i = x - (size / 2); i < x + (size / 2); i++ )
+    {
+        for( int j = y - (size / 2); j < y + (size / 2); j++ )
+        {
+            _map[ i ][ j ].type = AStar::NodeType::WALLNODE;
+            _map[ i ][ j ].expandCost = 1;
+            _map[ i ][ j ].pixmapItem = "W";
+        }
+
+        std::cout << std::endl;
+    }
 }
 
 void GameMap::dumpMap()

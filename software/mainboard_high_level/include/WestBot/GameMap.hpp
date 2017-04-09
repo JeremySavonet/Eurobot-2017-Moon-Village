@@ -33,6 +33,9 @@ public:
     void setStart( uint x, uint y );
     void setEnd( uint x, uint y );
     void setToSetState( AStar::ToSetState toSetState );
+    void setElements();
+
+    void addElement( uint x, uint y, uint size );
 
     void dumpMap();
 
