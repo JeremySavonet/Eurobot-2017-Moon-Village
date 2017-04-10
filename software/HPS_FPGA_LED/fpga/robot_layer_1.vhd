@@ -196,7 +196,7 @@ architecture rtl of robot_layer_1 is
     signal w_motor_dir      : std_logic_vector(MOTOR_COUNT-1 downto 0);
 
 
-    constant REG_SERVO_OFFSET : natural := 29;
+    constant REG_SERVO_OFFSET : natural := 30;
 
     constant SERVO_COUNT : natural := 8;
 
@@ -207,7 +207,7 @@ architecture rtl of robot_layer_1 is
     signal w_servo_out      : std_logic_vector(SERVO_COUNT-1 downto 0);
 
 
-    constant REG_ESC_OFFSET : natural := 45;
+    constant REG_ESC_OFFSET : natural := 46;
     constant ESC_COUNT : natural := 2;
 
     signal w_esc_value    : int16_t(ESC_COUNT-1 downto 0);
@@ -256,7 +256,7 @@ architecture rtl of robot_layer_1 is
 
     signal r_voltage      : int24_t(VOLTAGE_COUNT-1 downto 0); 
     signal r_lv_mux       : std_logic_vector(2-1 downto 0);
-    signal r_voltage_cnt  : std_logic_vector(2-1 downto 0); 
+    signal r_voltage_cnt  : std_logic_vector(7-1 downto 0); 
 
     constant REG_BUZZER_OFFSET : natural := 6;
 
@@ -678,7 +678,7 @@ begin
 
     w_qei_a(4) <= spi0_sclk;
     w_qei_b(4) <= spi0_ss;
-    w_qei_z(4) <= spi0_mosi;
+    w_qei_z(4) <= not spi0_mosi;
 
 
     qei_value <= w_qei_value;
@@ -758,12 +758,13 @@ begin
                 r_qei_z  <= w_qei_z(i);
                 r2_qei_z <= r_qei_z;
 
+                r_ref <= '0';
                 if r_qei_z = '1' and r2_qei_z = '0' then
                     r_ref <= '1';
                 end if; 
-                if r_qei_z = '0' and r_qei_z = '1' then
-                    r_ref <= '0';
-                end if; 
+                --if r_qei_z = '0' and r2_qei_z = '1' then
+                --    r_ref <= '0';
+                --end if; 
             end if;
         end process;
 

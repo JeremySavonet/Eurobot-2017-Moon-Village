@@ -179,7 +179,12 @@ begin
         signal r_position : std_logic_vector(32-1 downto 0);
         signal r_ref      : std_logic_vector(32-1 downto 0);
         signal r_qei_last : std_logic_vector(16-1 downto 0);
+        constant REGS_CARROUSSEL_REF_OFFSET : natural := 48;
     begin
+
+        w_regs_data_in_value_mask((REGS_CARROUSSEL_REF_OFFSET+1)*4-1 downto (REGS_CARROUSSEL_REF_OFFSET)*4) <= (others=>'1');
+        w_regs_data_in_value((REGS_CARROUSSEL_REF_OFFSET+1)*32-1 downto (REGS_CARROUSSEL_REF_OFFSET)*32) <= r_ref;
+
         p_sync: process(clk,reset) is
             variable v_diff : integer;
         begin
@@ -191,11 +196,13 @@ begin
                 r_qei_last <= qei_value(4);
                 if qei_value(4) /= r_qei_last then
                     v_diff := to_integer(unsigned(qei_value(4)))-to_integer(unsigned(r_qei_last));
-                    if (v_diff >= 0) then
-                        r_position <= std_logic_vector(unsigned(r_position)+to_unsigned(v_diff,32));
-                    else
-                        r_position <= std_logic_vector(unsigned(r_position)-to_unsigned(v_diff,32));
+                    if v_diff >= 2**15 then
+                        v_diff := v_diff - 2**16;                        
                     end if;
+                    if v_diff <= -2**15 then
+                        v_diff := v_diff + 2**16;                        
+                    end if;
+                    r_position <= std_logic_vector(signed(r_position)+to_signed(v_diff,32));
                 end if;
                 if qei_ref(4) = '1' then
                     r_ref <= r_position;
@@ -268,7 +275,7 @@ begin
                 end if;
 
                 w_pio_data_in_value((REG_MEASURE_INDEX+1)*32-1 downto REG_MEASURE_INDEX*32) <= w_pid_measure(i);
-
+                w_regs_data_in_value((REG_INDEX+REG_MEASURE_INDEX)*32-1 downto (REG_INDEX+REG_MEASURE_INDEX-1)*32) <= w_pid_measure(i);
             end process;
 
 
