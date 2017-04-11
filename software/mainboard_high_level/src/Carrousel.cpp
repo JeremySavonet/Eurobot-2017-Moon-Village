@@ -1,5 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
+#include <QDebug>
 #include <QThread>
 
 #include <WestBot/Carrousel.hpp>
@@ -8,12 +9,13 @@ using namespace WestBot;
 
 namespace
 {
-    const int THRESHOLD = 5;
+    const int THRESHOLD = 20;
 }
 
 Carrousel::Carrousel( Hal& hal )
     : _hal( hal )
     , _reference( 0 )
+    , _nbTickPerTour( 0 )
 {
 }
 
@@ -22,40 +24,88 @@ bool Carrousel::init()
     // Disable the module first
     setEnable( false );
 
+    setOverride( true );
+
     // Set PID gains
-    setGainKd( 0.0 );
+    setGainKp( 100.0 );
     setGainKi( 0.0 );
     setGainKd( 0.0 );
 
-    setSpeed( 0.0 );
-    setAcceleration( 0.0 );
+    setSpeed( 10.0 );
+    setAcceleration( 0.001 );
+    setOutputSaturation( 15000 );
 
     int32_t initialRef = lastReference();
-    int32_t initialPos = currentTarget();
+    int32_t initialPos = currentPosition();
     int32_t consign = initialPos + 10000;
+
+    setTarget( initialPos );
+
+    // Enable module
+    setEnable( true );
 
     setTarget( consign );
 
-    while( currentTarget() < ( consign - THRESHOLD ) )
+    // Find first ref
+    while( abs( currentPosition() - consign ) >= THRESHOLD )
     {
         QThread::msleep( 10 );
     }
 
+    int32_t firstRef = 0;
     if( lastReference() != initialRef )
     {
-        _reference = lastReference();
+        firstRef = lastReference();
     }
     else
     {
         return false;
     }
 
-    // Enable module
-    setEnable( true );
+    consign = currentPosition() + 10000;
+
+    // Set new target
+    setTarget( consign );
+
+    // Find ref
+    while( abs( currentPosition() - consign ) >= THRESHOLD )
+    {
+        QThread::msleep( 10 );
+    }
+
+    if( lastReference() != firstRef )
+    {
+        _reference = lastReference();
+
+    }
+    else
+    {
+        return false;
+    }
+
+    _nbTickPerTour = _reference - firstRef;
+
+    qDebug() << "Carrousel module initialized. Nb tick:" << _nbTickPerTour;
 
     return true;
 }
 
+//
+// Public methods
+//
+float Carrousel::position()
+{
+    return ( ( ( currentPosition() - reference() ) % _nbTickPerTour ) / (float)_nbTickPerTour ) * 6.0f;
+}
+
+void Carrousel::setPosition( float position )
+{
+    // TODO: XXX
+}
+
+//
+// Private methods
+//
 void Carrousel::setPeriod( int32_t period )
 {
     _hal._carrouselPidPeriod.write( period );
@@ -71,6 +121,11 @@ void Carrousel::setEnable( bool enabled )
    {
        _hal._carrouselEnable.write( 0 );
    }
+}
+
+void Carrousel::setOverride( bool enable )
+{
+    _hal._carrouselOverride.write( enable ? 1 : 0 );
 }
 
 void Carrousel::setGainKp( float kp )

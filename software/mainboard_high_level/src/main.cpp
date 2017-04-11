@@ -80,36 +80,21 @@ int main( int argc, char *argv[] )
 
     StrategyManager strategyManager( system );
 
-    // Carrousel TEST:
-    hal._carrouselEnable.write( 0 );
+    Carrousel carrouselGangBang( hal );
 
-    hal._carrouselOverride.write( 1 );
-
-    hal._carrouselPidKp.write( (float)100.0 );
-    hal._carrouselPidKi.write( (float)0.0 );
-    hal._carrouselPidKd.write( (float)0.0 );
-    hal._carrouselSpeed.write( (float)10.0 );
-    hal._carrouselAcc.write( (float)0.001 );
-    hal._carrouselOutputSaturation.write( 15000 );
-
-    hal._carrouselTarget.write( hal._carrouselPosition.read<int32_t>() );
-    hal._carrouselEnable.write(1);
-
-    int32_t target = hal._carrouselPosition.read<int32_t>();
+    if( ! carrouselGangBang.init() )
+    {
+        qWarning() << "Failed to init carrousel module...";
+        return EXIT_FAILURE;
+    }
 
     while( 1 )
     {
-        if( abs( target -  hal._carrouselPosition.read<int32_t>() ) <= 20 )
-        {
-            target += 1000;
-            hal._carrouselTarget.write( target );
-        }
-
-        led.digitalWrite( DigitalValue::ON );
+        /*led.digitalWrite( DigitalValue::ON );
         io1.digitalWrite( DigitalValue::OFF );
         QThread::msleep( 250 );
         led.digitalWrite( DigitalValue::OFF );
-        io1.digitalWrite( DigitalValue::ON );
+        io1.digitalWrite( DigitalValue::ON );*/
         QThread::msleep( 250 );
         QCoreApplication::processEvents();
     }
