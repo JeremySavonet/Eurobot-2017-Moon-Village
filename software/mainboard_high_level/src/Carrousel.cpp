@@ -13,18 +13,6 @@ namespace
 
 Carrousel::Carrousel( Hal& hal )
     : _hal( hal )
-    , _periodReg( _hal.itemWithId( "CarrouselPeriod" ) )
-    , _enableReg( _hal.itemWithId( "CarrouselEnable" ) )
-    , _stateReg( _hal.itemWithId( "CarrouselState" ) )
-    , _kpReg( _hal.itemWithId( "CarrouselKp" ) )
-    , _kiReg( _hal.itemWithId( "CarrouselKi" ) )
-    , _kdReg( _hal.itemWithId( "CarrouselKd" ) )
-    , _speedReg( _hal.itemWithId( "CarrouselSpeed" ) )
-    , _accReg( _hal.itemWithId( "CarrouselAcc" ) )
-    , _outputSatReg( _hal.itemWithId( "CarrouselSat" ) )
-    ,  _currentMeasureReg( _hal.itemWithId( "CarrouselCurrentMeasure" ) )
-    , _currentTargetReg( _hal.itemWithId( "CarrouselCurrentTarget" ) )
-    , _lastRefReg( _hal.itemWithId( "CarrouselLastRef" ) )
     , _reference( 0 )
 {
 }
@@ -64,109 +52,110 @@ bool Carrousel::init()
 
     // Enable module
     setEnable( true );
+
     return true;
 }
 
 void Carrousel::setPeriod( int32_t period )
 {
-    _periodReg->write( period );
+    _hal._carrouselPidPeriod.write( period );
 }
 
 void Carrousel::setEnable( bool enabled )
 {
    if( enabled )
    {
-       _enableReg->write( 0x01 );
+       _hal._carrouselEnable.write( 1 );
    }
    else
    {
-       _enableReg->write( 0x00 );
+       _hal._carrouselEnable.write( 0 );
    }
 }
 
 void Carrousel::setGainKp( float kp )
 {
-    _kpReg->write( kp );
+    _hal._carrouselPidKp.write( kp );
 }
 
 void Carrousel::setGainKi( float ki )
 {
-    _kpReg->write( ki );
+    _hal._carrouselPidKi.write( ki );
 }
 
 void Carrousel::setGainKd( float kd )
 {
-    _kpReg->write( kd );
+    _hal._carrouselPidKd.write( kd );
 }
 
 void Carrousel::setSpeed( float speed )
 {
-    _speedReg->write( speed );
+    _hal._carrouselSpeed.write( speed );
 }
 
 void Carrousel::setAcceleration( float acc )
 {
-    _accReg->write( acc );
+    _hal._carrouselAcc.write( acc );
 }
 
 void Carrousel::setOutputSaturation( uint32_t sat )
 {
-    _outputSatReg->write( sat );
+    _hal._carrouselOutputSaturation.write( sat );
 }
 
 void Carrousel::setTarget( int32_t position )
 {
-    _currentTargetReg->write( position );
+    _hal._carrouselTarget.write( position );
 }
 
 int32_t Carrousel::period() const
 {
-    return _periodReg->read< int32_t >();
+    return _hal._carrouselPidPeriod.read< int32_t >();
 }
 
 float Carrousel::kp() const
 {
-    return _kpReg->read< float >();
+    return _hal._carrouselPidKp.read< float >();
 }
 
 float Carrousel::ki() const
 {
-    return _kiReg->read< float >();
+    return _hal._carrouselPidKi.read< float >();
 }
 
 float Carrousel::kd() const
 {
-    return _kdReg->read< float >();
+    return _hal._carrouselPidKd.read< float >();
 }
 
 float Carrousel::speed() const
 {
-    _speedReg->read< float >();
+    return _hal._carrouselSpeed.read< float >();
 }
 
 float Carrousel::acceleration() const
 {
-    _accReg->read< float >();
+    return _hal._carrouselAcc.read< float >();
 }
 
 uint32_t Carrousel::outputSaturation() const
 {
-    _outputSatReg->read< uint32_t >();
+    return _hal._carrouselOutputSaturation.read< uint32_t >();
 }
 
-int32_t Carrousel::currentMeasure() const
+int32_t Carrousel::currentPosition() const
 {
-    _currentMeasureReg->read< int32_t >();
+    return _hal._carrouselPosition.read< int32_t >();
 }
 
 int32_t Carrousel::currentTarget() const
 {
-    _currentTargetReg->read< int32_t >();
+    return _hal._carrouselTarget.read< int32_t >();
 }
 
 int32_t Carrousel::lastReference() const
 {
-    _lastRefReg->read< int32_t >();
+    return _hal._carrouselLastReference.read< int32_t >();
 }
 
 int32_t Carrousel::reference() const

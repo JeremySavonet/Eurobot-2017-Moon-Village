@@ -176,9 +176,9 @@ void GameMap::setElements()
 
 void GameMap::addElement( uint x, uint y, uint size )
 {
-    for( int i = x - (size / 2); i < x + (size / 2); i++ )
+    for( uint i = x - (size / 2); i < x + (size / 2); i++ )
     {
-        for( int j = y - (size / 2); j < y + (size / 2); j++ )
+        for( uint j = y - (size / 2); j < y + (size / 2); j++ )
         {
             _map[ i ][ j ].type = AStar::NodeType::WALLNODE;
             _map[ i ][ j ].expandCost = 1;
@@ -191,9 +191,9 @@ void GameMap::addElement( uint x, uint y, uint size )
 
 void GameMap::dumpMap()
 {
-    for( int i = 0; i < _mapWidth; i++ )
+    for( uint i = 0; i < _mapWidth; i++ )
     {
-        for( int j = 0; j < _mapHeight; j++ )
+        for( uint j = 0; j < _mapHeight; j++ )
         {
             std::cout << _map[i][j].pixmapItem.toStdString();
         }

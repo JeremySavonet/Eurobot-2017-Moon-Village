@@ -32,7 +32,7 @@ public:
     float speed() const;
     float acceleration() const;
     uint32_t outputSaturation() const;
-    int32_t currentMeasure() const;
+    int32_t currentPosition() const;
     int32_t currentTarget() const;
     int32_t lastReference() const;
 
@@ -40,19 +40,6 @@ public:
 
 private:
     Hal _hal;
-    ItemRegister::Ptr _periodReg;
-    ItemRegister::Ptr _enableReg;
-    ItemRegister::Ptr _stateReg;
-    ItemRegister::Ptr _kpReg;
-    ItemRegister::Ptr _kiReg;
-    ItemRegister::Ptr _kdReg;
-    ItemRegister::Ptr _speedReg;
-    ItemRegister::Ptr _accReg;
-    ItemRegister::Ptr _outputSatReg;
-    ItemRegister::Ptr _currentMeasureReg;
-    ItemRegister::Ptr _currentTargetReg;
-    ItemRegister::Ptr _lastRefReg;
-
     int32_t _reference;
 };
 

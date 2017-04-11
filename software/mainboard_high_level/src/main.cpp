@@ -67,23 +67,36 @@ int main( int argc, char *argv[] )
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
 
-#ifdef SIMU
-    hal.itemWithId( "CONFIG" )->write( 0xffffffff );
+#ifdef SIMU 
+    hal._congigL1.write( 1 );
 #endif
 
+    // Enable layer 1
+    hal._stateL1.write( 1 );
+
     // Leds: Here just for an example
-    Output led( hal.itemWithId( "OUT1" ), "Led" );
-    Output io1( hal.itemWithId( "OUT2" ), "IO1" );
+    Output led( std::make_shared< ItemRegister >( hal._output0 ), "Led" );
+    Output io1( std::make_shared< ItemRegister >( hal._output1 ), "IO1" );
 
-    Carrousel carrousel( hal );
-
-    if( ! carrousel.init() )
-    {
-        qDebug() << "Carrousel initialization failed...";
-        return EXIT_FAILURE;
-    }
+    // Activate output override for leds
+    hal._outputOverride.write( 0x01010101 );
 
     StrategyManager strategyManager( system );
+
+    // Carrousel TEST:
+    hal._carrouselEnable.write( 0 );
+
+    hal._carrouselOverride.write( 1 );
+
+    hal._carrouselPidKp.write( (float)100.0 );
+    hal._carrouselPidKi.write( (float)0.0 );
+    hal._carrouselPidKd.write( (float)0.0 );
+    hal._carrouselSpeed.write( (float)10.0 );
+    hal._carrouselAcc.write( (float)0.001 );
+    hal._carrouselOutputSaturation.write( 15000 );
+
+    hal._carrouselTarget.write( hal._carrouselPosition.read<int32_t>() );
+    hal._carrouselEnable.write(1);
 
     while( 1 )
     {
@@ -93,7 +106,6 @@ int main( int argc, char *argv[] )
         led.digitalWrite( DigitalValue::OFF );
         io1.digitalWrite( DigitalValue::ON );
         QThread::msleep( 250 );
-
         QCoreApplication::processEvents();
     }
 
