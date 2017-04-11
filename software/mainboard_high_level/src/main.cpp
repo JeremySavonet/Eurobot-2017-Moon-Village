@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#define SIMU
+//#define SIMU
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -68,11 +68,8 @@ int main( int argc, char *argv[] )
     system.start(); // Start the state machine
 
 #ifdef SIMU 
-    hal._congigL1.write( 1 );
+    hal._modeSimu.write( 1 );
 #endif
-
-    // Enable layer 1
-    hal._stateL1.write( 1 );
 
     // Leds: Here just for an example
     Output led( std::make_shared< ItemRegister >( hal._output0 ), "Led" );
@@ -98,8 +95,16 @@ int main( int argc, char *argv[] )
     hal._carrouselTarget.write( hal._carrouselPosition.read<int32_t>() );
     hal._carrouselEnable.write(1);
 
+    int32_t target = hal._carrouselPosition.read<int32_t>();
+
     while( 1 )
     {
+        if( abs( target -  hal._carrouselPosition.read<int32_t>() ) <= 20 )
+        {
+            target += 1000;
+            hal._carrouselTarget.write( target );
+        }
+
         led.digitalWrite( DigitalValue::ON );
         io1.digitalWrite( DigitalValue::OFF );
         QThread::msleep( 250 );

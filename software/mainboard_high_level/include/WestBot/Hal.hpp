@@ -24,8 +24,8 @@ private:
 
 public:
     ItemRegister _resetL1;
-    ItemRegister _congigL1;
-    ItemRegister _stateL1;
+    ItemRegister _initOkL1;
+    ItemRegister _modeSimu;
     ItemRegister _voltage24V;
     ItemRegister _voltageA12V;
     ItemRegister _voltageA5V;
