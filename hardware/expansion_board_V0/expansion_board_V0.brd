@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.2.0">
+<eagle version="7.6.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -2672,11 +2672,11 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-129.8" y="-0.3" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-130.1" y="1.9" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="C56" library="iocene" package="CAPC1005X55N" value="1n" x="-102.2" y="10" smashed="yes" rot="MR270">
+<element name="C56" library="iocene" package="CAPC1005X55N" value="100n" x="-102.2" y="10" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-101.9" y="9" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-101.2" y="10.8" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
-<element name="C90" library="iocene" package="CAPC1005X55N" value="1n" x="-105.1" y="12.2" smashed="yes" rot="MR0">
+<element name="C90" library="iocene" package="CAPC1005X55N" value="100n" x="-105.1" y="12.2" smashed="yes" rot="MR0">
 <attribute name="NAME" x="-102" y="11.9" size="0.8" layer="26" font="vector" rot="MR0"/>
 <attribute name="VALUE" x="-104.3" y="11.2" size="0.8" layer="28" font="vector" rot="MR0"/>
 </element>
@@ -2736,7 +2736,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-130" y="17.8" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-130.1" y="19.9" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="C71" library="iocene" package="CAPC1005X55N" value="1n" x="-105.3" y="13.8" smashed="yes" rot="MR0">
+<element name="C71" library="iocene" package="CAPC1005X55N" value="100n" x="-105.3" y="13.8" smashed="yes" rot="MR0">
 <attribute name="NAME" x="-102.2" y="13.3" size="0.8" layer="26" font="vector" rot="MR0"/>
 <attribute name="VALUE" x="-104.5" y="12.8" size="0.8" layer="28" font="vector" rot="MR0"/>
 </element>
@@ -2768,7 +2768,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-108.955" y="12.9" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="13.7" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="C108" library="iocene" package="CAPC1005X55N" value="100n" x="-109.855" y="15.24" smashed="yes" rot="MR180">
+<element name="C108" library="iocene" package="CAPC1005X55N" value="NC" x="-109.855" y="15.24" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-109.055" y="14.94" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="16.24" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -2776,7 +2776,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-108.855" y="18.18" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="18.78" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="C117" library="iocene" package="CAPC1005X55N" value="nc" x="-109.855" y="20.32" smashed="yes" rot="MR180">
+<element name="C117" library="iocene" package="CAPC1005X55N" value="100n" x="-109.855" y="20.32" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="20.72" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="21.32" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -2864,7 +2864,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-150.7" y="-49" size="0.8" layer="25" font="vector"/>
 <attribute name="VALUE" x="-150.3" y="-50.8" size="0.8" layer="27" font="vector"/>
 </element>
-<element name="C95" library="iocene" package="CAPC1005X55N" value="1n" x="-91.5" y="11.3" smashed="yes" rot="R90">
+<element name="C95" library="iocene" package="CAPC1005X55N" value="100n" x="-91.5" y="11.3" smashed="yes" rot="R90">
 <attribute name="NAME" x="-89.9" y="10.2" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-90.5" y="10.5" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
@@ -2876,7 +2876,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-155.7" y="-16.2" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-157.6" y="-15.8" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="C96" library="iocene" package="CAPC1005X55N" value="1n" x="-95.7" y="7.8" smashed="yes" rot="R90">
+<element name="C96" library="iocene" package="CAPC1005X55N" value="100n" x="-95.7" y="7.8" smashed="yes" rot="R90">
 <attribute name="NAME" x="-92.9" y="6.5" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-94.7" y="7" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
@@ -2932,7 +2932,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-106.1" y="-36.1" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-105.3" y="-38.2" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="C58" library="iocene" package="CAPC1005X55N" value="1n" x="-96.7" y="9.5" smashed="yes" rot="MR270">
+<element name="C58" library="iocene" package="CAPC1005X55N" value="100n" x="-96.7" y="9.5" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-96.1" y="12.8" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-95.7" y="10.3" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
@@ -2948,19 +2948,19 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-96" y="-44.1" size="0.8" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="-96.6" y="-37.3" size="0.8" layer="27" font="vector" rot="R270"/>
 </element>
-<element name="C119" library="iocene" package="CAPC1005X55N" value="1n" x="-107.9" y="-57.8" smashed="yes" rot="MR90">
+<element name="C119" library="iocene" package="CAPC1005X55N" value="100p" x="-107.9" y="-57.8" smashed="yes" rot="MR90">
 <attribute name="NAME" x="-108.2" y="-56.7" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-108.9" y="-58.6" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="C120" library="iocene" package="CAPC1005X55N" value="1n" x="-105.4" y="-57.8" smashed="yes" rot="MR90">
+<element name="C120" library="iocene" package="CAPC1005X55N" value="100p" x="-105.4" y="-57.8" smashed="yes" rot="MR90">
 <attribute name="NAME" x="-105.8" y="-56.7" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-106.4" y="-58.6" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="C121" library="iocene" package="CAPC1005X55N" value="1n" x="-102.8" y="-57.8" smashed="yes" rot="MR90">
+<element name="C121" library="iocene" package="CAPC1005X55N" value="100p" x="-102.8" y="-57.8" smashed="yes" rot="MR90">
 <attribute name="NAME" x="-103.1" y="-56.7" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-103.8" y="-58.6" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="C128" library="iocene" package="CAPC1005X55N" value="1n" x="-106.7" y="57.8" smashed="yes" rot="MR270">
+<element name="C128" library="iocene" package="CAPC1005X55N" value="100p" x="-106.7" y="57.8" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-103.8" y="53.8" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-105.7" y="58.6" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
@@ -2968,11 +2968,11 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-105.3" y="-3.1" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-106.9" y="-2.5" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="C127" library="iocene" package="CAPC1005X55N" value="1n" x="-104.2" y="57.8" smashed="yes" rot="MR270">
+<element name="C127" library="iocene" package="CAPC1005X55N" value="100p" x="-104.2" y="57.8" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-101.8" y="53.8" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-103.2" y="58.6" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
-<element name="C126" library="iocene" package="CAPC1005X55N" value="1n" x="-101.7" y="57.8" smashed="yes" rot="MR270">
+<element name="C126" library="iocene" package="CAPC1005X55N" value="100p" x="-101.7" y="57.8" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-99.8" y="53.8" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-100.7" y="58.6" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
@@ -3260,7 +3260,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-103.1" y="4.5" size="0.8" layer="26" font="vector" rot="MR0"/>
 <attribute name="VALUE" x="-103.1" y="2.9" size="0.8" layer="28" font="vector" rot="MR0"/>
 </element>
-<element name="C76" library="iocene" package="CAPC1005X55N" value="1n" x="-103.7" y="10.4" smashed="yes" rot="MR270">
+<element name="C76" library="iocene" package="CAPC1005X55N" value="100n" x="-103.7" y="10.4" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-103.4" y="9.4" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-102.7" y="11.2" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
@@ -3648,39 +3648,39 @@ Your Eurocircuits Team
 <element name="R25" library="iocene" package="RESC_ULR15S-R0055FT2" value="ULR15S-R0055FT2" x="-133.1" y="-38.1" smashed="yes" rot="R270">
 <attribute name="NAME" x="-131.2" y="-35.7" size="0.8" layer="25" font="vector" rot="R270"/>
 </element>
-<element name="R22" library="iocene" package="RESC1005X40N" value="10k" x="-139.6" y="-32.4" smashed="yes" rot="R90">
+<element name="R22" library="iocene" package="RESC1005X40N" value="100" x="-139.6" y="-32.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="-139.4" y="-31.1" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-138.6" y="-33.2" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R1" library="iocene" package="RESC1005X40N" value="100k" x="-95.6" y="-42.7" smashed="yes" rot="R90">
+<element name="R1" library="iocene" package="RESC1005X40N" value="3.3k" x="-95.6" y="-42.7" smashed="yes" rot="R90">
 <attribute name="NAME" x="-95.2" y="-50.2" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-94.6" y="-43.5" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R5" library="iocene" package="RESC1005X40N" value="5k" x="-95.6" y="-40.4" smashed="yes" rot="R90">
+<element name="R5" library="iocene" package="RESC1005X40N" value="1k" x="-95.6" y="-40.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="-95.1" y="-48.3" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-94.6" y="-41.2" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R2" library="iocene" package="RESC1005X40N" value="100k" x="-90.1" y="-42.7" smashed="yes" rot="R90">
+<element name="R2" library="iocene" package="RESC1005X40N" value="3.3k" x="-90.1" y="-42.7" smashed="yes" rot="R90">
 <attribute name="NAME" x="-89.7" y="-50.2" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-89.1" y="-43.5" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R3" library="iocene" package="RESC1005X40N" value="100k" x="-91.7" y="-42.7" smashed="yes" rot="R90">
+<element name="R3" library="iocene" package="RESC1005X40N" value="3.3k" x="-91.7" y="-42.7" smashed="yes" rot="R90">
 <attribute name="NAME" x="-91.5" y="-50.1" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-90.7" y="-43.5" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R4" library="iocene" package="RESC1005X40N" value="100k" x="-94" y="-42.7" smashed="yes" rot="R90">
+<element name="R4" library="iocene" package="RESC1005X40N" value="33k" x="-94" y="-42.7" smashed="yes" rot="R90">
 <attribute name="NAME" x="-93.6" y="-50.1" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-93" y="-43.5" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R8" library="iocene" package="RESC1005X40N" value="5k" x="-94" y="-40.4" smashed="yes" rot="R90">
+<element name="R8" library="iocene" package="RESC1005X40N" value="3.3k" x="-94" y="-40.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="-93.6" y="-48.3" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-93" y="-41.2" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R7" library="iocene" package="RESC1005X40N" value="5k" x="-91.7" y="-40.4" smashed="yes" rot="R90">
+<element name="R7" library="iocene" package="RESC1005X40N" value="1k" x="-91.7" y="-40.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="-91.4" y="-48.2" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-90.7" y="-41.2" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
-<element name="R6" library="iocene" package="RESC1005X40N" value="5k" x="-90.1" y="-40.4" smashed="yes" rot="R90">
+<element name="R6" library="iocene" package="RESC1005X40N" value="1k" x="-90.1" y="-40.4" smashed="yes" rot="R90">
 <attribute name="NAME" x="-89.7" y="-48.3" size="0.8" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="-89.1" y="-41.2" size="0.8" layer="27" font="vector" rot="R90"/>
 </element>
@@ -3704,7 +3704,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-108.855" y="13.87" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="14.97" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R47" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="16.51" smashed="yes" rot="MR180">
+<element name="R47" library="iocene" package="RESC1005X40N" value="33" x="-109.855" y="16.51" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="16.91" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="17.51" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -3712,7 +3712,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-108.855" y="19.45" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="20.05" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R60" library="iocene" package="RESC1005X40N" value="560" x="-109.855" y="21.59" smashed="yes" rot="MR180">
+<element name="R60" library="iocene" package="RESC1005X40N" value="1k" x="-109.855" y="21.59" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="21.99" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="22.59" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
@@ -3734,7 +3734,7 @@ Your Eurocircuits Team
 <element name="R29" library="iocene" package="RESC_ULR15S-R0055FT2" value="ULR15S-R0055FT2" x="-133.1" y="-9.5" smashed="yes" rot="R90">
 <attribute name="NAME" x="-130.4" y="-11.7" size="0.8" layer="25" font="vector" rot="R90"/>
 </element>
-<element name="R31" library="iocene" package="RESC1005X40N" value="10k" x="-137.4" y="-14.4" smashed="yes">
+<element name="R31" library="iocene" package="RESC1005X40N" value="100" x="-137.4" y="-14.4" smashed="yes">
 <attribute name="NAME" x="-136.3" y="-14.7" size="0.8" layer="25" font="vector"/>
 <attribute name="VALUE" x="-138.2" y="-15.4" size="0.8" layer="27" font="vector"/>
 </element>
@@ -3756,11 +3756,11 @@ Your Eurocircuits Team
 <element name="R32" library="iocene" package="RESC_ULR15S-R0055FT2" value="ULR15S-R0055FT2" x="-140.8" y="7.27" smashed="yes" rot="R270">
 <attribute name="NAME" x="-143.7" y="8.67" size="0.8" layer="25" font="vector" rot="R270"/>
 </element>
-<element name="R34" library="iocene" package="RESC1005X40N" value="10k" x="-135.5" y="11.8" smashed="yes">
+<element name="R34" library="iocene" package="RESC1005X40N" value="100" x="-135.5" y="11.8" smashed="yes">
 <attribute name="NAME" x="-134.3" y="11.5" size="0.8" layer="25" font="vector"/>
 <attribute name="VALUE" x="-136.3" y="10.8" size="0.8" layer="27" font="vector"/>
 </element>
-<element name="R27" library="iocene" package="RESC1005X40N" value="10k" x="-135.5" y="14.2" smashed="yes">
+<element name="R27" library="iocene" package="RESC1005X40N" value="100" x="-135.5" y="14.2" smashed="yes">
 <attribute name="NAME" x="-134.4" y="13.9" size="0.8" layer="25" font="vector"/>
 <attribute name="VALUE" x="-136.3" y="13.2" size="0.8" layer="27" font="vector"/>
 </element>
@@ -3812,7 +3812,7 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-120.82" y="-18.25" size="0.8" layer="26" font="vector" rot="MR0"/>
 <attribute name="VALUE" x="-120.42" y="-20.25" size="0.8" layer="28" font="vector" rot="MR0"/>
 </element>
-<element name="R21" library="iocene" package="RESC1005X40N" value="10k" x="-137.4" y="-15.6" smashed="yes">
+<element name="R21" library="iocene" package="RESC1005X40N" value="100" x="-137.4" y="-15.6" smashed="yes">
 <attribute name="NAME" x="-136.2" y="-16.1" size="0.8" layer="25" font="vector"/>
 <attribute name="VALUE" x="-138.2" y="-16.6" size="0.8" layer="27" font="vector"/>
 </element>
@@ -3904,27 +3904,27 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-108.755" y="9.39" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="9.89" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R58" library="iocene" package="RESC1005X40N" value="1k" x="-109.2" y="-57.8" smashed="yes" rot="MR270">
+<element name="R58" library="iocene" package="RESC1005X40N" value="100" x="-109.2" y="-57.8" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-108.9" y="-54.5" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-108.2" y="-57" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
-<element name="R61" library="iocene" package="RESC1005X40N" value="1k" x="-106.6" y="-57.8" smashed="yes" rot="MR270">
+<element name="R61" library="iocene" package="RESC1005X40N" value="100" x="-106.6" y="-57.8" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-106.2" y="-54.5" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-105.6" y="-57" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
-<element name="R62" library="iocene" package="RESC1005X40N" value="1k" x="-104.1" y="-57.8" smashed="yes" rot="MR270">
+<element name="R62" library="iocene" package="RESC1005X40N" value="100" x="-104.1" y="-57.8" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-103.8" y="-54.5" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-103.1" y="-57" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
-<element name="R71" library="iocene" package="RESC1005X40N" value="1k" x="-103" y="57.8" smashed="yes" rot="MR90">
+<element name="R71" library="iocene" package="RESC1005X40N" value="100" x="-103" y="57.8" smashed="yes" rot="MR90">
 <attribute name="NAME" x="-100.8" y="53.8" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-104" y="57" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="R72" library="iocene" package="RESC1005X40N" value="1k" x="-105.5" y="57.8" smashed="yes" rot="MR90">
+<element name="R72" library="iocene" package="RESC1005X40N" value="100" x="-105.5" y="57.8" smashed="yes" rot="MR90">
 <attribute name="NAME" x="-102.8" y="53.8" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-106.5" y="57" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="R73" library="iocene" package="RESC1005X40N" value="1k" x="-108" y="57.8" smashed="yes" rot="MR90">
+<element name="R73" library="iocene" package="RESC1005X40N" value="100" x="-108" y="57.8" smashed="yes" rot="MR90">
 <attribute name="NAME" x="-104.9" y="53.8" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-109" y="57" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
@@ -3940,22 +3940,22 @@ Your Eurocircuits Team
 <attribute name="NAME" x="-26.5" y="1.7" size="0.8" layer="26" font="vector" rot="MR90"/>
 <attribute name="VALUE" x="-27.2" y="4.1" size="0.8" layer="28" font="vector" rot="MR90"/>
 </element>
-<element name="R80" library="iocene" package="RESC1005X40N" value="560" x="-109.855" y="29.21" smashed="yes" rot="MR180">
+<element name="R80" library="iocene" package="RESC1005X40N" value="33" x="-109.855" y="29.21" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.755" y="29.61" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="30.21" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R85" library="iocene" package="RESC1005X40N" value="560" x="-109.855" y="31.75" smashed="yes" rot="MR180">
+<element name="R85" library="iocene" package="RESC1005X40N" value="33" x="-109.855" y="31.75" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-108.855" y="32.15" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-110.655" y="32.75" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
-<element name="R35" library="iocene" package="RESC1005X40N" value="10k" x="-154.99" y="-26.45" smashed="yes" rot="MR180">
+<element name="R35" library="iocene" package="RESC1005X40N" value="100" x="-154.99" y="-26.45" smashed="yes" rot="MR180">
 <attribute name="NAME" x="-156.39" y="-24.85" size="0.8" layer="26" font="vector" rot="MR180"/>
 <attribute name="VALUE" x="-155.79" y="-25.45" size="0.8" layer="28" font="vector" rot="MR180"/>
 </element>
 <element name="R36" library="iocene" package="RESC_ULR15S-R0055FT2" value="ULR15S-R0055FT2" x="-160" y="-27.9" smashed="yes" rot="R180">
 <attribute name="NAME" x="-158.5" y="-29.9" size="0.8" layer="25" font="vector" rot="R180"/>
 </element>
-<element name="R37" library="iocene" package="RESC1005X40N" value="10k" x="-154.4" y="-23.5" smashed="yes" rot="MR270">
+<element name="R37" library="iocene" package="RESC1005X40N" value="100" x="-154.4" y="-23.5" smashed="yes" rot="MR270">
 <attribute name="NAME" x="-154.1" y="-20.1" size="0.8" layer="26" font="vector" rot="MR270"/>
 <attribute name="VALUE" x="-153.4" y="-22.7" size="0.8" layer="28" font="vector" rot="MR270"/>
 </element>
