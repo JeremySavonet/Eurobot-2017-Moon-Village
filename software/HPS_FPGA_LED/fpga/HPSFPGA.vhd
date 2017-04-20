@@ -110,14 +110,14 @@ entity hpsfpga is
     s : out std_logic_vector(8-1 downto 0);    
 
     --------- IOs ----------
-    io_0 : in  std_logic;
-    io_1 : in  std_logic;
-    io_2 : out std_logic;
-    io_3 : out std_logic;
-    io_4 : in  std_logic;
-    io_5 : in  std_logic;
-    io_6 : out std_logic;
-    io_7 : out std_logic;
+    io_0 : inout  std_logic;
+    io_1 : inout  std_logic;
+    io_2 : inout  std_logic;
+    io_3 : inout  std_logic;
+    io_4 : inout  std_logic;
+    io_5 : inout  std_logic;
+    io_6 : inout  std_logic;
+    io_7 : inout  std_logic;
 
     --------- UART ----------
     uart0_rx     : in  std_logic;
@@ -387,6 +387,22 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_pio_n_layer3_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
     signal w_pio_n_layer3_data_out_write           : std_logic_vector(64-1 downto 0);                      -- data_out_write
 
+        --------- I2C ----------
+    signal w_i2c_0_scl     : std_logic;
+    signal w_i2c_0_sda     : std_logic;
+    signal w_i2c_0_scl_oe  : std_logic;
+    signal w_i2c_0_sda_oe  : std_logic;
+    signal w_i2c_0_reset   : std_logic;
+
+    signal w_i2c_1_scl     : std_logic;
+    signal w_i2c_1_sda     : std_logic;
+    signal w_i2c_1_scl_oe  : std_logic;
+    signal w_i2c_1_sda_oe  : std_logic;
+    signal w_i2c_1_reset   : std_logic;
+
+        --------- UART ----------
+    signal w_uart_tx       : std_logic_vector(4-1 downto 0);
+    signal w_uart_rx       : std_logic_vector(4-1 downto 0);
 
 
     signal w_motor_value    : int16_t(6-1 downto 0);
@@ -419,6 +435,7 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_angle_acc     : std_logic_vector(32-1 downto 0);
     signal w_angle_speed   : std_logic_vector(32-1 downto 0);
     signal w_angle_target  : std_logic_vector(32-1 downto 0);
+
 
 
 begin
@@ -576,6 +593,24 @@ begin
         -------- TO/FROM LAYER 2 --------
         ---------------------------------
 
+
+        --------- I2C ----------
+        i2c_0_scl     => w_i2c_0_scl,
+        i2c_0_sda     => w_i2c_0_sda,
+        i2c_0_scl_oe  => w_i2c_0_scl_oe,
+        i2c_0_sda_oe  => w_i2c_0_sda_oe,
+        i2c_0_reset   => w_i2c_0_reset,
+
+        i2c_1_scl     => w_i2c_1_scl,
+        i2c_1_sda     => w_i2c_1_sda,
+        i2c_1_scl_oe  => w_i2c_1_scl_oe,
+        i2c_1_sda_oe  => w_i2c_1_sda_oe,
+        i2c_1_reset   => w_i2c_1_reset,
+
+        --------- UART ----------
+        uart_tx       => w_uart_tx,
+        uart_rx       => w_uart_rx,
+
         motor_value   => w_motor_value,
         motor_current => w_motor_current,
         motor_fault   => w_motor_fault,
@@ -602,6 +637,25 @@ begin
         ---------------------------------
         -------- TO/FROM LAYER 1 --------
         ---------------------------------
+
+        --------- I2C ----------
+        i2c_0_scl     => w_i2c_0_scl,
+        i2c_0_sda     => w_i2c_0_sda,
+        i2c_0_scl_oe  => w_i2c_0_scl_oe,
+        i2c_0_sda_oe  => w_i2c_0_sda_oe,
+        i2c_0_reset   => w_i2c_0_reset,
+
+        i2c_1_scl     => w_i2c_1_scl,
+        i2c_1_sda     => w_i2c_1_sda,
+        i2c_1_scl_oe  => w_i2c_1_scl_oe,
+        i2c_1_sda_oe  => w_i2c_1_sda_oe,
+        i2c_1_reset   => w_i2c_1_reset,
+
+        --------- UART ----------
+        uart_tx       => w_uart_tx,
+        uart_rx       => w_uart_rx,
+
+
 
         motor_value   => w_motor_value,
         motor_current => w_motor_current,

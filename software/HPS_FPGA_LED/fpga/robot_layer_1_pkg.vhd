@@ -90,14 +90,14 @@ package robot_layer_1_pkg is
         s : out std_logic_vector(8-1 downto 0);    
 
         --------- IOs ----------
-        io_0 : in  std_logic;
-        io_1 : in  std_logic;
-        io_2 : out std_logic;
-        io_3 : out std_logic;
-        io_4 : in  std_logic;
-        io_5 : in  std_logic;
-        io_6 : out std_logic;
-        io_7 : out std_logic;
+        io_0 : inout  std_logic;
+        io_1 : inout  std_logic;
+        io_2 : inout  std_logic;
+        io_3 : inout  std_logic;
+        io_4 : inout  std_logic;
+        io_5 : inout  std_logic;
+        io_6 : inout  std_logic;
+        io_7 : inout  std_logic;
 
         --------- UART ----------
         uart0_rx     : in  std_logic;
@@ -158,6 +158,24 @@ package robot_layer_1_pkg is
         ---------------------------------
         -------- TO/FROM LAYER 2 --------
         ---------------------------------
+
+
+        --------- I2C ----------
+        i2c_0_scl     : out std_logic;
+        i2c_0_sda     : out std_logic;
+        i2c_0_scl_oe  : in std_logic;
+        i2c_0_sda_oe  : in std_logic;
+        i2c_0_reset   : in std_logic;
+
+        i2c_1_scl     : out std_logic;
+        i2c_1_sda     : out std_logic;
+        i2c_1_scl_oe  : in std_logic;
+        i2c_1_sda_oe  : in std_logic;
+        i2c_1_reset   : in std_logic;
+
+        --------- UART ----------
+        uart_tx       : in  std_logic_vector(4-1 downto 0);
+        uart_rx       : out std_logic_vector(4-1 downto 0);
 
         motor_value   : in  int16_t(MOTOR_COUNT-1 downto 0);
         motor_current : out int24_t(MOTOR_COUNT-1 downto 0);

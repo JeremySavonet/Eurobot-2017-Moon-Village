@@ -104,7 +104,7 @@ begin
 
 
         w_regs_data_in_value_mask((2+REGS_ORIGIN)*4-1 downto (1+REGS_ORIGIN)*4) <= "0011";
-        w_regs_data_in_value_mask((REGS_ORIGIN+REGS_TRAJ_OUT_OFFSET+2)*4-1 downto (REGS_ORIGIN+REGS_TRAJ_OUT_OFFSET)*4) <= (others=>'1');
+        w_regs_data_in_value_mask((REGS_ORIGIN+REGS_TRAJ_OUT_OFFSET+2-1)*4-1 downto (REGS_ORIGIN+REGS_TRAJ_OUT_OFFSET-1)*4) <= (others=>'1');
 
 
         p_async: process(regs_data_out_value,w_pio_data_out_value,
@@ -128,7 +128,7 @@ begin
                                                                                        sum_m_dist;         
             w_regs_data_in_value((2+REGS_ORIGIN)*32-1 downto (1+REGS_ORIGIN)*32) <= w_pio_data_out_value((2)*32-1 downto (1)*32); 
 
-            w_regs_data_in_value((REGS_TRAJ_OUT_OFFSET+REGS_ORIGIN+2)*32-1 downto (REGS_TRAJ_OUT_OFFSET+REGS_ORIGIN)*32) <= w_pio_data_out_value((REGS_TRAJ_OUT_OFFSET+2)*32-1 downto (REGS_TRAJ_OUT_OFFSET)*32); 
+            w_regs_data_in_value((REGS_TRAJ_OUT_OFFSET+REGS_ORIGIN+2-1)*32-1 downto (REGS_TRAJ_OUT_OFFSET+REGS_ORIGIN-1)*32) <= w_pio_data_out_value((REGS_TRAJ_OUT_OFFSET+2)*32-1 downto (REGS_TRAJ_OUT_OFFSET)*32); 
             
         end process;
 
@@ -136,14 +136,14 @@ begin
         --w_odo_output(1) <= w_pio_data_out_value((2+8)*32-1 downto (1+8)*32); --! angle
 
         dist_en       <= w_pio_data_out_value((1+REGS_PID_DISTANCE_OFFSET)*32-1 downto (0+REGS_PID_DISTANCE_OFFSET)*32)((0+REGS_PID_DISTANCE_OFFSET)*32);
-        dist_acc      <= w_pio_data_out_value((2+REGS_PID_DISTANCE_OFFSET)*32-1 downto (1+REGS_PID_DISTANCE_OFFSET)*32);
-        dist_speed    <= w_pio_data_out_value((3+REGS_PID_DISTANCE_OFFSET)*32-1 downto (2+REGS_PID_DISTANCE_OFFSET)*32);
+        dist_speed    <= w_pio_data_out_value((2+REGS_PID_DISTANCE_OFFSET)*32-1 downto (1+REGS_PID_DISTANCE_OFFSET)*32);
+        dist_acc      <= w_pio_data_out_value((3+REGS_PID_DISTANCE_OFFSET)*32-1 downto (2+REGS_PID_DISTANCE_OFFSET)*32);
         dist_target   <= w_pio_data_out_value((4+REGS_PID_DISTANCE_OFFSET)*32-1 downto (3+REGS_PID_DISTANCE_OFFSET)*32);
 
 
         angle_en      <= w_pio_data_out_value((1+REGS_PID_ANGLE_OFFSET)*32-1 downto (0+REGS_PID_ANGLE_OFFSET)*32)((0+REGS_PID_ANGLE_OFFSET)*32);
-        angle_acc     <= w_pio_data_out_value((2+REGS_PID_ANGLE_OFFSET)*32-1 downto (1+REGS_PID_ANGLE_OFFSET)*32);
-        angle_speed   <= w_pio_data_out_value((3+REGS_PID_ANGLE_OFFSET)*32-1 downto (2+REGS_PID_ANGLE_OFFSET)*32);
+        angle_speed   <= w_pio_data_out_value((2+REGS_PID_ANGLE_OFFSET)*32-1 downto (1+REGS_PID_ANGLE_OFFSET)*32);
+        angle_acc     <= w_pio_data_out_value((3+REGS_PID_ANGLE_OFFSET)*32-1 downto (2+REGS_PID_ANGLE_OFFSET)*32);
         angle_target  <= w_pio_data_out_value((4+REGS_PID_ANGLE_OFFSET)*32-1 downto (3+REGS_PID_ANGLE_OFFSET)*32);
 
 

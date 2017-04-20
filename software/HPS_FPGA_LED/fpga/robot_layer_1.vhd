@@ -92,14 +92,14 @@ entity robot_layer_1 is
         s : out std_logic_vector(8-1 downto 0);    
 
         --------- IOs ----------
-        io_0 : in  std_logic;
-        io_1 : in  std_logic;
-        io_2 : out std_logic;
-        io_3 : out std_logic;
-        io_4 : in  std_logic;
-        io_5 : in  std_logic;
-        io_6 : out std_logic;
-        io_7 : out std_logic;
+        io_0 : inout  std_logic;
+        io_1 : inout  std_logic;
+        io_2 : inout  std_logic;
+        io_3 : inout  std_logic;
+        io_4 : inout  std_logic;
+        io_5 : inout  std_logic;
+        io_6 : inout  std_logic;
+        io_7 : inout  std_logic;
 
         --------- UART ----------
         uart0_rx     : in  std_logic;
@@ -161,6 +161,23 @@ entity robot_layer_1 is
         -------- TO/FROM LAYER 2 --------
         ---------------------------------
 
+        --------- I2C ----------
+        i2c_0_scl     : out std_logic;
+        i2c_0_sda     : out std_logic;
+        i2c_0_scl_oe  : in std_logic;
+        i2c_0_sda_oe  : in std_logic;
+        i2c_0_reset   : in std_logic;
+
+        i2c_1_scl     : out std_logic;
+        i2c_1_sda     : out std_logic;
+        i2c_1_scl_oe  : in std_logic;
+        i2c_1_sda_oe  : in std_logic;
+        i2c_1_reset   : in std_logic;
+
+        --------- UART ----------
+        uart_tx       : in  std_logic_vector(4-1 downto 0);
+        uart_rx       : out std_logic_vector(4-1 downto 0);
+
         motor_value   : in  int16_t(MOTOR_COUNT-1 downto 0);
         motor_current : out int24_t(MOTOR_COUNT-1 downto 0);
         motor_fault   : out std_logic_vector(MOTOR_COUNT-1 downto 0);
@@ -200,8 +217,9 @@ architecture rtl of robot_layer_1 is
 
     constant SERVO_COUNT : natural := 8;
 
-    signal w_servo_value    : int8_t(SERVO_COUNT-1 downto 0);
+    signal w_servo_value    : int16_t(SERVO_COUNT-1 downto 0);
     signal w_servo_enabled  : std_logic_vector(SERVO_COUNT-1 downto 0);
+    signal w_servo_full_range : std_logic_vector(SERVO_COUNT-1 downto 0);
     signal w_servo_override : std_logic_vector(SERVO_COUNT-1 downto 0);
     signal w_servo_current  : int24_t(SERVO_COUNT-1 downto 0);
     signal w_servo_out      : std_logic_vector(SERVO_COUNT-1 downto 0);
@@ -397,9 +415,15 @@ begin
 
 
     w_input_in(0) <= io_0 when w_sim_mode = '0' else SW(0);
-    w_input_in(1) <= io_1 when w_sim_mode = '0' else SW(1);
-    w_input_in(2) <= io_4 when w_sim_mode = '0' else SW(2);
-    w_input_in(3) <= io_5 when w_sim_mode = '0' else SW(3);
+    w_input_in(1) <= io_2 when w_sim_mode = '0' else SW(1);
+    w_input_in(2) <= io_3 when w_sim_mode = '0' else SW(2);
+    w_input_in(3) <= io_4 when w_sim_mode = '0' else SW(3);
+
+    io_0 <= 'Z';
+    io_2 <= 'Z';
+    io_3 <= 'Z';
+    io_4 <= 'Z';
+
 
 
     b_io: block
@@ -453,10 +477,10 @@ begin
 
 
 
-    io_2 <= w_output_out(0);
-    io_3 <= w_output_out(1);
-    io_6 <= w_output_out(2);
-    io_7 <= w_output_out(3);
+    io_1 <= w_output_out(0);
+    io_6 <= w_output_out(1);
+    io_7 <= w_output_out(2);
+    --io_? <= w_output_out(3);
 
 
 
@@ -581,23 +605,26 @@ begin
     end block;
 
     g_servo: for i in 0 to SERVO_COUNT-1 generate
-        signal w_duty : std_logic_vector(12-1 downto 0);
+        signal w_duty : std_logic_vector(16-1 downto 0);
         signal w_reg  : std_logic_vector(32-1 downto 0);
     begin
 
         w_reg <= regs_data_out_value(((i+1)+REG_SERVO_OFFSET)*32-1 downto (i+REG_SERVO_OFFSET)*32);
 
-        w_servo_enabled(i) <= w_reg(8);
-        w_servo_override(i) <= w_reg(16);
+        w_servo_enabled(i)    <= w_reg(16);
+        w_servo_full_range(i) <= w_reg(17);
+        w_servo_override(i) <= w_reg(24);
 
-        w_servo_value(i) <= w_reg(8-1 downto 0) when w_servo_override(i) = '1' else (others=>'0');
+        w_servo_value(i) <= w_reg(16-1 downto 0) when w_servo_override(i) = '1' else (others=>'0');
 
-        w_duty <= std_logic_vector(to_unsigned(256,w_duty'length)+unsigned(w_servo_value(i)))(w_duty'range) when w_servo_enabled(i) = '1' else (others=>'0');
+        w_duty <= std_logic_vector(to_unsigned(2**16/5,w_duty'length)+unsigned(w_servo_value(i))*52)(w_duty'range) when w_servo_enabled(i) = '1' and w_servo_full_range(i) = '0' 
+             else w_servo_value(i) when w_servo_enabled(i) = '1' and w_servo_full_range(i) = '1'
+             else (others=>'0'); 
 
         inst_pwm_servo: pwm 
         generic map(
-            sys_clk         => CLK_FREQUENCY_HZ*2, --system clock frequency in Hz
-            pwm_freq        => 625*2/10,     --PWM switching frequency in Hz
+            sys_clk         => CLK_FREQUENCY_HZ, --system clock frequency in Hz
+            pwm_freq        => 200,     --PWM switching frequency in Hz
             bits_resolution => w_duty'length,         --bits of resolution setting the duty cycle
             phases          => 1           --number of out : pwms and phases
         )
@@ -692,7 +719,27 @@ begin
         signal r_ref    : std_logic;
 
         signal r_qei_value_simu : std_logic_vector(16-1 downto 0);
+        function get_id_motor(qei_id : natural) return natural is
+        begin
+            if qei_id = 0 or qei_id = 2 then
+                return 0;
+            end if;
+
+            if qei_id = 1 or qei_id = 3 then
+                return 1;
+            end if;
+
+            return 2;        
+        end function;
+
+        constant SIMU_ID_MOTOR : natural := get_id_motor(i);
+        constant SIMU_REF_COUNT : natural := 8192;
+        signal r_ref_cnt : integer range -(SIMU_REF_COUNT+1) to SIMU_REF_COUNT+1;
+        signal w_qei_z_local : std_logic;
+        signal r_qei_z_simu : std_logic;
     begin
+
+
 
         w_regs_data_in_value(((i+1)+REG_QEI_OFFSET)*32-1 downto (i+REG_QEI_OFFSET)*32) <= "0000000" & w_qei_override(i) & "0000000" & w_qei_ref(i) & w_qei_value(i);
 
@@ -733,21 +780,32 @@ begin
         begin
             if reset = '1' then
                 r_qei_value_simu <= (others=>'0');
+                r_ref_cnt <= 0;
             elsif rising_edge(clk) then
-                if unsigned(abs(signed(w_motor_value(i)))) >= 16384 then
-                    if w_motor_dir(i) = '0' then
+                if unsigned(abs(signed(w_motor_value(SIMU_ID_MOTOR)))) >= 10000 then
+                    if w_motor_dir(SIMU_ID_MOTOR) = '0' then
                         r_qei_value_simu <= std_logic_vector(unsigned(r_qei_value_simu)+1);
+                        r_ref_cnt <= r_ref_cnt+1;
                     else
                         r_qei_value_simu <= std_logic_vector(unsigned(r_qei_value_simu)-1);
+                        r_ref_cnt <= r_ref_cnt-1;
                     end if;
+                end if;
+                r_qei_z_simu <= '0';
+                if r_ref_cnt = SIMU_REF_COUNT or r_ref_cnt = -SIMU_REF_COUNT then
+                    r_ref_cnt <= 0;
+                    r_qei_z_simu <= '1';
                 end if;
             
                 if w_sim_mode = '0' then
                     r_qei_value_simu <= (others=>'0');
+                    r_ref_cnt <= 0;
                 end if;
                 
             end if;
         end process;
+
+        w_qei_z_local <= w_qei_z(i) when w_sim_mode = '0' else r_qei_z_simu;
     
         p_sync: process(clk,reset) is
         begin
@@ -755,7 +813,7 @@ begin
                 r_ref <= '0';
                 r_qei_z <= '0';
             elsif rising_edge(clk) then
-                r_qei_z  <= w_qei_z(i);
+                r_qei_z  <= w_qei_z_local;
                 r2_qei_z <= r_qei_z;
 
                 r_ref <= '0';
@@ -773,51 +831,29 @@ begin
     end generate;
 
 
+    uart0_tx <= uart_tx(0);
+    uart1_tx <= uart_tx(1);
+    uart2_tx <= uart_tx(2);
+    uart3_tx <= uart_tx(3);
 
-    inst_uart0: uart
-    generic map(
-        CLK_FREQ => 50e6,
-        BAUD_RATE => 1_000_000,
-        PARITY_BIT => "none"
-    )
-    port map (
-        CLK     => clk,
-        RST     => not w_reset_n,    
-                         
-        -- UART INTERFACE
-        UART_TXD    => uart0_tx,
-        UART_RXD    => uart0_rx,
-        -- USER DATA INPUT INTERFACE
-        DATA_IN     => r_uart_tx_data(r_uart_tx_data'high downto r_uart_tx_data'length-8),
-        DATA_SEND   => w_uart_tx_valid, -- when DATA_SEND = 1, data on DATA_IN will be transmit, DATA_SEND can set to 1 only when BUSY = 0
-        BUSY        => w_uart_tx_busy, -- when BUSY = 1 transiever is busy, you must not set DATA_SEND to 1
-        -- USER DATA OUTPUT INTERFACE
-        DATA_OUT    => open,
-        DATA_VLD    => open,
-        FRAME_ERROR => open
+    uart_rx(0) <= uart_tx(0);--uart0_rx;
+    uart_rx(1) <= uart1_rx;
+    uart_rx(2) <= uart2_rx;
+    uart_rx(3) <= uart3_rx;
 
-    );	
+    i2c0_scl <= 'Z' when i2c_0_scl_oe = '0' else '0';
+    i2c0_sda <= 'Z' when i2c_0_sda_oe = '0' else '0';
+    i2c0_reset <= i2c_0_reset;
+    
+    i2c_0_scl <= i2c0_scl;
+    i2c_0_sda <= i2c0_sda;
 
-    w_uart_tx_valid <= not w_uart_tx_busy;
-
-
-    p_sync_uart_tx: process(clk, w_reset_n) is
-    begin
-        if (w_reset_n = '0') then
-            r_uart_tx_data <= X"A5" & std_logic_vector(to_unsigned(MSG_SIZE,8)) & X"00" & X"00000000" & X"00000000" & X"0000" & X"0000"; 
-        elsif rising_edge(clk) then
-            if w_uart_tx_busy = '0' then
-                r_uart_tx_data <= r_uart_tx_data(r_uart_tx_data'high-8 downto 0) & r_uart_tx_data(r_uart_tx_data'high downto r_uart_tx_data'length-8);
-            end if;
-            --if r_ad0_rx_valid = '1' then
-            --    r_uart_tx_data <= X"A5" & std_logic_vector(to_unsigned(MSG_SIZE,8)) & X"00" & X"00000000" & X"00000000" & X"0000" & X"0000";                 
-            --end if;
-
-        end if;
-    end process;
-
-    --w_m0_pio_0_in <= r_pid_state & "0000000" & w_ad0_rx_data(24-1 downto  0);
-    --w_m1_pio_0_in <= r_pid_state & "0000000" & w_ad0_rx_data(48-1 downto 24);
+    i2c1_scl <= 'Z' when i2c_1_scl_oe = '0' else '0';
+    i2c1_sda <= 'Z' when i2c_1_sda_oe = '0' else '0';
+    i2c1_reset <= i2c_1_reset;
+    
+    i2c_1_scl <= i2c1_scl;
+    i2c_1_sda <= i2c1_sda;
 
 
 end architecture;

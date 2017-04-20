@@ -25,8 +25,9 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
-USE ieee.std_logic_unsigned.all;
-
+--USE ieee.std_logic_unsigned.all;
+USE ieee.numeric_std.ALL; 
+ 
 ENTITY pwm IS
   GENERIC(
       sys_clk         : INTEGER := 50_000_000; --system clock frequency in Hz
@@ -51,6 +52,7 @@ ARCHITECTURE logic OF pwm IS
   SIGNAL  half_duty    :  half_duties := (OTHERS => 0);                     --array of half duty values (for each phase)
 BEGIN
   PROCESS(clk, reset_n)
+	variable v_compute : unsigned(bits_resolution+24-1 downto 0);
   BEGIN
     IF(reset_n = '0') THEN                                                 --asynchronous reset
       count <= (OTHERS => 0);                                                --clear counter
@@ -58,7 +60,8 @@ BEGIN
       pwm_n_out <= (OTHERS => '0');                                          --clear pwm inverse outputs
     ELSIF(clk'EVENT AND clk = '1') THEN                                      --rising system clock edge
       IF(ena = '1') THEN                                                   --latch in new duty cycle
-        half_duty_new <= conv_integer(duty)*period/(2**bits_resolution)/2;   --determine clocks in 1/2 duty cycle
+		   v_compute := unsigned(duty)*to_unsigned(period,24)/(2**(bits_resolution+1));
+        half_duty_new <= to_integer(v_compute(31-1 downto 0));--(unsigned(duty)*period/(2**(bits_resolution))/2));--conv_integer(duty)*period/(2**bits_resolution)/2;   --determine clocks in 1/2 duty cycle
       END IF;
       FOR i IN 0 to phases-1 LOOP                                            --create a counter for each phase
         IF(count(0) = period - 1 - i*period/phases) THEN                       --end of period reached
