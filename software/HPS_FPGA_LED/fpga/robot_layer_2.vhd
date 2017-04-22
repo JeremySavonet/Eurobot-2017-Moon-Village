@@ -346,14 +346,14 @@ begin
             motor_value(0) <= std_logic_vector(to_signed(2**15-1,16));
         end if;
         if v_left < -2**15 then
-            motor_value(0) <= std_logic_vector(to_signed(-2**15,16));
+            motor_value(0) <= std_logic_vector(to_signed(-2**15-1,16));
         end if;
 
         if v_right > 2**15-1 then
             motor_value(1) <= std_logic_vector(to_signed(2**15-1,16));
         end if;
         if v_right < -2**15 then
-            motor_value(1) <= std_logic_vector(to_signed(-2**15,16));
+            motor_value(1) <= std_logic_vector(to_signed(-2**15-1,16));
         end if;
 
     end process;
