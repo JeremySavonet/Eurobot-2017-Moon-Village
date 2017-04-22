@@ -4,19 +4,26 @@
 #define WESTBOT_CARROUSEL_HPP_
 
 #include "Hal.hpp"
-#include "ItemRegister.hpp"
 
 namespace WestBot {
 
 class Carrousel
 {
 public:
+    enum class Sens
+    {
+        ClockWise,
+        CounterClockWise
+    };
+
     Carrousel( Hal& hal );
 
     bool init();
 
     float position();
-    void setPosition( float position );
+
+    void setPosition( float position, bool closest = true );
+    void setPosition( float position, Sens = Sens::ClockWise );
 
 private:
     void setPeriod( int32_t period );
