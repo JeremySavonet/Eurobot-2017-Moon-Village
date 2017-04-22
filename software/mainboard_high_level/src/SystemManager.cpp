@@ -60,7 +60,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         this,
         [ this ]( const DigitalValue& value )
         {
-            if( value == DigitalValue::ON )
+            if( value == DigitalValue::OFF )
             {
                 emit started();
             }
