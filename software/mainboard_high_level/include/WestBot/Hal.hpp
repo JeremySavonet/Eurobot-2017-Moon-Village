@@ -42,6 +42,32 @@ public:
     ItemRegister _output2;
     ItemRegister _output3;
     ItemRegister _outputOverride;
+
+    ItemRegister _s0;
+    ItemRegister _s0Enable;
+    ItemRegister _s0Override;
+    ItemRegister _s1;
+    ItemRegister _s1Enable;
+    ItemRegister _s1Override;
+    ItemRegister _s2;
+    ItemRegister _s2Enable;
+    ItemRegister _s2Override;
+    ItemRegister _s3;
+    ItemRegister _s3Enable;
+    ItemRegister _s3Override;
+    ItemRegister _s4;
+    ItemRegister _s4Enable;
+    ItemRegister _s4Override;
+    ItemRegister _s5;
+    ItemRegister _s5Enable;
+    ItemRegister _s5Override;
+    ItemRegister _s6;
+    ItemRegister _s6Enable;
+    ItemRegister _s6Override;
+    ItemRegister _s7;
+    ItemRegister _s7Enable;
+    ItemRegister _s7Override;
+
     // TODO: complete layer1 registers defition
 
     ItemRegister _carrouselPidPeriod;

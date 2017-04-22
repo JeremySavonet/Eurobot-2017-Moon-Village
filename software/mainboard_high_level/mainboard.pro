@@ -31,6 +31,7 @@ SOURCES += src/Action.cpp \
            src/SystemManager.cpp \
            src/main.cpp \
            src/GameMap.cpp \
+           src/Servo.cpp
 
 HEADERS += \
     include/Defines.hpp \
@@ -52,6 +53,7 @@ HEADERS += \
     include/WestBot/StrategyManager.hpp \
     include/WestBot/SystemManager.hpp \
     include/WestBot/GameMap.hpp \
+    include/WestBot/Servo.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

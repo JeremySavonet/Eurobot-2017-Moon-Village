@@ -14,8 +14,22 @@
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
 #include <WestBot/Output.hpp>
+#include <WestBot/Servo.hpp>
 #include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
+
+#define SERVO_0_ARM_R_CLOSED 31217
+#define SERVO_0_ARM_R_OPEN 15590
+#define SERVO_0_ARM_R_OPEN90 20000
+#define SERVO_0_ARM_R_DROP 30275
+
+#define SERVO_6_ARM_L_CLOSED 12713
+#define SERVO_6_ARM_L_OPEN 31217
+#define SERVO_6_ARM_L_OPEN90 23000
+#define SERVO_6_ARM_L_DROP 14155
+
+#define SERVO_7_EJECTOR_STANDBY 31217
+#define SERVO_7_EJECTOR_EJECT 11533
 
 namespace
 {
@@ -84,31 +98,70 @@ int main( int argc, char *argv[] )
         return EXIT_FAILURE;
     }
 
-    float pos = 6.0;
-    uint8_t id = 0;
+    Servo s0( "Arm_right" );
+    s0.attach( hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
+
+    if( ! s0.isAttached() )
+    {
+        qWarning() << "Failed to attached servo arm right...";
+        return EXIT_FAILURE;
+    }
+
+    Servo s6( "Arm_left" );
+    s6.attach( hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
+
+    if( ! s6.isAttached() )
+    {
+        qWarning() << "Failed to attached servo arm left...";
+        return EXIT_FAILURE;
+    }
+
+    Servo s7( "Ejector" );
+    s7.attach( hal, 7, SERVO_7_EJECTOR_STANDBY, SERVO_7_EJECTOR_EJECT );
+
+    if( ! s7.isAttached() )
+    {
+        qWarning() << "Failed to attached servo ejector...";
+        return EXIT_FAILURE;
+    }
+
+    carrousel.setPosition( 1.0 );
+
+    // TEST SERVO
     while( 1 )
     {
-        id++;
+        s0.write( SERVO_0_ARM_R_CLOSED );
+        s6.write( SERVO_6_ARM_L_CLOSED );
+
         QThread::msleep( 1000 );
-        carrousel.setPosition( pos );
-        if( id <= 30 )
-        {
-            pos -= 0.5f;
-        }
-        if( id >= 30 && id <= 60 )
-        {
-            pos += 0.5f;
-        }
 
-        if( pos < 0.0 )
-        {
-            pos += 6.0;
-        }
+        s0.write( SERVO_0_ARM_R_DROP );
+        s6.write( SERVO_6_ARM_L_DROP );
 
-        if( pos > 6.0 )
-        {
-            pos -= 6.0;
-        }
+        QThread::msleep( 1000 );
+
+        s7.write( SERVO_7_EJECTOR_EJECT );
+
+        QThread::msleep( 1000 );
+
+        s0.write( SERVO_0_ARM_R_OPEN90 );
+        s6.write( SERVO_6_ARM_L_OPEN90 );
+
+        QThread::msleep( 1000 );
+
+        s7.write( SERVO_7_EJECTOR_STANDBY );
+
+        QThread::msleep( 5000 );
+
+        s0.disable();
+        s6.disable();
+        s7.disable();
+
+        QThread::msleep( 5000 );
+
+        s0.enable();
+        s6.enable();
+        s7.enable();
 
         QCoreApplication::processEvents();
     }
