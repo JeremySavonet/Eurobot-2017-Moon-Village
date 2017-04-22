@@ -95,80 +95,35 @@ bool Carrousel::init()
 //
 float Carrousel::position()
 {
-    return ( ( ( currentPosition() - reference() ) % _nbTickPerTour ) /
+    float pos = ( ( ( currentPosition() - reference() ) % _nbTickPerTour ) /
              ( float ) _nbTickPerTour ) * 6.0f;
+
+    if( pos < 0.0 )
+    {
+        pos += 6.0;
+
+    }
+
+    return pos;
 }
 
-void Carrousel::setPosition( float targetPos, bool closest )
+void Carrousel::setPosition( float targetPos )
 {
+    float diff = targetPos - position();
+    if( diff > 3.0 )
+    {
+        diff -= 6.0;
+    }
+
+    if( diff < -3.0 )
+    {
+        diff += 6.0;
+    }
+
     int32_t posInTick =
-        ( int32_t ) ( targetPos * ( ( float ) _nbTickPerTour / 6.0f ) );
+        ( int32_t ) ( diff * ( ( float ) _nbTickPerTour / 6.0f ) );
 
-    // Saturate the position to avoid drift
-    if( posInTick > _nbTickPerTour )
-    {
-        posInTick = _nbTickPerTour;
-    }
-
-    if( closest )
-    {
-        // Clockwise
-        if( ( position() - targetPos ) < 0 )
-        {
-            setTarget( currentPosition() + posInTick );
-        }
-        else
-        {
-            setTarget( currentPosition() - posInTick );
-        }
-    }
-    else
-    {
-        // ALWAYS GO CLOCKWISE ?
-        setTarget( currentPosition() + posInTick );
-    }
-}
-
-void Carrousel::setPosition( float targetPos, Carrousel::Sens sens )
-{
-    int32_t posInTick =
-        ( int32_t ) ( targetPos * ( ( float ) _nbTickPerTour / 6.0f ) );
-
-    // Saturate the position to avoid drift
-    if( posInTick > _nbTickPerTour )
-    {
-        posInTick = _nbTickPerTour;
-    }
-
-    switch( sens )
-    {
-    case Carrousel::Sens::ClockWise:
-        // Shortest sens is clockwise, ok then...
-        if( ( position() - targetPos ) < 0 )
-        {
-            setTarget( currentPosition() + posInTick );
-        }
-        else // longest way, overrlap
-        {
-            setTarget( currentPosition() + posInTick + _nbTickPerTour );
-        }
-        break;
-
-    case Carrousel::Sens::CounterClockWise:
-        if( ( position() - targetPos ) < 0 )
-        {
-            setTarget( currentPosition() + posInTick + _nbTickPerTour );
-        }
-        else
-        {
-            setTarget( currentPosition() + posInTick );
-        }
-        break;
-
-    default:
-        qDebug() << "Just do nothing cause this case is not handled";
-        break;
-    }
+    setTarget( currentPosition() + posInTick );
 }
 
 //

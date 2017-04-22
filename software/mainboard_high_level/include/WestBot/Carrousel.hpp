@@ -10,20 +10,13 @@ namespace WestBot {
 class Carrousel
 {
 public:
-    enum class Sens
-    {
-        ClockWise,
-        CounterClockWise
-    };
-
     Carrousel( Hal& hal );
 
     bool init();
 
     float position();
 
-    void setPosition( float position, bool closest = true );
-    void setPosition( float position, Sens = Sens::ClockWise );
+    void setPosition( float position );
 
 private:
     void setPeriod( int32_t period );

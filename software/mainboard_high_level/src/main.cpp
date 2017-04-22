@@ -71,31 +71,45 @@ int main( int argc, char *argv[] )
     hal._modeSimu.write( 1 );
 #endif
 
-    // Leds: Here just for an example
-    Output led( std::make_shared< ItemRegister >( hal._output0 ), "Led" );
-    Output io1( std::make_shared< ItemRegister >( hal._output1 ), "IO1" );
-
     // Activate output override for leds
     hal._outputOverride.write( 0x01010101 );
 
     StrategyManager strategyManager( system );
 
-    Carrousel carrouselGangBang( hal );
+    Carrousel carrousel( hal );
 
-    if( ! carrouselGangBang.init() )
+    if( ! carrousel.init() )
     {
         qWarning() << "Failed to init carrousel module...";
         return EXIT_FAILURE;
     }
 
+    float pos = 6.0;
+    uint8_t id = 0;
     while( 1 )
     {
-        /*led.digitalWrite( DigitalValue::ON );
-        io1.digitalWrite( DigitalValue::OFF );
-        QThread::msleep( 250 );
-        led.digitalWrite( DigitalValue::OFF );
-        io1.digitalWrite( DigitalValue::ON );*/
-        QThread::msleep( 250 );
+        id++;
+        QThread::msleep( 1000 );
+        carrousel.setPosition( pos );
+        if( id <= 30 )
+        {
+            pos -= 0.5f;
+        }
+        if( id >= 30 && id <= 60 )
+        {
+            pos += 0.5f;
+        }
+
+        if( pos < 0.0 )
+        {
+            pos += 6.0;
+        }
+
+        if( pos > 6.0 )
+        {
+            pos -= 6.0;
+        }
+
         QCoreApplication::processEvents();
     }
 
