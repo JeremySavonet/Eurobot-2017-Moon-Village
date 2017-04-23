@@ -23,6 +23,7 @@ private:
     Memory _layer3;
 
 public:
+    // Layer 1
     ItemRegister _resetL1;
     ItemRegister _initOkL1;
     ItemRegister _modeSimu;
@@ -68,8 +69,18 @@ public:
     ItemRegister _s7Enable;
     ItemRegister _s7Override;
 
-    // TODO: complete layer1 registers defition
-
+    // Layer 2
+    ItemRegister _odometryTheta;
+    ItemRegister _odometryX;
+    ItemRegister _odometryY;
+    ItemRegister _pidDistanceInverted;
+    ItemRegister _pidDistanceKp;
+    ItemRegister _pidDistanceKi;
+    ItemRegister _pidDistanceKd;
+    ItemRegister _pidAngleInverted;
+    ItemRegister _pidAngleKp;
+    ItemRegister _pidAngleKi;
+    ItemRegister _pidAngleKd;
     ItemRegister _carrouselPidPeriod;
     ItemRegister _carrouselEnable;
     ItemRegister _carrouselOverride;

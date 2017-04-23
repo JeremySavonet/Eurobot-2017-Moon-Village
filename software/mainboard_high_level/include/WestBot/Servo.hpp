@@ -7,6 +7,19 @@
 
 #include "Hal.hpp"
 
+#define SERVO_0_ARM_R_CLOSED 31217
+#define SERVO_0_ARM_R_OPEN 15590
+#define SERVO_0_ARM_R_OPEN90 20000
+#define SERVO_0_ARM_R_DROP 30275
+
+#define SERVO_6_ARM_L_CLOSED 12713
+#define SERVO_6_ARM_L_OPEN 31217
+#define SERVO_6_ARM_L_OPEN90 23000
+#define SERVO_6_ARM_L_DROP 14155
+
+#define SERVO_7_EJECTOR_STANDBY 31217
+#define SERVO_7_EJECTOR_EJECT 11533
+
 namespace WestBot {
 
 class Servo

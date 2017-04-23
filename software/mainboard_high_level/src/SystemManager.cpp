@@ -91,6 +91,16 @@ SystemManager::~SystemManager()
 // Public methods
 void SystemManager::init()
 {
+    setPidDInverted( 0 );
+    setPidDKp( 2000.0 );
+    setPidDKi( 0.0 );
+    setPidDKd( 0.0 );
+
+    setPidAInverted( 1 );
+    setPidAKp( 500000.0 );
+    setPidAKi( 0.0 );
+    setPidAKd( 0.0 );
+
     createStateMachine();
 }
 
@@ -572,3 +582,42 @@ QState* SystemManager::createHardStopState( QState* parent )
     return state;
 }
 
+void SystemManager::setPidDInverted( uint8_t inverted )
+{
+    _hal._pidDistanceInverted.write( inverted );
+}
+
+void SystemManager::setPidDKp( float kp )
+{
+    _hal._pidDistanceKp.write( kp );
+}
+
+void SystemManager::setPidDKi( float ki )
+{
+    _hal._pidDistanceKi.write( ki );
+}
+
+void SystemManager::setPidDKd( float kd )
+{
+    _hal._pidDistanceKd.write( kd );
+}
+
+void SystemManager::setPidAInverted( uint8_t inverted )
+{
+    _hal._pidAngleInverted.write( inverted );
+}
+
+void SystemManager::setPidAKp( float kp )
+{
+    _hal._pidAngleKp.write( kp );
+}
+
+void SystemManager::setPidAKi( float ki )
+{
+    _hal._pidAngleKp.write( ki );
+}
+
+void SystemManager::setPidAKd( float kd )
+{
+    _hal._pidAngleKp.write( kd );
+}
