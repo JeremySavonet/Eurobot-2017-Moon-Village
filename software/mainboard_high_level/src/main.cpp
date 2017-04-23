@@ -17,6 +17,7 @@
 #include <WestBot/Servo.hpp>
 #include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
+#include <WestBot/TrajectoryManager.hpp>
 
 namespace
 {
@@ -68,12 +69,14 @@ int main( int argc, char *argv[] )
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
 
+    TrajectoryManager trajectoryManager( hal );
+    trajectoryManager.init();
+
+    qDebug() << "Platform ready...";
+
 #ifdef SIMU 
     hal._modeSimu.write( 1 );
 #endif
-
-    // Activate output override for leds
-    hal._outputOverride.write( 0x01010101 );
 
     StrategyManager strategyManager( system );
 
