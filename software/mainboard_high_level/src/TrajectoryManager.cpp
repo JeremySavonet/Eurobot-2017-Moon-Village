@@ -18,6 +18,8 @@ TrajectoryManager::~TrajectoryManager()
 
 void TrajectoryManager::init()
 {
+    _hal._trajFreqHz.write( 10 );
+
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
     _hal._trajCmdValid.write( 0x0 );

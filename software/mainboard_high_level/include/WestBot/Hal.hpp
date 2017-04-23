@@ -77,10 +77,12 @@ public:
     ItemRegister _pidDistanceKp;
     ItemRegister _pidDistanceKi;
     ItemRegister _pidDistanceKd;
+    ItemRegister _pidDistanceSaturation;
     ItemRegister _pidAngleInverted;
     ItemRegister _pidAngleKp;
     ItemRegister _pidAngleKi;
     ItemRegister _pidAngleKd;
+    ItemRegister _pidAngleSaturation;
     ItemRegister _carrouselPidPeriod;
     ItemRegister _carrouselEnable;
     ItemRegister _carrouselOverride;

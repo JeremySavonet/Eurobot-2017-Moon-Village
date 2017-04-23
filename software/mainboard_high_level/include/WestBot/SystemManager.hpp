@@ -97,11 +97,13 @@ private:
     void setPidDKp( float kp );
     void setPidDKi( float ki );
     void setPidDKd( float kd );
+    void setPidDSaturation( uint32_t saturation );
 
     void setPidAInverted( uint8_t inverted );
     void setPidAKp( float kp );
     void setPidAKi( float ki );
     void setPidAKd( float kd );
+    void setPidASaturation( uint32_t saturation );
 
 private:
     Hal _hal;

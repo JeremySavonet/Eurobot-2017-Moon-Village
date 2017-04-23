@@ -95,11 +95,13 @@ void SystemManager::init()
     setPidDKp( 2000.0 );
     setPidDKi( 0.0 );
     setPidDKd( 0.0 );
+    setPidDSaturation( 25000 );
 
     setPidAInverted( 1 );
     setPidAKp( 500000.0 );
     setPidAKi( 0.0 );
     setPidAKd( 0.0 );
+    setPidASaturation( 20000 );
 
     createStateMachine();
 }
@@ -602,6 +604,11 @@ void SystemManager::setPidDKd( float kd )
     _hal._pidDistanceKd.write( kd );
 }
 
+void SystemManager::setPidDSaturation( uint32_t saturation )
+{
+    _hal._pidDistanceSaturation.write( saturation );
+}
+
 void SystemManager::setPidAInverted( uint8_t inverted )
 {
     _hal._pidAngleInverted.write( inverted );
@@ -620,4 +627,9 @@ void SystemManager::setPidAKi( float ki )
 void SystemManager::setPidAKd( float kd )
 {
     _hal._pidAngleKp.write( kd );
+}
+
+void SystemManager::setPidASaturation( uint32_t saturation )
+{
+    _hal._pidAngleSaturation.write( saturation );
 }
