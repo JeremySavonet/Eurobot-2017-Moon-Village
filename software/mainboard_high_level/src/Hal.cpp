@@ -83,7 +83,27 @@ Hal::Hal()
     , _carrouselPosition(  _layer2, 45 * 4, 32 )
     , _carrouselTarget( _layer2, 46 * 4, 32 )
     , _carrouselLastReference( _layer2, 48 * 4, 32 )
-{
+
+    // Layer 3
+    , _trajFreqHz( _layer3, 2 * 4, 16 )
+    , _trajCmdValid( _layer3, 11 * 4, 8 )
+    , _trajCmdId( _layer3, 11 * 4 + 1, 8 )
+    , _trajCmdType( _layer3, 11 * 4 + 2, 8 )
+    , _trajCmdOrderType( _layer3, 11 * 4 + 3, 8 )
+    , _trajCmdWndDistance( _layer3, 12 * 4, 32 )
+    , _trajCmdWndAngleDeg( _layer3, 13 * 4, 32 )
+    , _trajCmdWndAngleStartDeg( _layer3, 14 * 4, 32 )
+    , _trajCmdCfgSpeed( _layer3, 12 * 4, 32 )
+    , _trajCmdCfgAcc( _layer3, 13 * 4, 32 )
+    , _trajCmdPosTheta( _layer3, 12 * 4, 32 )
+    , _trajCmdPosX( _layer3, 13 * 4, 32 )
+    , _trajCmdPosY( _layer3, 14 * 4, 32 )
+    , _trajCmdDDistance( _layer3, 12 * 4, 32 )
+    , _trajOutAck( _layer3, 15 * 4, 8 )
+    , _trajOutState( _layer3, 15 * 4 + 1, 8 )
+    , _trajOutBlocked( _layer3, 15 * 4 + 2, 8 )
+    , _trajOutInWindow( _layer3, 15 * 4 + 3, 8 )
+{        
 }
 
 Hal::~Hal()

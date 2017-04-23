@@ -93,6 +93,26 @@ public:
     ItemRegister _carrouselPosition;
     ItemRegister _carrouselTarget;
     ItemRegister _carrouselLastReference;
+
+    // Layer 3
+    ItemRegister _trajFreqHz;
+    ItemRegister _trajCmdValid;
+    ItemRegister _trajCmdId;
+    ItemRegister _trajCmdType;
+    ItemRegister _trajCmdOrderType;
+    ItemRegister _trajCmdWndDistance;
+    ItemRegister _trajCmdWndAngleDeg;
+    ItemRegister _trajCmdWndAngleStartDeg;
+    ItemRegister _trajCmdCfgSpeed;
+    ItemRegister _trajCmdCfgAcc;
+    ItemRegister _trajCmdPosTheta;
+    ItemRegister _trajCmdPosX;
+    ItemRegister _trajCmdPosY;
+    ItemRegister _trajCmdDDistance;
+    ItemRegister _trajOutAck;
+    ItemRegister _trajOutState;
+    ItemRegister _trajOutBlocked;
+    ItemRegister _trajOutInWindow;
 };
 
 }
