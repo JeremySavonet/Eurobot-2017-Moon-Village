@@ -12,8 +12,8 @@ SOURCES += src/RPLidar.cpp
 
 HEADERS += include/WestBot/RPLidar/RPLidar.hpp
 
-LIBS += -L./3rdparty/rplidar_sdk/lib -lSlamtecRPLidar
-R
+LIBS += -L../rplidar/3rdparty/rplidar_sdk/lib -lrplidar_sdk
+
 DEFINES += WESTBOT_RPLIDARSHAREDLIB_LIBRARY
 
 DEFINES += QT_DEPRECATED_WARNINGS
