@@ -6,4 +6,7 @@
     url = https://github.com/drunkpony/cvra-modules
 [submodule "software/rplidar"]
 	path = software/rplidar
-	url = https://github.com/JeremySavonet/rplidar.git
+    url = https://github.com/JeremySavonet/rplidar.git
+[submodule "software/astar"]
+	path = software/astar
+	url = https://github.com/JeremySavonet/astar.git
