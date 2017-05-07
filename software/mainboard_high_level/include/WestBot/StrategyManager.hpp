@@ -7,6 +7,7 @@
 #include <QString>
 
 #include "Carrousel.hpp"
+#include "Common.hpp"
 #include "Servo.hpp"
 #include "SystemManager.hpp"
 #include "TrajectoryManager.hpp"
@@ -32,7 +33,7 @@ public:
     ~StrategyManager() override = default;
 
 private:
-    void doStrat();
+    void doStrat( const Color& color );
 
 private:
     SystemManager& _systemManager;

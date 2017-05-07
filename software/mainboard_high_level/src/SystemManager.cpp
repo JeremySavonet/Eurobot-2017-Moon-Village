@@ -192,6 +192,7 @@ void SystemManager::createStateMachine()
     startGameState->addTransition(
         this,
         & SystemManager::hardStop,
+        hardStopState );
 
     runningStratState->addTransition(
         this,
@@ -316,6 +317,8 @@ QState* SystemManager::createRunningStratState( QState* parent )
             qDebug() << "Enter running strat state";
             emit doStrat( _color );
         } );
+
+    return state;
 }
 
 QState* SystemManager::createFunnyActionState( QState* parent )
@@ -330,6 +333,8 @@ QState* SystemManager::createFunnyActionState( QState* parent )
         {
             qDebug() << "Enter funny action state";
         } );
+
+    return state;
 }
 
 // Final state

@@ -1,12 +1,11 @@
 // COPYRIGHT (C) 2016-2017 ALL RIGHTS RESERVED WESTBot
-V
+
 #ifndef WESTBOT_SYSTEMMANAGER_HPP_
 #define WESTBOT_SYSTEMMANAGER_HPP_
-[MaV
+
 #include <QList>
 #include <QObject>
-#inc[Ma
-Ylude <QStateMachine>
+#include <QStateMachine>
 #include <QTimer>
 
 #include "Action.hpp"
