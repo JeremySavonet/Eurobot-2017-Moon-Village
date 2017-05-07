@@ -3,13 +3,14 @@
 #ifndef WESTBOT_TRAJECTORYMANAGER_HPP_
 #define WESTBOT_TRAJECTORYMANAGER_HPP_
 
+#include <QDebug>
+
 #include "Hal.hpp"
 
 #define CMD_TYPE_TRAJ 0x0
 #define CMD_TYPE_CFG_DISTANCE 0x1
 #define CMD_TYPE_CFG_ANGLE 0x2
 #define CMD_TYPE_CFG_WND 0x3
-
 
 #define TRAJ_DISABLE 0
 #define TRAJ_ENABLE 1
@@ -67,10 +68,108 @@ public:
         RUNNING_CLITOID_CURVE,   // Running a clitoid in the curve part
     };
 
+    /*!
+    * \brief Overload stream operator for color enum class.
+    */
+    inline QDebug operator<<( QDebug debug, const TrajectoryState& state )
+    {
+        switch( state )
+        {
+        case TrajectoryState::READY:
+            debug << "Trajectory: READY";
+            break;
+
+        case TrajectoryState::RUNNING_A:
+            debug << "Trajectory: RUNNING_A";
+            break;
+
+        case TrajectoryState::RUNNING_D:
+            debug << "Trajectory: RUNNING_D";
+            break;
+
+        case TrajectoryState::RUNNING_AD:
+            debug << "Trajectory: RUNNING_AD";
+            break;
+
+        case TrajectoryState::RUNNING_XY_START:
+            debug << "Trajectory: RUNNING_XY_START";
+            break;
+
+        case TrajectoryState::RUNNING_XY_ANGLE:
+            debug << "Trajectory: RUNNING_XY_ANGLE";
+            break;
+
+        case TrajectoryState::RUNNING_XY_ANGLE_OK:
+            debug << "Trajectory: RUNNING_XY_ANGLE_OK";
+            break;
+
+        case TrajectoryState::RUNNING_XY_F_START:
+            debug << "Trajectory: RUNNING_XY_F_START";
+            break;
+
+        case TrajectoryState::RUNNING_XY_F_ANGLE:
+            debug << "Trajectory: RUNNING_XY_F_ANGLE";
+            break;
+
+        case TrajectoryState::RUNNING_XY_F_ANGLE_OK:
+            debug << "Trajectory: RUNNING_XY_F_ANGLE_OK";
+            break;
+
+        case TrajectoryState::RUNNING_XY_B_START:
+            debug << "Trajectory: RUNNING_XY_B_START";
+            break;
+
+        case TrajectoryState::RUNNING_XY_B_ANGLE:
+            debug << "Trajectory: RUNNING_XY_B_ANGLE";
+            break;
+
+        case TrajectoryState::RUNNING_XY_B_ANGLE_OK:
+            debug << "Trajectory: RUNNING_XY_B_ANGLE_OK";
+            break;
+
+        case TrajectoryState::RUNNING_CIRCLE:
+            debug << "Trajectory: RUNNING_CIRCLE";
+            break;
+
+        case TrajectoryState::RUNNING_LINE:
+            debug << "Trajectory: RUNNING_LINE";
+            break;
+
+        case TrajectoryState::RUNNING_CLITOID_LINE:
+            debug << "Trajectory: RUNNING_CLITOID_LINE";
+            break;
+
+        case TrajectoryState::RUNNING_CLITOID_CURVE:
+            debug << "Trajectory: RUNNING_CLITOID_CURVE";
+            break;
+        }
+        return debug;
+    }
+
     TrajectoryManager( Hal& hal );
     ~TrajectoryManager();
 
     void init();
+
+    void disable();
+    void enable();
+
+    void stop();
+    void hardStop();
+
+    void moveDRel( float distance );
+    void moveOnlyDRel( float distance );
+    void turnARel( float theta );
+    void turnAAbs( float theta );
+    void turnOnlyARel( float theta );
+    void turnOnlyAAbs( float theta );
+    void turnToXY( float x, float y );
+    void turnToXYBehind( float x, float y );
+    void moveToXYAbs( float theta, float x, float y );
+    void moveForwardToXYAbs( float theta, float x, float y );
+    void moveBackwardToXYAbs( float theta, float x, float y );
+    void moveToDARel( float theta, float distance );
+    void moveToXYRel( float x, float y );
 
 private:
     Hal _hal;
