@@ -1,11 +1,12 @@
-// Copyright (c) 2016-2017 All Rights Reserved WestBot
-
+// COPYRIGHT (C) 2016-2017 ALL RIGHTS RESERVED WESTBot
+V
 #ifndef WESTBOT_SYSTEMMANAGER_HPP_
 #define WESTBOT_SYSTEMMANAGER_HPP_
-
+[MaV
 #include <QList>
 #include <QObject>
-#include <QStateMachine>
+#inc[Ma
+Ylude <QStateMachine>
 #include <QTimer>
 
 #include "Action.hpp"
@@ -41,11 +42,10 @@ public:
     void start();
     void stop();
 
-    void pushAction( const Action::Ptr& action );
-    void clearActionQueue();
-
     void setMode( SystemMode mode );
     SystemMode mode() const;
+
+    const Color& color() const;
 
 signals:
     void started();
@@ -56,16 +56,10 @@ signals:
 
     void readyForWar();
 
-    void executeAction();
-    void actionQueueCleared();
-
-    void onActionSuccess();
-    void onActionError();
-
-    void funnyActionDone();
-
     void hardStop();
     void reArming();
+
+    void doStrat( const Color& color );
 
 private:
     void createStateMachine();
@@ -75,13 +69,7 @@ private:
     QState* createCheckGameColorState( QState* parent );
     QState* createStartGameState( QState* parent );
 
-    // States to manage game action execution
-    QState* createWaitForActionState( QState* parent );
-    QState* createExecuteActionState( QState* parent );
-    QState* createCancelActionState( QState* parent );
-
-    // Last action of the game: Bonus +20pts.
-    // We go to that state when timer reach 90s.
+    QState* createRunningStratState( QState* parent );
     QState* createFunnyActionState( QState* parent );
 
     // Final state
@@ -109,8 +97,6 @@ private:
     Hal _hal;
     QStateMachine _stateMachine;
     QTimer _gameTimer;
-    QTimer _actionTimeoutTimer;
-    QList< Action::Ptr > _actions;
     Input::Ptr _startButton;
     Input::Ptr _colorButton;
     Input::Ptr _stopButton;

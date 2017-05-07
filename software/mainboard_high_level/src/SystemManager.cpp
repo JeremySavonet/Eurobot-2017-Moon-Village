@@ -5,7 +5,6 @@
 #include <QState>
 #include <QString>
 
-#include <WestBot/FunnyAction.hpp>
 #include <WestBot/SystemManager.hpp>
 
 using namespace WestBot;
@@ -13,34 +12,22 @@ using namespace WestBot;
 namespace
 {
     const int GAME_DURATION = 10 * 1000; // 90s
-    const int ACTION_TIMEOUT = 500; // 500ms
 }
 
 SystemManager::SystemManager( Hal& hal, QObject* parent )
     : QObject( parent )
     , _hal( hal )
     , _stateMachine( this )
-    , _startButton( new Input( std::make_shared< ItemRegister >( _hal._input0 ), "Tirette" ) )
-    , _colorButton( new Input( std::make_shared< ItemRegister >( _hal._input1 ), "Color" ) )
-    , _stopButton( new Input( std::make_shared< ItemRegister >( _hal._input2 ), "AU" ) )
+    , _startButton( new Input( std::make_shared< ItemRegister >( _hal._input0 ),
+                               "Tirette" ) )
+    , _colorButton( new Input( std::make_shared< ItemRegister >( _hal._input1 ),
+                               "Color" ) )
+    , _stopButton( new Input( std::make_shared< ItemRegister >( _hal._input2 ),
+                              "AU" ) )
     , _color( Color::Unknown )
     , _systemMode( SystemManager::SystemMode::Full )
 {
     _gameTimer.setSingleShot( true );
-
-    connect(
-        & _actionTimeoutTimer,
-        & QTimer::timeout,
-        this,
-        [ this ]()
-        {
-            if( ! _actions.isEmpty() )
-            {
-                _actions.first()->setState( Action::State::InError );
-                _actions.removeFirst();
-                emit onActionError();
-            }
-        } );
 
     connect(
         & _gameTimer,
@@ -116,27 +103,6 @@ void SystemManager::stop()
     _stateMachine.stop();
 }
 
-void SystemManager::pushAction( const Action::Ptr& action )
-{
-    qDebug() << "Pushing action:" << action->name() << "in the queue";
-
-    _actions.append( action );
-    emit executeAction();
-}
-
-void SystemManager::clearActionQueue()
-{
-    qDebug() << "Clearing action queue: size =" << _actions.size();
-
-    for( const auto& action : _actions )
-    {
-        action->setState( Action::State::Flushed );
-    }
-
-    _actions.clear();
-    emit actionQueueCleared();
-}
-
 void SystemManager::setMode( SystemManager::SystemMode mode )
 {
     _systemMode = mode;
@@ -147,6 +113,11 @@ SystemManager::SystemMode SystemManager::mode() const
     return _systemMode;
 }
 
+const Color& SystemManager::color() const
+{
+    return _color;
+}
+
 // Private methods
 void SystemManager::createStateMachine()
 {
@@ -154,10 +125,7 @@ void SystemManager::createStateMachine()
     QState* checkGameColorState = createCheckGameColorState( & _stateMachine );
     QState* startGameState = createStartGameState( & _stateMachine );
 
-    QState* waitForActionState = createWaitForActionState( & _stateMachine );
-    QState* executeActionState = createExecuteActionState( & _stateMachine );
-    QState* cancelActionState = createCancelActionState( & _stateMachine );
-
+    QState* runningStratState = createRunningStratState( & _stateMachine );
     QState* funnyActionState = createFunnyActionState( & _stateMachine );
 
     QState* stopGameState = createStopGameState( & _stateMachine );
@@ -174,40 +142,17 @@ void SystemManager::createStateMachine()
         & SystemManager::started,
         startGameState );
 
-    startGameState->addTransition( waitForActionState );
-
-    waitForActionState->addTransition(
+    startGameState->addTransition(
         this,
-        & SystemManager::executeAction,
-        executeActionState );
+        & SystemManager::readyForWar,
+        runningStratState );
 
-    executeActionState->addTransition(
-        this,
-        & SystemManager::onActionSuccess,
-        waitForActionState );
-
-    executeActionState->addTransition(
-        this,
-        & SystemManager::onActionError,
-        cancelActionState );
-
-    cancelActionState->addTransition( waitForActionState );
-
-    // Fallback funny action
-    waitForActionState->addTransition(
+    runningStratState->addTransition(
         this,
         & SystemManager::doFunnyAction,
         funnyActionState );
 
-    executeActionState->addTransition(
-        this,
-        & SystemManager::doFunnyAction,
-        funnyActionState );
-
-    funnyActionState->addTransition(
-        this,
-        & SystemManager::funnyActionDone,
-        stopGameState );
+    funnyActionState->addTransition( stopGameState );
 
     // Rearm the system for an other game
     stopGameState->addTransition( initialState );
@@ -223,17 +168,7 @@ void SystemManager::createStateMachine()
         & SystemManager::error,
         errorState );
 
-    waitForActionState->addTransition(
-        this,
-        & SystemManager::error,
-        errorState );
-
-    executeActionState->addTransition(
-        this,
-        & SystemManager::error,
-        errorState );
-
-    cancelActionState->addTransition(
+    runningStratState->addTransition(
         this,
         & SystemManager::error,
         errorState );
@@ -257,19 +192,8 @@ void SystemManager::createStateMachine()
     startGameState->addTransition(
         this,
         & SystemManager::hardStop,
-        hardStopState );
 
-    waitForActionState->addTransition(
-        this,
-        & SystemManager::hardStop,
-        hardStopState );
-
-    executeActionState->addTransition(
-        this,
-        & SystemManager::hardStop,
-        hardStopState );
-
-    cancelActionState->addTransition(
+    runningStratState->addTransition(
         this,
         & SystemManager::hardStop,
         hardStopState );
@@ -379,9 +303,7 @@ QState* SystemManager::createStartGameState( QState* parent )
     return state;
 }
 
-
-// States to manage game action execution
-QState* SystemManager::createWaitForActionState( QState* parent )
+QState* SystemManager::createRunningStratState( QState* parent )
 {
     QState* state = new QState( parent );
 
@@ -391,105 +313,11 @@ QState* SystemManager::createWaitForActionState( QState* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Enter in wait for action state";
-
-            _actionTimeoutTimer.stop();
-
-            // If the queue is not empty, directly execute the next action
-            // If not, wait strategyManager to pushBack an action.
-            if( ! _actions.isEmpty() )
-            {
-                emit executeAction();
-            }
+            qDebug() << "Enter running strat state";
+            emit doStrat( _color );
         } );
-
-    connect(
-        state,
-        & QState::exited,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Exit wait for action state";
-
-            if( ! _actions.isEmpty() )
-            {
-                _actions.first()->setState( Action::State::Running );
-            }
-        } );
-
-
-    return state;
 }
 
-QState* SystemManager::createExecuteActionState( QState* parent )
-{
-    QState* state = new QState( parent );
-
-    connect(
-        state,
-        & QState::entered,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Enter in execute action state";
-
-            if( _actions.isEmpty() )
-            {
-                emit onActionError();
-                return;
-            }
-
-            const auto& action = _actions.first();
-            connect(
-                action.get(),
-                & Action::complete,
-                this,
-                [ this, action ]() mutable
-                {
-                    if( action->hasError() )
-                    {
-                        emit onActionError();
-                        return;
-                    }
-
-                    _actions.removeFirst();
-
-                    emit onActionSuccess();
-
-                } );
-
-            action->execute();
-
-            // Start  action timeout
-            _actionTimeoutTimer.start( ACTION_TIMEOUT );
-        } );
-
-    return state;
-}
-
-QState* SystemManager::createCancelActionState( QState* parent )
-{
-    QState* state = new QState( parent );
-
-    connect(
-        state,
-        & QState::entered,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Enter in cancel action state";
-
-            if( ! _actions.isEmpty() )
-            {
-                clearActionQueue();
-            }
-        } );
-
-    return state;
-}
-
-// Last action of the game: Bonus +20pts.
-// We go to that state when game timer reach GAME_DURATION.
 QState* SystemManager::createFunnyActionState( QState* parent )
 {
     QState* state = new QState( parent );
@@ -501,27 +329,7 @@ QState* SystemManager::createFunnyActionState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter funny action state";
-            const auto funnyAction = std::make_shared< FunnyAction >();
-
-            connect(
-                funnyAction.get(),
-                & Action::complete,
-                this,
-                & SystemManager::funnyActionDone );
-
-            funnyAction->execute();
         } );
-
-    connect(
-        state,
-        & QState::exited,
-        this,
-        []()
-        {
-            qDebug() << "Exit funny action state. END OF THE GAME";
-        } );
-
-    return state;
 }
 
 // Final state
@@ -536,7 +344,6 @@ QState* SystemManager::createStopGameState( QState* parent )
         []()
         {
             qDebug() << "Enter stop state";
-            // XXX: Deinit all peripherals and clear what is supposed to be cleared
         } );
 
     return state;
@@ -554,13 +361,7 @@ QState* SystemManager::createErrorState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter error state";
-
-            _actionTimeoutTimer.stop();
-
-            if( ! _actions.isEmpty() )
-            {
-                clearActionQueue();
-            }
+            // XXX: WHAT TO DO: Signal with error type
         } );
 
     return state;

@@ -11,18 +11,15 @@ TEMPLATE = app
 
 INCLUDEPATH += include
 
-SOURCES += src/Action.cpp \
-           src/Carrousel.cpp \
+SOURCES += src/Carrousel.cpp \
            src/Configuration.cpp \
            src/ConfigurationTcpServer.cpp \
            src/Entity.cpp \
-           src/FunnyAction.cpp \
            src/Hal.cpp \
            src/Input.cpp \
            src/ItemRegister.cpp \
            src/Memory.cpp \
            src/MemoryManager.cpp \
-           src/MoveAction.cpp \
            src/Output.cpp \
            src/StrategyManager.cpp \
            src/SystemManager.cpp \
@@ -32,20 +29,17 @@ SOURCES += src/Action.cpp \
 
 HEADERS += \
     include/Defines.hpp \
-    include/WestBot/Action.hpp \
     include/WestBot/Carrousel.hpp \
     include/WestBot/Common.hpp \
     include/WestBot/Configuration.hpp \
     include/WestBot/ConfigurationTcpServer.hpp \
     include/WestBot/Entity.hpp \
-    include/WestBot/FunnyAction.hpp \
     include/WestBot/Hal.hpp \
     include/WestBot/Input.hpp \
     include/WestBot/ItemRegister.hpp \
     include/WestBot/Layer.hpp \
     include/WestBot/Memory.hpp \
     include/WestBot/MemoryManager.hpp \
-    include/WestBot/MoveAction.hpp \
     include/WestBot/Output.hpp \
     include/WestBot/StrategyManager.hpp \
     include/WestBot/SystemManager.hpp \

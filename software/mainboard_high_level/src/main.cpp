@@ -65,6 +65,7 @@ int main( int argc, char *argv[] )
     // Init the System manager
     SystemManager system( hal );
     system.init(); // Create the state machine
+    system.setMode( SystemManager::SystemMode::Full ); // Set the system in full mode
 
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
@@ -74,11 +75,9 @@ int main( int argc, char *argv[] )
 
     qDebug() << "Platform ready...";
 
-#ifdef SIMU 
+#ifdef SIMU
     hal._modeSimu.write( 1 );
 #endif
-
-    StrategyManager strategyManager( system );
 
     Carrousel carrousel( hal );
 
@@ -115,10 +114,13 @@ int main( int argc, char *argv[] )
         return EXIT_FAILURE;
     }
 
-    carrousel.setPosition( 1.0 );
-
-    // Test trajectory module
-    trajectoryManager.moveToXYAbs( 0.0f, 1200.0f, 200.0f );
+    StrategyManager strategyManager(
+        system,
+        trajectoryManager,
+        carrousel,
+        s0,
+        s6,
+        s7 );
 
     while( 1 )
     {

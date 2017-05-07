@@ -6,7 +6,10 @@
 #include <QObject>
 #include <QString>
 
+#include "Carrousel.hpp"
+#include "Servo.hpp"
 #include "SystemManager.hpp"
+#include "TrajectoryManager.hpp"
 
 namespace WestBot
 {
@@ -20,11 +23,24 @@ class StrategyManager : public QObject
 public:
     StrategyManager(
         SystemManager& systemManager,
+        TrajectoryManager& trajectoryManager,
+        Carrousel& carrousel,
+        Servo& armRight,
+        Servo& armLeft,
+        Servo& ejector,
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
 private:
+    void doStrat();
+
+private:
     SystemManager& _systemManager;
+    TrajectoryManager& _trajectoryManager;
+    Carrousel& _carrousel;
+    Servo& _armRight;
+    Servo& _armLeft;
+    Servo& _ejector;
 };
 
 }
