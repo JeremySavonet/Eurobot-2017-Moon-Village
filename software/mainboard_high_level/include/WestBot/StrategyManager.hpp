@@ -34,6 +34,7 @@ public:
 
 private:
     void doStrat( const Color& color );
+    void doFunnyAction();
 
 private:
     SystemManager& _systemManager;

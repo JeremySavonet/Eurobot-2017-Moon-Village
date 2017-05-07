@@ -41,6 +41,7 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Hardstop pushed";
+            _trajectoryManager.hardStop();
         } );
 
     connect(
@@ -59,14 +60,19 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Stop the game: Rearming strat";
+            _trajectoryManager.stop();
         } );
 }
 
 // Private methods
-
 void StrategyManager::doStrat( const Color& color )
 {
     qDebug() << "Do strat for color:" << color;
 
+    // TODO: XXX
+}
+
+void StrategyManager::doFunnyAction()
+{
     // TODO: XXX
 }

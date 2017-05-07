@@ -8,7 +8,6 @@
 #include <QStateMachine>
 #include <QTimer>
 
-#include "Action.hpp"
 #include "Common.hpp"
 #include "Hal.hpp"
 #include "Input.hpp"
