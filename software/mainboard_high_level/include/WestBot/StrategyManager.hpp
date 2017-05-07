@@ -32,6 +32,19 @@ public:
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
+    // A set of actions
+    void openArms90();
+    void openArmsFull();
+    void closeArms();
+    void turnCarrousel();
+    void ejectCylinder();
+    void checkCylinderInCarrouselAtPosition( float position );
+    void collectCylinderAtPosition( float theta, float x, float y );
+    void collectTotemAtPosition( float theta, float x, float y );
+
+    // Avoidance
+    void gotoAvoidPosition();
+
 private:
     void doStrat( const Color& color );
     void doFunnyAction();

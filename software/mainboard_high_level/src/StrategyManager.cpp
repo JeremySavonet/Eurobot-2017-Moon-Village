@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <QDebug>
+#include <QThread>
 
 #include <WestBot/StrategyManager.hpp>
 
@@ -51,6 +52,7 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Funny action time...";
+            doFunnyAction();
         } );
 
     connect(
@@ -62,6 +64,80 @@ StrategyManager::StrategyManager(
             qDebug() << "Stop the game: Rearming strat";
             _trajectoryManager.stop();
         } );
+}
+
+// Public methods
+void StrategyManager::openArms90()
+{
+    _armRight.write( SERVO_0_ARM_R_OPEN90 );
+    _armLeft.write( SERVO_6_ARM_L_OPEN90 );
+}
+
+void StrategyManager::openArmsFull()
+{
+    _armRight.write( SERVO_0_ARM_R_OPEN );
+    _armLeft.write( SERVO_6_ARM_L_OPEN );
+}
+
+void StrategyManager::closeArms()
+{
+    _armRight.write( SERVO_0_ARM_R_CLOSED );
+    _armLeft.write( SERVO_6_ARM_L_CLOSED );
+}
+
+void StrategyManager::turnCarrousel()
+{
+    float pos = _carrousel.position();
+
+    _carrousel.setPosition( pos + 1.0 );
+}
+
+void StrategyManager::ejectCylinder()
+{
+    _ejector.write( SERVO_7_EJECTOR_EJECT );
+    QThread::msleep( 250 );
+    _ejector.write( SERVO_7_EJECTOR_STANDBY );
+}
+
+void StrategyManager::checkCylinderInCarrouselAtPosition( float position )
+{
+    _carrousel.setPosition( position );
+    QThread::msleep( 250 );
+
+    // TODO: Check color
+}
+
+void StrategyManager::collectCylinderAtPosition( float theta, float x, float y )
+{
+    openArmsFull();
+
+    _trajectoryManager.moveToXYAbs( theta, x, y );
+
+    turnCarrousel();
+
+    qDebug() << "Done collecting...";
+}
+
+void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
+{
+    openArmsFull();
+
+    _trajectoryManager.moveToXYAbs( theta, x, y );
+
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+
+    qDebug() << "Done collecting...";
+}
+
+void StrategyManager::gotoAvoidPosition()
+{
+
 }
 
 // Private methods
