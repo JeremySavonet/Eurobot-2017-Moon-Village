@@ -14,7 +14,6 @@ INCLUDEPATH += include
 SOURCES += src/Carrousel.cpp \
            src/Configuration.cpp \
            src/ConfigurationTcpServer.cpp \
-           src/Entity.cpp \
            src/Hal.cpp \
            src/Input.cpp \
            src/ItemRegister.cpp \
@@ -33,7 +32,6 @@ HEADERS += \
     include/WestBot/Common.hpp \
     include/WestBot/Configuration.hpp \
     include/WestBot/ConfigurationTcpServer.hpp \
-    include/WestBot/Entity.hpp \
     include/WestBot/Hal.hpp \
     include/WestBot/Input.hpp \
     include/WestBot/ItemRegister.hpp \
