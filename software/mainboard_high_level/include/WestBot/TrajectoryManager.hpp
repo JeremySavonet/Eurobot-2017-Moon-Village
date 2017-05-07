@@ -68,84 +68,6 @@ public:
         RUNNING_CLITOID_CURVE,   // Running a clitoid in the curve part
     };
 
-    /*!
-    * \brief Overload stream operator for color enum class.
-    */
-    inline QDebug operator<<( QDebug debug, const TrajectoryState& state )
-    {
-        switch( state )
-        {
-        case TrajectoryState::READY:
-            debug << "Trajectory: READY";
-            break;
-
-        case TrajectoryState::RUNNING_A:
-            debug << "Trajectory: RUNNING_A";
-            break;
-
-        case TrajectoryState::RUNNING_D:
-            debug << "Trajectory: RUNNING_D";
-            break;
-
-        case TrajectoryState::RUNNING_AD:
-            debug << "Trajectory: RUNNING_AD";
-            break;
-
-        case TrajectoryState::RUNNING_XY_START:
-            debug << "Trajectory: RUNNING_XY_START";
-            break;
-
-        case TrajectoryState::RUNNING_XY_ANGLE:
-            debug << "Trajectory: RUNNING_XY_ANGLE";
-            break;
-
-        case TrajectoryState::RUNNING_XY_ANGLE_OK:
-            debug << "Trajectory: RUNNING_XY_ANGLE_OK";
-            break;
-
-        case TrajectoryState::RUNNING_XY_F_START:
-            debug << "Trajectory: RUNNING_XY_F_START";
-            break;
-
-        case TrajectoryState::RUNNING_XY_F_ANGLE:
-            debug << "Trajectory: RUNNING_XY_F_ANGLE";
-            break;
-
-        case TrajectoryState::RUNNING_XY_F_ANGLE_OK:
-            debug << "Trajectory: RUNNING_XY_F_ANGLE_OK";
-            break;
-
-        case TrajectoryState::RUNNING_XY_B_START:
-            debug << "Trajectory: RUNNING_XY_B_START";
-            break;
-
-        case TrajectoryState::RUNNING_XY_B_ANGLE:
-            debug << "Trajectory: RUNNING_XY_B_ANGLE";
-            break;
-
-        case TrajectoryState::RUNNING_XY_B_ANGLE_OK:
-            debug << "Trajectory: RUNNING_XY_B_ANGLE_OK";
-            break;
-
-        case TrajectoryState::RUNNING_CIRCLE:
-            debug << "Trajectory: RUNNING_CIRCLE";
-            break;
-
-        case TrajectoryState::RUNNING_LINE:
-            debug << "Trajectory: RUNNING_LINE";
-            break;
-
-        case TrajectoryState::RUNNING_CLITOID_LINE:
-            debug << "Trajectory: RUNNING_CLITOID_LINE";
-            break;
-
-        case TrajectoryState::RUNNING_CLITOID_CURVE:
-            debug << "Trajectory: RUNNING_CLITOID_CURVE";
-            break;
-        }
-        return debug;
-    }
-
     TrajectoryManager( Hal& hal );
     ~TrajectoryManager();
 
@@ -175,6 +97,83 @@ private:
     Hal _hal;
 };
 
+    /*!
+    * \brief Overload stream operator for color enum class.
+    */
+    inline QDebug operator<<( QDebug debug, const TrajectoryManager::TrajectoryState& state )
+    {
+        switch( state )
+        {
+        case TrajectoryManager::TrajectoryState::READY:
+            debug << "Trajectory: READY";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_A:
+            debug << "Trajectory: RUNNING_A";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_D:
+            debug << "Trajectory: RUNNING_D";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_AD:
+            debug << "Trajectory: RUNNING_AD";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_START:
+            debug << "Trajectory: RUNNING_XY_START";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_ANGLE:
+            debug << "Trajectory: RUNNING_XY_ANGLE";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_ANGLE_OK:
+            debug << "Trajectory: RUNNING_XY_ANGLE_OK";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_F_START:
+            debug << "Trajectory: RUNNING_XY_F_START";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_F_ANGLE:
+            debug << "Trajectory: RUNNING_XY_F_ANGLE";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_F_ANGLE_OK:
+            debug << "Trajectory: RUNNING_XY_F_ANGLE_OK";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_B_START:
+            debug << "Trajectory: RUNNING_XY_B_START";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_B_ANGLE:
+            debug << "Trajectory: RUNNING_XY_B_ANGLE";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_XY_B_ANGLE_OK:
+            debug << "Trajectory: RUNNING_XY_B_ANGLE_OK";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_CIRCLE:
+            debug << "Trajectory: RUNNING_CIRCLE";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_LINE:
+            debug << "Trajectory: RUNNING_LINE";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_CLITOID_LINE:
+            debug << "Trajectory: RUNNING_CLITOID_LINE";
+            break;
+
+        case TrajectoryManager::TrajectoryState::RUNNING_CLITOID_CURVE:
+            debug << "Trajectory: RUNNING_CLITOID_CURVE";
+            break;
+        }
+        return debug;
+    }
 }
 
 #endif // WESTBOT_TRAJECTORYMANAGER_HPP_

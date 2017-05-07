@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QString>
 
-#include "GameMap.hpp"
 #include "SystemManager.hpp"
 
 namespace WestBot
@@ -24,17 +23,8 @@ public:
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
-    void buildMap();
-    void buildPath();
-
-    void toEuclidean();
-    void toManhattan();
-
-    void dumpMap();
-
 private:
     SystemManager& _systemManager;
-    GameMap::Ptr _gameMap;
 };
 
 }

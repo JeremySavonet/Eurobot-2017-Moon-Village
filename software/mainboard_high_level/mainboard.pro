@@ -9,10 +9,7 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += include \
-            += ../astar/include/
-
-LIBS += -L../astar/lib/ -lAStar
+INCLUDEPATH += include
 
 SOURCES += src/Action.cpp \
            src/Carrousel.cpp \
@@ -30,7 +27,6 @@ SOURCES += src/Action.cpp \
            src/StrategyManager.cpp \
            src/SystemManager.cpp \
            src/main.cpp \
-           src/GameMap.cpp \
            src/Servo.cpp \
            src/TrajectoryManager.cpp
 
@@ -53,7 +49,6 @@ HEADERS += \
     include/WestBot/Output.hpp \
     include/WestBot/StrategyManager.hpp \
     include/WestBot/SystemManager.hpp \
-    include/WestBot/GameMap.hpp \
     include/WestBot/Servo.hpp \
     include/WestBot/TrajectoryManager.hpp
 

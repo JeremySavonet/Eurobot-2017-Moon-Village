@@ -118,31 +118,7 @@ int main( int argc, char *argv[] )
     carrousel.setPosition( 1.0 );
 
     // Test trajectory module
-    uint8_t inWindow;
-    uint8_t commandId = hal._trajOutAck.read< uint8_t >();
-
-    hal._trajCmdValid.write(0x0);
-    hal._trajCmdId.write( commandId++ );
-    hal._trajCmdType.write( CMD_TYPE_TRAJ );
-    hal._trajCmdOrderType.write( TRAJ_GOTO_XY_ABS );
-    hal._trajCmdPosTheta.write( ( float ) 0.0 );
-    hal._trajCmdPosX.write( ( float ) 1200.0 );
-    hal._trajCmdPosY.write( ( float ) 200.0 );
-
-    hal._trajCmdValid.write( 0x1) ;
-
-    while( hal._trajOutAck.read< uint8_t >() != commandId )
-    {
-       QThread::msleep( 10 );
-       qDebug() << "wait cmd ack";
-    }
-    do
-    {
-       QThread::msleep( 100 );
-       state = static_cast< TrajectoryManager::TrajectoryState >( hal._trajOutState.read< uint8_t >() );
-       inWindow = hal._trajOutInWindow.read< uint8_t >();
-       qDebug() << "wait traj ready ....";
-    } while( inWindow == 0 );
+    trajectoryManager.moveToXYAbs( 0.0f, 1200.0f, 200.0f );
 
     while( 1 )
     {
