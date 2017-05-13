@@ -9,7 +9,10 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += include
+INCLUDEPATH += include \
+               ../rplidar/include
+
+LIBS += -L../rplidar/lib -lRPLidar
 
 SOURCES += src/Carrousel.cpp \
            src/Configuration.cpp \

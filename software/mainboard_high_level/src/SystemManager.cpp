@@ -26,8 +26,16 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                               "AU" ) )
     , _color( Color::Unknown )
     , _systemMode( SystemManager::SystemMode::Full )
+    , _lidar( "/dev/ttyUSB0" )
 {
     _gameTimer.setSingleShot( true );
+
+    if( ! _lidar.connect() )
+    {
+        qWarning() << "Cannot connect to RPLidar";
+    }
+
+    qDebug() << "RPLidar connected";
 
     connect(
         & _gameTimer,
@@ -37,9 +45,11 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         {
             qDebug() << "End of the game, time to switch to the"
                      << "funny action state";
-            emit doFunnyAction();
-        } );
 
+            emit doFunnyAction();
+            _lidar.stopMotor();
+
+        } );
 
     connect(
         _startButton.get(),
@@ -49,7 +59,14 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         {
             if( value == DigitalValue::OFF )
             {
-                emit started();
+                if( _stopButton->digitalRead() == DigitalValue::ON )
+                {
+                    qWarning() << "Could not start game if AU on";
+                }
+                else
+                {
+                    emit started();
+                }
             }
         } );
 
@@ -72,6 +89,11 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
 
 SystemManager::~SystemManager()
 {
+    _lidar.stopMotor();
+    qDebug() << "Stop motor";
+
+    _lidar.disconnect();
+
     stop();
 }
 
@@ -88,7 +110,7 @@ void SystemManager::init()
     setPidAKp( 500000.0 );
     setPidAKi( 0.0 );
     setPidAKd( 0.0 );
-    setPidASaturation( 20000 );
+    setPidASaturation( 25000 );
 
     createStateMachine();
 }
@@ -292,14 +314,13 @@ QState* SystemManager::createStartGameState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter start game state";
-            _gameTimer.start( GAME_DURATION );
-        } );
 
-    connect(
-        state,
-        & QState::exited,
-        this,
-        & SystemManager::readyForWar );
+            _lidar.startMotor();
+
+            _gameTimer.start( GAME_DURATION );
+
+            emit readyForWar();
+        } );
 
     return state;
 }
@@ -331,6 +352,7 @@ QState* SystemManager::createFunnyActionState( QState* parent )
         this,
         [ this ]()
         {
+            emit stopped();
             qDebug() << "Enter funny action state";
         } );
 
@@ -385,6 +407,8 @@ QState* SystemManager::createHardStopState( QState* parent )
         {
             _gameTimer.stop();
             qDebug() << "Enter hard stop state";
+
+            _lidar.stopMotor();
         } );
 
     return state;

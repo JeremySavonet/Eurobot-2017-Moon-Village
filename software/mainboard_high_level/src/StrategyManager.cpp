@@ -57,12 +57,22 @@ StrategyManager::StrategyManager(
 
     connect(
         & _systemManager,
-        & SystemManager::stop,
+        & SystemManager::stopped,
         this,
         [ this ]()
         {
             qDebug() << "Stop the game: Rearming strat";
             _trajectoryManager.stop();
+        } );
+
+    connect(
+        & _systemManager,
+        & SystemManager::hardStop,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Hard stop requested.";
+            _trajectoryManager.hardStop();
         } );
 }
 
@@ -145,7 +155,9 @@ void StrategyManager::doStrat( const Color& color )
 {
     qDebug() << "Do strat for color:" << color;
 
-    // TODO: XXX
+    _trajectoryManager.moveToXYAbs( 0.0, 1200.0, 200.0 );
+
+    qDebug() << "END OF THE START <<<<<";
 }
 
 void StrategyManager::doFunnyAction()

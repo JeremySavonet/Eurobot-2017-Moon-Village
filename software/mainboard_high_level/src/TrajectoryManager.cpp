@@ -1,5 +1,7 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
+#include <QCoreApplication>
+
 #include <QDebug>
 #include <QThread>
 
@@ -51,8 +53,8 @@ void TrajectoryManager::init()
     _hal._trajCmdValid.write( 0x0 );
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_CFG_DISTANCE );
-    _hal._trajCmdCfgSpeed.write( ( float ) 0.15 );
-    _hal._trajCmdCfgAcc.write( ( float ) 0.00008 );
+    _hal._trajCmdCfgSpeed.write( ( float ) 0.12 );
+    _hal._trajCmdCfgAcc.write( ( float ) 0.00001 );
     _hal._trajCmdValid.write( 0x1 );
 
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
@@ -65,7 +67,7 @@ void TrajectoryManager::init()
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_CFG_ANGLE );
     _hal._trajCmdCfgSpeed.write( ( float ) 0.0008 );
-    _hal._trajCmdCfgAcc.write( ( float) 0.0000004 );
+    _hal._trajCmdCfgAcc.write( ( float) 0.0000002 );
     _hal._trajCmdValid.write( 0x1 );
 
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
@@ -102,6 +104,7 @@ void TrajectoryManager::disable()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 10 );
+       QCoreApplication::processEvents();
        qDebug() << "wait disable ack";
     }
 }
@@ -119,6 +122,7 @@ void TrajectoryManager::enable()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 10 );
+       QCoreApplication::processEvents();
        qDebug() << "wait enable ack";
     }
 }
@@ -136,6 +140,7 @@ void TrajectoryManager::stop()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 10 );
+       QCoreApplication::processEvents();
        qDebug() << "wait stop ack";
     }
 }
@@ -153,6 +158,7 @@ void TrajectoryManager::hardStop()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 10 );
+       QCoreApplication::processEvents();
        qDebug() << "wait hardstop ack";
     }
 }
@@ -174,6 +180,7 @@ void TrajectoryManager::moveDRel( float distance )
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
         QThread::msleep( 10 );
+        QCoreApplication::processEvents();
         qDebug() << "wait cmd ack";
     }
     do
@@ -187,6 +194,7 @@ void TrajectoryManager::moveDRel( float distance )
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -206,6 +214,7 @@ void TrajectoryManager::moveOnlyDRel( float distance )
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
         QThread::msleep( 10 );
+        QCoreApplication::processEvents();
         qDebug() << "wait cmd ack";
     }
     do
@@ -219,6 +228,7 @@ void TrajectoryManager::moveOnlyDRel( float distance )
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -239,6 +249,7 @@ void TrajectoryManager::turnARel( float theta )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -250,6 +261,7 @@ void TrajectoryManager::turnARel( float theta )
         qDebug()
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -270,6 +282,7 @@ void TrajectoryManager::turnAAbs( float theta )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -281,6 +294,7 @@ void TrajectoryManager::turnAAbs( float theta )
         qDebug()
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -301,6 +315,7 @@ void TrajectoryManager::turnOnlyARel( float theta )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -312,6 +327,7 @@ void TrajectoryManager::turnOnlyARel( float theta )
         qDebug()
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -332,6 +348,7 @@ void TrajectoryManager::turnOnlyAAbs( float theta )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -343,6 +360,7 @@ void TrajectoryManager::turnOnlyAAbs( float theta )
         qDebug()
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -364,6 +382,7 @@ void TrajectoryManager::turnToXY( float x, float y )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -376,6 +395,7 @@ void TrajectoryManager::turnToXY( float x, float y )
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -396,7 +416,8 @@ void TrajectoryManager::turnToXYBehind( float x, float y )
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
         QThread::msleep( 10 );
-        qDebug() << "wait cmd ack";
+        qDebug() << "wait cmd ack";    
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -409,6 +430,7 @@ void TrajectoryManager::turnToXYBehind( float x, float y )
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -431,6 +453,7 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -444,6 +467,7 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
             << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -466,6 +490,7 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -479,6 +504,7 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
             << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -501,6 +527,7 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -514,6 +541,7 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y )
             << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -535,6 +563,7 @@ void TrajectoryManager::moveToDARel( float theta, float distance )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -548,6 +577,7 @@ void TrajectoryManager::moveToDARel( float theta, float distance )
             << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }
 
@@ -569,6 +599,7 @@ void TrajectoryManager::moveToXYRel( float x, float y )
     {
         QThread::msleep( 10 );
         qDebug() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
     do
     {
@@ -581,5 +612,6 @@ void TrajectoryManager::moveToXYRel( float x, float y )
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
+        QCoreApplication::processEvents();
     } while( inWindow == 0 );
 }

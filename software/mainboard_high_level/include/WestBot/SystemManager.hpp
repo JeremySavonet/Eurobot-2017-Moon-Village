@@ -12,6 +12,8 @@
 #include "Hal.hpp"
 #include "Input.hpp"
 
+#include <WestBot/RPLidar/RPLidar.hpp>
+
 class QState;
 class QString;
 
@@ -100,6 +102,7 @@ private:
     Input::Ptr _stopButton;
     Color _color;
     SystemMode _systemMode;
+    RPLidar::RPLidar _lidar;
 };
 
 }
