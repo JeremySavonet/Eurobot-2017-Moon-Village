@@ -37,31 +37,12 @@ StrategyManager::StrategyManager(
 
     connect(
         & _systemManager,
-        & SystemManager::hardStop,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Hardstop pushed";
-            _trajectoryManager.hardStop();
-        } );
-
-    connect(
-        & _systemManager,
         & SystemManager::doFunnyAction,
         this,
         [ this ]()
         {
             qDebug() << "Funny action time...";
             doFunnyAction();
-        } );
-
-    connect(
-        & _systemManager,
-        & SystemManager::stopped,
-        this,
-        [ this ]()
-        {
-            _trajectoryManager.stop();
         } );
 
     connect(
@@ -154,12 +135,10 @@ void StrategyManager::doStrat( const Color& color )
 {
     qDebug() << "Do strat for color:" << color;
 
-    //_trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
-
-    qDebug() << "END OF THE STRAT <<<<<";
+    _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
 }
 
 void StrategyManager::doFunnyAction()
 {
-    // TODO: XXX
+    _trajectoryManager.hardStop();
 }
