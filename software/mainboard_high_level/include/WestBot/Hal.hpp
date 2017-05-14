@@ -73,16 +73,34 @@ public:
     ItemRegister _odometryTheta;
     ItemRegister _odometryX;
     ItemRegister _odometryY;
+
+    // PID DISTANCE
+    ItemRegister _pidDistanceEnable;
+    ItemRegister _pidDistanceOverride;
     ItemRegister _pidDistanceInverted;
     ItemRegister _pidDistanceKp;
     ItemRegister _pidDistanceKi;
     ItemRegister _pidDistanceKd;
+    ItemRegister _pidDistanceSpeed;
+    ItemRegister _pidDistanceAcceleration;
     ItemRegister _pidDistanceSaturation;
+    ItemRegister _pidDistancePosition;
+    ItemRegister _pidDistanceTarget;
+
+    // PID ANGLE
+    ItemRegister _pidAngleEnable;
+    ItemRegister _pidAngleOverride;
     ItemRegister _pidAngleInverted;
     ItemRegister _pidAngleKp;
     ItemRegister _pidAngleKi;
     ItemRegister _pidAngleKd;
+    ItemRegister _pidAngleSpeed;
+    ItemRegister _pidAngleAcceleration;
     ItemRegister _pidAngleSaturation;
+    ItemRegister _pidAnglePosition;
+    ItemRegister _pidAngleTarget;
+
+    // PID CARROUSEL
     ItemRegister _carrouselPidPeriod;
     ItemRegister _carrouselEnable;
     ItemRegister _carrouselOverride;

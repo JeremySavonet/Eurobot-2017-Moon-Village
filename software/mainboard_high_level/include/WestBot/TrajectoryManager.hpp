@@ -95,6 +95,7 @@ public:
 
 private:
     Hal _hal;
+    bool _stop;
 };
 
     /*!

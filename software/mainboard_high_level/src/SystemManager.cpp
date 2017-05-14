@@ -47,8 +47,6 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                      << "funny action state";
 
             emit doFunnyAction();
-            _lidar.stopMotor();
-
         } );
 
     connect(
@@ -100,17 +98,35 @@ SystemManager::~SystemManager()
 // Public methods
 void SystemManager::init()
 {
-    setPidDInverted( 0 );
-    setPidDKp( 2000.0 );
-    setPidDKi( 0.0 );
-    setPidDKd( 0.0 );
-    setPidDSaturation( 25000 );
+    // Config PID Distance
+    _hal._pidDistanceEnable.write( 0 );
+    _hal._pidDistanceOverride.write( 0 );
+    _hal._pidDistanceInverted.write( 0 );
+    _hal._pidDistanceKp.write( ( float ) 2000.0 );
+    _hal._pidDistanceKi.write( ( float ) 0.0 );
+    _hal._pidDistanceKd.write( ( float ) 0.0 );
 
-    setPidAInverted( 1 );
-    setPidAKp( 500000.0 );
-    setPidAKi( 0.0 );
-    setPidAKd( 0.0 );
-    setPidASaturation( 25000 );
+    _hal._pidDistanceSpeed.write( ( float ) 0.01 );
+    _hal._pidDistanceAcceleration.write( ( float ) 0.0001 );
+    _hal._pidDistanceSaturation.write( 25000 );
+
+    _hal._pidDistanceTarget.write( _hal._pidDistancePosition.read< float >() );
+    _hal._pidDistanceEnable.write( 1 );
+
+    // Config PID Angle
+    _hal._pidAngleEnable.write( 0 );
+    _hal._pidAngleOverride.write( 0 );
+    _hal._pidAngleInverted.write( 1 );
+    _hal._pidAngleKp.write( ( float ) 500000.0 );
+    _hal._pidAngleKi.write( ( float ) 0.0 );
+    _hal._pidAngleKd.write( ( float ) 0.0 );
+
+    _hal._pidAngleSpeed.write( ( float ) 0.0001 );
+    _hal._pidAngleAcceleration.write( ( float ) 0.00000002 );
+    _hal._pidAngleSaturation.write( 25000 );
+
+    _hal._pidAngleTarget.write( _hal._pidAnglePosition.read< float >() );
+    _hal._pidAngleEnable.write( 1 );
 
     createStateMachine();
 }
@@ -170,8 +186,8 @@ void SystemManager::createStateMachine()
         runningStratState );
 
     runningStratState->addTransition(
-        this,
-        & SystemManager::doFunnyAction,
+        & _gameTimer,
+        & QTimer::timeout,
         funnyActionState );
 
     funnyActionState->addTransition( stopGameState );
@@ -352,8 +368,17 @@ QState* SystemManager::createFunnyActionState( QState* parent )
         this,
         [ this ]()
         {
-            emit stopped();
             qDebug() << "Enter funny action state";
+            emit doFunnyAction();
+        } );
+
+    connect(
+        state,
+        & QState::exited,
+        this,
+        [ this ]()
+        {
+            emit stopped();
         } );
 
     return state;
@@ -368,9 +393,10 @@ QState* SystemManager::createStopGameState( QState* parent )
         state,
         & QState::entered,
         this,
-        []()
+        [ this ]()
         {
             qDebug() << "Enter stop state";
+            _lidar.stopMotor();
         } );
 
     return state;
@@ -412,54 +438,4 @@ QState* SystemManager::createHardStopState( QState* parent )
         } );
 
     return state;
-}
-
-void SystemManager::setPidDInverted( uint8_t inverted )
-{
-    _hal._pidDistanceInverted.write( inverted );
-}
-
-void SystemManager::setPidDKp( float kp )
-{
-    _hal._pidDistanceKp.write( kp );
-}
-
-void SystemManager::setPidDKi( float ki )
-{
-    _hal._pidDistanceKi.write( ki );
-}
-
-void SystemManager::setPidDKd( float kd )
-{
-    _hal._pidDistanceKd.write( kd );
-}
-
-void SystemManager::setPidDSaturation( uint32_t saturation )
-{
-    _hal._pidDistanceSaturation.write( saturation );
-}
-
-void SystemManager::setPidAInverted( uint8_t inverted )
-{
-    _hal._pidAngleInverted.write( inverted );
-}
-
-void SystemManager::setPidAKp( float kp )
-{
-    _hal._pidAngleKp.write( kp );
-}
-
-void SystemManager::setPidAKi( float ki )
-{
-    _hal._pidAngleKp.write( ki );
-}
-
-void SystemManager::setPidAKd( float kd )
-{
-    _hal._pidAngleKp.write( kd );
-}
-
-void SystemManager::setPidASaturation( uint32_t saturation )
-{
-    _hal._pidAngleSaturation.write( saturation );
 }

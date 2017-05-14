@@ -61,7 +61,6 @@ StrategyManager::StrategyManager(
         this,
         [ this ]()
         {
-            qDebug() << "Stop the game: Rearming strat";
             _trajectoryManager.stop();
         } );
 
@@ -155,9 +154,9 @@ void StrategyManager::doStrat( const Color& color )
 {
     qDebug() << "Do strat for color:" << color;
 
-    _trajectoryManager.moveToXYAbs( 0.0, 1200.0, 200.0 );
+    //_trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
 
-    qDebug() << "END OF THE START <<<<<";
+    qDebug() << "END OF THE STRAT <<<<<";
 }
 
 void StrategyManager::doFunnyAction()
