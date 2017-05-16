@@ -24,7 +24,12 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                                "Color" ) )
     , _stopButton( new Input( std::make_shared< ItemRegister >( _hal._input2 ),
                               "AU" ) )
+    , _ledYellow( new Output( std::make_shared< ItemRegister >( _hal._output0 ),
+                              "yellow" ) )
+    , _ledBlue( new Output( std::make_shared< ItemRegister >( _hal._output2 ),
+                            "blue" ) )
     , _color( Color::Unknown )
+    , _colorSensor( "Color_sensor" )
     , _systemMode( SystemManager::SystemMode::Full )
     , _lidar( "/dev/ttyUSB0" )
 {
@@ -69,6 +74,15 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         } );
 
     connect(
+        _colorButton.get(),
+        & Input::stateChanged,
+        this,
+        [ this ]( const DigitalValue& value )
+        {
+            displayColor( value );
+        } );
+
+    connect(
         _stopButton.get(),
         & Input::stateChanged,
         this,
@@ -83,6 +97,8 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                 emit reArming();
             }
         } );
+
+    displayColor( _colorButton->digitalRead() );
 }
 
 SystemManager::~SystemManager()
@@ -302,14 +318,18 @@ QState* SystemManager::createCheckGameColorState( QState* parent )
         this,
         [ this ]()
         {
-            if( _colorButton->digitalRead() == DigitalValue::OFF )
+            const auto value = _colorButton->digitalRead();
+
+            if( DigitalValue::OFF == value )
             {
                 _color = Color::Blue;
             }
             else
             {
-                _color = Color::Red;
+                _color = Color::Yellow;
             }
+
+            displayColor( value );
 
             qDebug()
                 << "Exit check color state. Color for the game is:"
@@ -438,4 +458,20 @@ QState* SystemManager::createHardStopState( QState* parent )
         } );
 
     return state;
+}
+
+void SystemManager::displayColor( const DigitalValue& value )
+{
+    if( value == DigitalValue::OFF )
+    {
+        _color = Color::Blue;
+        _ledBlue->digitalWrite( DigitalValue::ON );
+        _ledYellow->digitalWrite( DigitalValue::OFF );
+    }
+    else
+    {
+        _color = Color::Yellow;
+        _ledBlue->digitalWrite( DigitalValue::OFF );
+        _ledYellow->digitalWrite( DigitalValue::ON );
+    }
 }

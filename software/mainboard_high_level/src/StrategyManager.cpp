@@ -53,6 +53,17 @@ StrategyManager::StrategyManager(
         {
             qDebug() << "Hard stop requested.";
             _trajectoryManager.hardStop();
+            _trajectoryManager.disable();
+        } );
+
+    connect(
+        & _systemManager,
+        & SystemManager::reArming,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Rearming.";
+            _trajectoryManager.enable();
         } );
 }
 

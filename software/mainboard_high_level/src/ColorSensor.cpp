@@ -81,7 +81,7 @@ Color ColorSensor::sensorCheck()
     return Color::Blue;
 }
 
-bool ColorSensor::isAttached() const
+bool ColorSensor::isAttached()
 {
-    return _sensor->read< uint16_t >() == 0x01 ? true : false;
+    return _sensorValid->read< uint16_t >() == 0x01 ? true : false;
 }

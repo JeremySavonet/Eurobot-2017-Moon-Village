@@ -22,7 +22,7 @@ namespace WestBot
     enum class Color
     {
         Unknown,
-        Red,
+        Yellow,
         Blue
     };
 
@@ -37,8 +37,8 @@ namespace WestBot
             debug << "Unknown";
             break;
 
-        case Color::Red:
-            debug << "Red";
+        case Color::Yellow:
+            debug << "Yellow";
             break;
 
         case Color::Blue:

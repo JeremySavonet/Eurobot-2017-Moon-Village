@@ -43,11 +43,6 @@ public:
     ItemRegister _output2;
     ItemRegister _output3;
     ItemRegister _outputOverride;
-    ItemRegister _colorSensorValid;
-    ItemRegister _colorSensorRed;
-    ItemRegister _colorSensorGreen;
-    ItemRegister _colorSensorBlue;
-    ItemRegister _colorSensorClear;
 
     ItemRegister _s0;
     ItemRegister _s0Enable;
@@ -73,6 +68,12 @@ public:
     ItemRegister _s7;
     ItemRegister _s7Enable;
     ItemRegister _s7Override;
+
+    ItemRegister _colorSensorValid;
+    ItemRegister _colorSensorRed;
+    ItemRegister _colorSensorGreen;
+    ItemRegister _colorSensorBlue;
+    ItemRegister _colorSensorClear;
 
     // Layer 2
     ItemRegister _odometryTheta;

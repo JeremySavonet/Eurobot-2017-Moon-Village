@@ -8,9 +8,11 @@
 #include <QStateMachine>
 #include <QTimer>
 
+#include "ColorSensor.hpp"
 #include "Common.hpp"
 #include "Hal.hpp"
 #include "Input.hpp"
+#include "Output.hpp"
 
 #include <WestBot/RPLidar/RPLidar.hpp>
 
@@ -82,13 +84,18 @@ private:
     QState* createHardStopState( QState* parent );
 
 private:
+    void displayColor( const DigitalValue& value );
+
     Hal _hal;
     QStateMachine _stateMachine;
     QTimer _gameTimer;
     Input::Ptr _startButton;
     Input::Ptr _colorButton;
     Input::Ptr _stopButton;
+    Output::Ptr _ledYellow;
+    Output::Ptr _ledBlue;
     Color _color;
+    ColorSensor _colorSensor;
     SystemMode _systemMode;
     RPLidar::RPLidar _lidar;
 };

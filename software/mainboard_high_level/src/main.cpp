@@ -64,6 +64,8 @@ int main( int argc, char *argv[] )
     Hal hal;
     hal.init(); // Open the FPGA memory and load our module
 
+    hal._outputOverride.write( 0x01010101 );
+
     // Init the System manager
     SystemManager system( hal );
     system.init(); // Create the state machine
