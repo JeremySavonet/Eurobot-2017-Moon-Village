@@ -4,6 +4,7 @@
 
 #include <QState>
 #include <QString>
+#include <QThread>
 
 #include <WestBot/SystemManager.hpp>
 
@@ -68,7 +69,14 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                 }
                 else
                 {
-                    emit started();
+                    if( _colorSensor.attach( _hal, _color ) )
+                    {
+                        emit started();
+                    }
+                    else
+                    {
+                        emit error( "Could not attach color sensor" );
+                    }
                 }
             }
         } );
@@ -80,6 +88,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         [ this ]( const DigitalValue& value )
         {
             displayColor( value );
+            _colorSensor.changeTarget( _color );
         } );
 
     connect(

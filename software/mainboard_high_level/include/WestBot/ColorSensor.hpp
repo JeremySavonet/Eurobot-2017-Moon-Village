@@ -19,6 +19,8 @@ public:
     bool attach( Hal& hal,
                  Color colorTarget = Color::Unknown );
 
+    void changeTarget( Color colorTarget );
+
     const QString& name() const;
 
     // Read the sensor and return a bool matching the targeted color.
@@ -27,7 +29,7 @@ public:
     // Read the sensor and return the guessed color.
     Color sensorCheck();
 
-    bool isAttached();
+    bool isAttached() const;
 
 private:
     const QString _name;
@@ -39,6 +41,7 @@ private:
     ItemRegister::Ptr _sensorClear;
 
     Color _colorTarget;
+    bool _isAttached;
 };
 
 }
