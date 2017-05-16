@@ -9,33 +9,41 @@ using namespace WestBot;
 
 namespace
 {
-    const int COLOR_BLUE_THRESHOLD = 100;
-    const int COLOR_YELLOW_THRESHOLD = 100;
+    const uint16_t COLOR_RED_THRESHOLD = 100;
+    const uint16_t COLOR_GREEN_THRESHOLD = 100;
+    const uint16_t COLOR_BLUE_THRESHOLD = 100;
+    const uint16_t COLOR_CLEAR_THRESHOLD = 100;
 }
 
 ColorSensor::ColorSensor( const QString& name )
     : _name( name )
-    , _sensor( nullptr )
+    , _sensorValid( nullptr )
+    , _sensorRed( nullptr )
+    , _sensorGreen( nullptr )
+    , _sensorBlue( nullptr )
+    , _sensorClear( nullptr )
     , _colorTarget( Color::Unknown )
 {
 }
 
 bool ColorSensor::attach( Hal& hal,
-                          uint8_t sensorId,
                           Color colorTarget )
 {
-    switch( sensorId )
-    {
-    case 0:
-        _sensor = std::make_shared< ItemRegister >( hal._s0 ); // TODO: Change
-        break;
-
-    default:
-        qDebug() << "Not a valid color sensor id to attach.";
-        return false;
-    }
+    _sensorValid = std::make_shared< ItemRegister >( hal._colorSensorValid );
+    _sensorRed = std::make_shared< ItemRegister >( hal._colorSensorRed );
+    _sensorGreen = std::make_shared< ItemRegister >( hal._colorSensorGreen );
+    _sensorBlue = std::make_shared< ItemRegister >( hal._colorSensorBlue );
+    _sensorClear = std::make_shared< ItemRegister >( hal._colorSensorClear );
 
     _colorTarget = colorTarget;
+
+    while( _sensorValid->read< uint16_t >() != 0x01 )
+    {
+        QThread::msleep( 10 );
+        qDebug() << "Wait sensor module to be ready...";
+    }
+
+    qDebug() << "Sensor module is attached";
 
     return true;
 }
@@ -53,18 +61,27 @@ bool ColorSensor::isInRange()
         return false;
     }
 
+    const uint16_t red = _sensorRed->read< uint16_t >();
+    const uint16_t green = _sensorGreen->read< uint16_t >();
+    const uint16_t blue = _sensorBlue->read< uint16_t >();
+    const uint16_t clear = _sensorClear->read< uint16_t >();
+
     // TODO: read register, compare to threashold and check with target color
     return true;
 }
 
 Color ColorSensor::sensorCheck()
 {
+    const uint16_t red = _sensorRed->read< uint16_t >();
+    const uint16_t green = _sensorGreen->read< uint16_t >();
+    const uint16_t blue = _sensorBlue->read< uint16_t >();
+    const uint16_t clear = _sensorClear->read< uint16_t >();
+
     // TODO: read register and compare to threshold
     return Color::Blue;
 }
 
 bool ColorSensor::isAttached() const
 {
-    // TODO: Change
-    return _sensor->read< uint8_t >() == 0x03 ? true : false;
+    return _sensor->read< uint16_t >() == 0x01 ? true : false;
 }

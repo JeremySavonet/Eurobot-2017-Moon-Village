@@ -119,4 +119,3 @@ bool Servo::isAttached() const
 {
     return _servoEnable->read< uint8_t >() == 0x03 ? true : false;
 }
-

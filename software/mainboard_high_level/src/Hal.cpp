@@ -58,6 +58,11 @@ Hal::Hal()
     , _s7( _layer1, 37 * 4, 16 )
     , _s7Enable( _layer1, 37 * 4 + 2, 8 )
     , _s7Override( _layer1, 37 * 4 + 3, 8 )
+    , _colorSensorValid( _layer1, 50 * 4, 32 )
+    , _colorSensorRed( _layer1, 51 * 4, 16 )
+    , _colorSensorGreen( _layer1, 51 * 4 + 1, 16 )
+    , _colorSensorBlue( _layer1, 52 * 4, 16 )
+    , _colorSensorClear( _layer1, 52 * 4 + 1, 16 )
 
     // Layer 2
     , _odometryTheta( _layer2, 13 * 4 + 2, 16 )
@@ -123,7 +128,7 @@ Hal::Hal()
     , _trajOutState( _layer3, 15 * 4 + 1, 8 )
     , _trajOutBlocked( _layer3, 15 * 4 + 2, 8 )
     , _trajOutInWindow( _layer3, 15 * 4 + 3, 8 )
-{        
+{
 }
 
 Hal::~Hal()

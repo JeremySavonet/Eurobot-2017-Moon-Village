@@ -7,6 +7,7 @@
 
 #include "Common.hpp"
 #include "Hal.hpp"
+#include "ItemRegister.hpp"
 
 namespace WestBot {
 
@@ -16,7 +17,6 @@ public:
     ColorSensor( const QString& name );
 
     bool attach( Hal& hal,
-                 uint8_t sensorId,
                  Color colorTarget = Color::Unknown );
 
     const QString& name() const;
@@ -32,7 +32,12 @@ public:
 private:
     const QString _name;
 
-    ItemRegister::Ptr _sensor;
+    ItemRegister::Ptr _sensorValid;
+    ItemRegister::Ptr _sensorRed;
+    ItemRegister::Ptr _sensorGreen;
+    ItemRegister::Ptr _sensorBlue;
+    ItemRegister::Ptr _sensorClear;
+
     Color _colorTarget;
 };
 
