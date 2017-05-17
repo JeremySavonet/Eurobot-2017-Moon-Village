@@ -4,8 +4,8 @@
 
 #include <QState>
 #include <QString>
+#include <QThread>
 
-#include <WestBot/FunnyAction.hpp>
 #include <WestBot/SystemManager.hpp>
 
 using namespace WestBot;
@@ -13,34 +13,37 @@ using namespace WestBot;
 namespace
 {
     const int GAME_DURATION = 10 * 1000; // 90s
-    const int ACTION_TIMEOUT = 500; // 500ms
 }
 
 SystemManager::SystemManager( Hal& hal, QObject* parent )
     : QObject( parent )
     , _hal( hal )
     , _stateMachine( this )
-    , _startButton( new Input( std::make_shared< ItemRegister >( _hal._input0 ), "Tirette" ) )
-    , _colorButton( new Input( std::make_shared< ItemRegister >( _hal._input1 ), "Color" ) )
-    , _stopButton( new Input( std::make_shared< ItemRegister >( _hal._input2 ), "AU" ) )
+    , _startButton( new Input( std::make_shared< ItemRegister >( _hal._input0 ),
+                               "Tirette" ) )
+    , _colorButton( new Input( std::make_shared< ItemRegister >( _hal._input1 ),
+                               "Color" ) )
+    , _stopButton( new Input( std::make_shared< ItemRegister >( _hal._input2 ),
+                              "AU" ) )
+    , _ledYellow( new Output( std::make_shared< ItemRegister >( _hal._output0 ),
+                              "yellow" ) )
+    , _ledBlue( new Output( std::make_shared< ItemRegister >( _hal._output2 ),
+                            "blue" ) )
     , _color( Color::Unknown )
+    , _colorSensor( "Color_sensor" )
     , _systemMode( SystemManager::SystemMode::Full )
+    , _lidar( "/dev/ttyUSB0" )
+    , _detectionManager( "Opponent_detector" )
+    , _positionManager( _lidar )
 {
     _gameTimer.setSingleShot( true );
 
-    connect(
-        & _actionTimeoutTimer,
-        & QTimer::timeout,
-        this,
-        [ this ]()
-        {
-            if( ! _actions.isEmpty() )
-            {
-                _actions.first()->setState( Action::State::InError );
-                _actions.removeFirst();
-                emit onActionError();
-            }
-        } );
+    if( ! _lidar.connect() )
+    {
+        qWarning() << "Cannot connect to RPLidar";
+    }
+
+    qDebug() << "RPLidar connected";
 
     connect(
         & _gameTimer,
@@ -50,9 +53,9 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         {
             qDebug() << "End of the game, time to switch to the"
                      << "funny action state";
+
             emit doFunnyAction();
         } );
-
 
     connect(
         _startButton.get(),
@@ -62,8 +65,32 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         {
             if( value == DigitalValue::OFF )
             {
-                emit started();
+                if( _stopButton->digitalRead() == DigitalValue::ON )
+                {
+                    qWarning() << "Could not start game if AU on";
+                }
+                else
+                {
+                    if( _colorSensor.attach( _hal, _color ) )
+                    {
+                        emit started();
+                    }
+                    else
+                    {
+                        emit error( "Could not attach color sensor" );
+                    }
+                }
             }
+        } );
+
+    connect(
+        _colorButton.get(),
+        & Input::stateChanged,
+        this,
+        [ this ]( const DigitalValue& value )
+        {
+            displayColor( value );
+            _colorSensor.changeTarget( _color );
         } );
 
     connect(
@@ -81,16 +108,82 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                 emit reArming();
             }
         } );
+
+    connect(
+        & _detectionManager,
+        & DetectionManager::opponentDetected,
+        this,
+        [ this ]( bool status )
+        {
+            if( status )
+            {
+                qDebug() << "Opponent detected";
+            }
+            else
+            {
+                qDebug() << "We are safe";
+            }
+        } );
+
+    connect(
+        & _positionManager,
+        & PositionManager::positionUpdated,
+        this,
+        [ this ]( int theta, int x, int y )
+        {
+            qDebug()
+                << "New position is: Theta:" << theta << " X:" << x << " Y:" << y;
+        } );
+
+    displayColor( _colorButton->digitalRead() );
+
+    _detectionManager.init( _hal );
+    _positionManager.init();
 }
 
 SystemManager::~SystemManager()
 {
+    _lidar.stopMotor();
+    qDebug() << "Stop motor";
+
+    _lidar.disconnect();
+
     stop();
 }
 
 // Public methods
 void SystemManager::init()
 {
+    // Config PID Distance
+    _hal._pidDistanceEnable.write( 0 );
+    _hal._pidDistanceOverride.write( 0 );
+    _hal._pidDistanceInverted.write( 0 );
+    _hal._pidDistanceKp.write( ( float ) 2000.0 );
+    _hal._pidDistanceKi.write( ( float ) 0.0 );
+    _hal._pidDistanceKd.write( ( float ) 0.0 );
+
+    _hal._pidDistanceSpeed.write( ( float ) 0.01 );
+    _hal._pidDistanceAcceleration.write( ( float ) 0.0001 );
+    _hal._pidDistanceSaturation.write( 25000 );
+
+    _hal._pidDistanceTarget.write( _hal._pidDistancePosition.read< float >() );
+    _hal._pidDistanceEnable.write( 1 );
+
+    // Config PID Angle
+    _hal._pidAngleEnable.write( 0 );
+    _hal._pidAngleOverride.write( 0 );
+    _hal._pidAngleInverted.write( 1 );
+    _hal._pidAngleKp.write( ( float ) 500000.0 );
+    _hal._pidAngleKi.write( ( float ) 0.0 );
+    _hal._pidAngleKd.write( ( float ) 0.0 );
+
+    _hal._pidAngleSpeed.write( ( float ) 0.0001 );
+    _hal._pidAngleAcceleration.write( ( float ) 0.00000002 );
+    _hal._pidAngleSaturation.write( 25000 );
+
+    _hal._pidAngleTarget.write( _hal._pidAnglePosition.read< float >() );
+    _hal._pidAngleEnable.write( 1 );
+
     createStateMachine();
 }
 
@@ -104,27 +197,6 @@ void SystemManager::stop()
     _stateMachine.stop();
 }
 
-void SystemManager::pushAction( const Action::Ptr& action )
-{
-    qDebug() << "Pushing action:" << action->name() << "in the queue";
-
-    _actions.append( action );
-    emit executeAction();
-}
-
-void SystemManager::clearActionQueue()
-{
-    qDebug() << "Clearing action queue: size =" << _actions.size();
-
-    for( const auto& action : _actions )
-    {
-        action->setState( Action::State::Flushed );
-    }
-
-    _actions.clear();
-    emit actionQueueCleared();
-}
-
 void SystemManager::setMode( SystemManager::SystemMode mode )
 {
     _systemMode = mode;
@@ -135,6 +207,11 @@ SystemManager::SystemMode SystemManager::mode() const
     return _systemMode;
 }
 
+const Color& SystemManager::color() const
+{
+    return _color;
+}
+
 // Private methods
 void SystemManager::createStateMachine()
 {
@@ -142,10 +219,7 @@ void SystemManager::createStateMachine()
     QState* checkGameColorState = createCheckGameColorState( & _stateMachine );
     QState* startGameState = createStartGameState( & _stateMachine );
 
-    QState* waitForActionState = createWaitForActionState( & _stateMachine );
-    QState* executeActionState = createExecuteActionState( & _stateMachine );
-    QState* cancelActionState = createCancelActionState( & _stateMachine );
-
+    QState* runningStratState = createRunningStratState( & _stateMachine );
     QState* funnyActionState = createFunnyActionState( & _stateMachine );
 
     QState* stopGameState = createStopGameState( & _stateMachine );
@@ -162,40 +236,17 @@ void SystemManager::createStateMachine()
         & SystemManager::started,
         startGameState );
 
-    startGameState->addTransition( waitForActionState );
-
-    waitForActionState->addTransition(
+    startGameState->addTransition(
         this,
-        & SystemManager::executeAction,
-        executeActionState );
+        & SystemManager::readyForWar,
+        runningStratState );
 
-    executeActionState->addTransition(
-        this,
-        & SystemManager::onActionSuccess,
-        waitForActionState );
-
-    executeActionState->addTransition(
-        this,
-        & SystemManager::onActionError,
-        cancelActionState );
-
-    cancelActionState->addTransition( waitForActionState );
-
-    // Fallback funny action
-    waitForActionState->addTransition(
-        this,
-        & SystemManager::doFunnyAction,
+    runningStratState->addTransition(
+        & _gameTimer,
+        & QTimer::timeout,
         funnyActionState );
 
-    executeActionState->addTransition(
-        this,
-        & SystemManager::doFunnyAction,
-        funnyActionState );
-
-    funnyActionState->addTransition(
-        this,
-        & SystemManager::funnyActionDone,
-        stopGameState );
+    funnyActionState->addTransition( stopGameState );
 
     // Rearm the system for an other game
     stopGameState->addTransition( initialState );
@@ -211,17 +262,7 @@ void SystemManager::createStateMachine()
         & SystemManager::error,
         errorState );
 
-    waitForActionState->addTransition(
-        this,
-        & SystemManager::error,
-        errorState );
-
-    executeActionState->addTransition(
-        this,
-        & SystemManager::error,
-        errorState );
-
-    cancelActionState->addTransition(
+    runningStratState->addTransition(
         this,
         & SystemManager::error,
         errorState );
@@ -247,17 +288,7 @@ void SystemManager::createStateMachine()
         & SystemManager::hardStop,
         hardStopState );
 
-    waitForActionState->addTransition(
-        this,
-        & SystemManager::hardStop,
-        hardStopState );
-
-    executeActionState->addTransition(
-        this,
-        & SystemManager::hardStop,
-        hardStopState );
-
-    cancelActionState->addTransition(
+    runningStratState->addTransition(
         this,
         & SystemManager::hardStop,
         hardStopState );
@@ -327,14 +358,18 @@ QState* SystemManager::createCheckGameColorState( QState* parent )
         this,
         [ this ]()
         {
-            if( _colorButton->digitalRead() == DigitalValue::OFF )
+            const auto value = _colorButton->digitalRead();
+
+            if( DigitalValue::OFF == value )
             {
                 _color = Color::Blue;
             }
             else
             {
-                _color = Color::Red;
+                _color = Color::Yellow;
             }
+
+            displayColor( value );
 
             qDebug()
                 << "Exit check color state. Color for the game is:"
@@ -355,21 +390,18 @@ QState* SystemManager::createStartGameState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter start game state";
+
+            _lidar.startMotor();
+
             _gameTimer.start( GAME_DURATION );
-        } );
 
-    connect(
-        state,
-        & QState::exited,
-        this,
-        & SystemManager::readyForWar );
+            emit readyForWar();
+        } );
 
     return state;
 }
 
-
-// States to manage game action execution
-QState* SystemManager::createWaitForActionState( QState* parent )
+QState* SystemManager::createRunningStratState( QState* parent )
 {
     QState* state = new QState( parent );
 
@@ -379,105 +411,13 @@ QState* SystemManager::createWaitForActionState( QState* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Enter in wait for action state";
-
-            _actionTimeoutTimer.stop();
-
-            // If the queue is not empty, directly execute the next action
-            // If not, wait strategyManager to pushBack an action.
-            if( ! _actions.isEmpty() )
-            {
-                emit executeAction();
-            }
-        } );
-
-    connect(
-        state,
-        & QState::exited,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Exit wait for action state";
-
-            if( ! _actions.isEmpty() )
-            {
-                _actions.first()->setState( Action::State::Running );
-            }
-        } );
-
-
-    return state;
-}
-
-QState* SystemManager::createExecuteActionState( QState* parent )
-{
-    QState* state = new QState( parent );
-
-    connect(
-        state,
-        & QState::entered,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Enter in execute action state";
-
-            if( _actions.isEmpty() )
-            {
-                emit onActionError();
-                return;
-            }
-
-            const auto& action = _actions.first();
-            connect(
-                action.get(),
-                & Action::complete,
-                this,
-                [ this, action ]() mutable
-                {
-                    if( action->hasError() )
-                    {
-                        emit onActionError();
-                        return;
-                    }
-
-                    _actions.removeFirst();
-
-                    emit onActionSuccess();
-
-                } );
-
-            action->execute();
-
-            // Start  action timeout
-            _actionTimeoutTimer.start( ACTION_TIMEOUT );
+            qDebug() << "Enter running strat state";
+            emit doStrat( _color );
         } );
 
     return state;
 }
 
-QState* SystemManager::createCancelActionState( QState* parent )
-{
-    QState* state = new QState( parent );
-
-    connect(
-        state,
-        & QState::entered,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Enter in cancel action state";
-
-            if( ! _actions.isEmpty() )
-            {
-                clearActionQueue();
-            }
-        } );
-
-    return state;
-}
-
-// Last action of the game: Bonus +20pts.
-// We go to that state when game timer reach GAME_DURATION.
 QState* SystemManager::createFunnyActionState( QState* parent )
 {
     QState* state = new QState( parent );
@@ -489,24 +429,16 @@ QState* SystemManager::createFunnyActionState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter funny action state";
-            const auto funnyAction = std::make_shared< FunnyAction >();
-
-            connect(
-                funnyAction.get(),
-                & Action::complete,
-                this,
-                & SystemManager::funnyActionDone );
-
-            funnyAction->execute();
+            emit doFunnyAction();
         } );
 
     connect(
         state,
         & QState::exited,
         this,
-        []()
+        [ this ]()
         {
-            qDebug() << "Exit funny action state. END OF THE GAME";
+            emit stopped();
         } );
 
     return state;
@@ -521,10 +453,10 @@ QState* SystemManager::createStopGameState( QState* parent )
         state,
         & QState::entered,
         this,
-        []()
+        [ this ]()
         {
             qDebug() << "Enter stop state";
-            // XXX: Deinit all peripherals and clear what is supposed to be cleared
+            _lidar.stopMotor();
         } );
 
     return state;
@@ -542,13 +474,7 @@ QState* SystemManager::createErrorState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter error state";
-
-            _actionTimeoutTimer.stop();
-
-            if( ! _actions.isEmpty() )
-            {
-                clearActionQueue();
-            }
+            // XXX: WHAT TO DO: Signal with error type
         } );
 
     return state;
@@ -567,8 +493,25 @@ QState* SystemManager::createHardStopState( QState* parent )
         {
             _gameTimer.stop();
             qDebug() << "Enter hard stop state";
+
+            _lidar.stopMotor();
         } );
 
     return state;
 }
 
+void SystemManager::displayColor( const DigitalValue& value )
+{
+    if( value == DigitalValue::OFF )
+    {
+        _color = Color::Blue;
+        _ledBlue->digitalWrite( DigitalValue::ON );
+        _ledYellow->digitalWrite( DigitalValue::OFF );
+    }
+    else
+    {
+        _color = Color::Yellow;
+        _ledBlue->digitalWrite( DigitalValue::OFF );
+        _ledYellow->digitalWrite( DigitalValue::ON );
+    }
+}

@@ -46,3 +46,6 @@ tmp/
 # Ignore Eagle temp files
 *.b#*
 *.s#*
+
+# Ignore Qt user files
+*.pro.user

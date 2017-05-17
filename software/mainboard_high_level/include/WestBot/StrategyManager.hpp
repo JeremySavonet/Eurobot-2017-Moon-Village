@@ -6,8 +6,11 @@
 #include <QObject>
 #include <QString>
 
-#include "GameMap.hpp"
+#include "Carrousel.hpp"
+#include "Common.hpp"
+#include "Servo.hpp"
 #include "SystemManager.hpp"
+#include "TrajectoryManager.hpp"
 
 namespace WestBot
 {
@@ -21,20 +24,38 @@ class StrategyManager : public QObject
 public:
     StrategyManager(
         SystemManager& systemManager,
+        TrajectoryManager& trajectoryManager,
+        Carrousel& carrousel,
+        Servo& armRight,
+        Servo& armLeft,
+        Servo& ejector,
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
-    void buildMap();
-    void buildPath();
+    // A set of actions
+    void openArms90();
+    void openArmsFull();
+    void closeArms();
+    void turnCarrousel();
+    void ejectCylinder();
+    void checkCylinderInCarrouselAtPosition( float position );
+    void collectCylinderAtPosition( float theta, float x, float y );
+    void collectTotemAtPosition( float theta, float x, float y );
 
-    void toEuclidean();
-    void toManhattan();
+    // Avoidance
+    void gotoAvoidPosition();
 
-    void dumpMap();
+private:
+    void doStrat( const Color& color );
+    void doFunnyAction();
 
 private:
     SystemManager& _systemManager;
-    GameMap::Ptr _gameMap;
+    TrajectoryManager& _trajectoryManager;
+    Carrousel& _carrousel;
+    Servo& _armRight;
+    Servo& _armLeft;
+    Servo& _ejector;
 };
 
 }

@@ -14,8 +14,12 @@
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
 #include <WestBot/Output.hpp>
+#include <WestBot/Servo.hpp>
 #include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
+#include <WestBot/TrajectoryManager.hpp>
+
+#include <hps_arm.h> // For our base address
 
 namespace
 {
@@ -60,21 +64,24 @@ int main( int argc, char *argv[] )
     Hal hal;
     hal.init(); // Open the FPGA memory and load our module
 
+    hal._outputOverride.write( 0x01010101 );
+
     // Init the System manager
     SystemManager system( hal );
     system.init(); // Create the state machine
+    system.setMode( SystemManager::SystemMode::Full ); // Set the system in full mode
 
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
 
-#ifdef SIMU 
+    TrajectoryManager trajectoryManager( hal );
+    trajectoryManager.init();
+
+    qDebug() << "Platform ready...";
+
+#ifdef SIMU
     hal._modeSimu.write( 1 );
 #endif
-
-    // Activate output override for leds
-    hal._outputOverride.write( 0x01010101 );
-
-    StrategyManager strategyManager( system );
 
     Carrousel carrousel( hal );
 
@@ -84,32 +91,47 @@ int main( int argc, char *argv[] )
         return EXIT_FAILURE;
     }
 
-    float pos = 6.0;
-    uint8_t id = 0;
+    Servo s0( "Arm_right" );
+    s0.attach( hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
+
+    if( ! s0.isAttached() )
+    {
+        qWarning() << "Failed to attached servo arm right...";
+        return EXIT_FAILURE;
+    }
+
+    Servo s6( "Arm_left" );
+    s6.attach( hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
+
+    if( ! s6.isAttached() )
+    {
+        qWarning() << "Failed to attached servo arm left...";
+        return EXIT_FAILURE;
+    }
+
+    Servo s7( "Ejector" );
+    s7.attach( hal, 7, SERVO_7_EJECTOR_STANDBY, SERVO_7_EJECTOR_EJECT );
+
+    if( ! s7.isAttached() )
+    {
+        qWarning() << "Failed to attached servo ejector...";
+        return EXIT_FAILURE;
+    }
+
+    StrategyManager strategyManager(
+        system,
+        trajectoryManager,
+        carrousel,
+        s0,
+        s6,
+        s7 );
+
+    qDebug() << "==== System ready ! ==== ";
+    // TODO: LED_SYS_READY = ON
+
     while( 1 )
     {
-        id++;
-        QThread::msleep( 1000 );
-        carrousel.setPosition( pos );
-        if( id <= 30 )
-        {
-            pos -= 0.5f;
-        }
-        if( id >= 30 && id <= 60 )
-        {
-            pos += 0.5f;
-        }
-
-        if( pos < 0.0 )
-        {
-            pos += 6.0;
-        }
-
-        if( pos > 6.0 )
-        {
-            pos -= 6.0;
-        }
-
+        QThread::msleep( 250 );
         QCoreApplication::processEvents();
     }
 

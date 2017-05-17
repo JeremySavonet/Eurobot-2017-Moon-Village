@@ -3,8 +3,7 @@
 #include <memory>
 
 #include <QDebug>
-
-#include <WestBot/AStar/Utils.hpp>
+#include <QThread>
 
 #include <WestBot/StrategyManager.hpp>
 
@@ -12,72 +11,145 @@ using namespace WestBot;
 
 StrategyManager::StrategyManager(
     SystemManager& systemManager,
+    TrajectoryManager& trajectoryManager,
+    Carrousel& carrousel,
+    Servo& armRight,
+    Servo& armLeft,
+    Servo& ejector,
     QObject* parent )
     : QObject( parent )
     , _systemManager( systemManager )
+    , _trajectoryManager( trajectoryManager )
+    , _carrousel( carrousel )
+    , _armRight( armRight )
+    , _armLeft( armLeft )
+    , _ejector( ejector )
 {
-    _gameMap = std::make_shared< GameMap >();
+    connect(
+        & _systemManager,
+        & SystemManager::doStrat,
+        this,
+        [ this ]( const Color& color )
+        {
+            qDebug() << "Ready to start strategy thread...";
+            doStrat( color );
+        } );
 
     connect(
         & _systemManager,
-        & SystemManager::readyForWar,
+        & SystemManager::doFunnyAction,
         this,
         [ this ]()
         {
-            qDebug() << "Ready to start strategy thread...";
+            qDebug() << "Funny action time...";
+            doFunnyAction();
+        } );
+
+    connect(
+        & _systemManager,
+        & SystemManager::hardStop,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Hard stop requested.";
+            _trajectoryManager.hardStop();
+            _trajectoryManager.disable();
+        } );
+
+    connect(
+        & _systemManager,
+        & SystemManager::reArming,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Rearming.";
+            _trajectoryManager.enable();
         } );
 }
 
-
-void StrategyManager::buildMap()
+// Public methods
+void StrategyManager::openArms90()
 {
-    const uint width = 300; //300cm
-    const uint height = 200; //200cm
-    const uint scale = 1;
-
-    _gameMap->setScale( scale );
-    _gameMap->setMap( width, height );
-
-    _gameMap->addElement( 20, 60, 6 );
-    _gameMap->addElement( 280, 60, 6 );
-
-    _gameMap->addElement( 100, 60, 6 );
-    _gameMap->addElement( 200, 60, 6 );
-
-    _gameMap->addElement( 50, 110, 6 );
-    _gameMap->addElement( 250, 110, 6 );
-
-    _gameMap->addElement( 50, 110, 6 );
-    _gameMap->addElement( 250, 110, 6 );
-
-    _gameMap->addElement( 90, 140, 6 );
-    _gameMap->addElement( 210, 140, 6 );
-
-    _gameMap->addElement( 80, 185, 6 );
-    _gameMap->addElement( 220, 185, 6 );
-
-    _gameMap->setStart( 0, 90 );
+    _armRight.write( SERVO_0_ARM_R_OPEN90 );
+    _armLeft.write( SERVO_6_ARM_L_OPEN90 );
 }
 
-void StrategyManager::buildPath()
+void StrategyManager::openArmsFull()
 {
-    _gameMap->showPath();
+    _armRight.write( SERVO_0_ARM_R_OPEN );
+    _armLeft.write( SERVO_6_ARM_L_OPEN );
 }
 
-void StrategyManager::toEuclidean()
+void StrategyManager::closeArms()
 {
-    qDebug() << "Changing heuristic to euclidian";
-    _gameMap->setHeuristics( AStar::AStarHeuristics::euclidean );
+    _armRight.write( SERVO_0_ARM_R_CLOSED );
+    _armLeft.write( SERVO_6_ARM_L_CLOSED );
 }
 
-void StrategyManager::toManhattan()
+void StrategyManager::turnCarrousel()
 {
-    qDebug() << "Changing heuristic to manhattan";
-    _gameMap->setHeuristics( AStar::AStarHeuristics::manhattan );
+    float pos = _carrousel.position();
+
+    _carrousel.setPosition( pos + 1.0 );
 }
 
+void StrategyManager::ejectCylinder()
+{
+    _ejector.write( SERVO_7_EJECTOR_EJECT );
+    QThread::msleep( 250 );
+    _ejector.write( SERVO_7_EJECTOR_STANDBY );
+}
 
-void StrategyManager::dumpMap()
-{    
-    _gameMap->dumpMap();
+void StrategyManager::checkCylinderInCarrouselAtPosition( float position )
+{
+    _carrousel.setPosition( position );
+    QThread::msleep( 250 );
+
+    // TODO: Check color
+}
+
+void StrategyManager::collectCylinderAtPosition( float theta, float x, float y )
+{
+    openArmsFull();
+
+    _trajectoryManager.moveToXYAbs( theta, x, y );
+
+    turnCarrousel();
+
+    qDebug() << "Done collecting...";
+}
+
+void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
+{
+    openArmsFull();
+
+    _trajectoryManager.moveToXYAbs( theta, x, y );
+
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+
+    qDebug() << "Done collecting...";
+}
+
+void StrategyManager::gotoAvoidPosition()
+{
+
+}
+
+// Private methods
+void StrategyManager::doStrat( const Color& color )
+{
+    qDebug() << "Do strat for color:" << color;
+
+    _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
+}
+
+void StrategyManager::doFunnyAction()
+{
+    _trajectoryManager.hardStop();
 }
