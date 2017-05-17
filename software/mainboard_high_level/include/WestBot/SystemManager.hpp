@@ -14,6 +14,7 @@
 #include "Hal.hpp"
 #include "Input.hpp"
 #include "Output.hpp"
+#include "PositionManager.hpp"
 
 #include <WestBot/RPLidar/RPLidar.hpp>
 
@@ -100,6 +101,7 @@ private:
     SystemMode _systemMode;
     RPLidar::RPLidar _lidar;
     DetectionManager _detectionManager;
+    PositionManager _positionManager;
 };
 
 }

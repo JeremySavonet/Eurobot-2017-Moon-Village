@@ -6,8 +6,9 @@
 
 using namespace WestBot;
 
-DetectionManager::DetectionManager( const QString& name )
-    : _name( name )
+DetectionManager::DetectionManager( const QString& name, QObject* parent )
+    : QObject( parent )
+    , _name( name )
     , _opponentDetected( false )
 {
     _eventTimer = new QTimer( this );

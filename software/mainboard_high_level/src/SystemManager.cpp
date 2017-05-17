@@ -34,6 +34,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     , _systemMode( SystemManager::SystemMode::Full )
     , _lidar( "/dev/ttyUSB0" )
     , _detectionManager( "Opponent_detector" )
+    , _positionManager( _lidar )
 {
     _gameTimer.setSingleShot( true );
 
@@ -124,9 +125,20 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             }
         } );
 
+    connect(
+        & _positionManager,
+        & PositionManager::positionUpdated,
+        this,
+        [ this ]( int theta, int x, int y )
+        {
+            qDebug()
+                << "New position is: Theta:" << theta << " X:" << x << " Y:" << y;
+        } );
+
     displayColor( _colorButton->digitalRead() );
 
     _detectionManager.init( _hal );
+    _positionManager.init();
 }
 
 SystemManager::~SystemManager()

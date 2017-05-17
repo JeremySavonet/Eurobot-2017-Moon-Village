@@ -18,7 +18,8 @@ class DetectionManager : public QObject
     Q_OBJECT
 
 public:
-    DetectionManager( const QString& name );
+    DetectionManager( const QString& name, QObject* parent = nullptr );
+    ~DetectionManager() override = default;
 
     void init( Hal& hal );
 
