@@ -33,7 +33,7 @@ table = array2table(table,'VariableNames',{'dir' 'ax' 'ay' 'bx' 'by'});
 color = ['b' 'r' 'k' 'g' 'm' 'y'];
 
 
-for i = 1:2%length(data)
+for i = 1%:2%length(data)
 	
 	if ~isempty(data(i).odo)
 		ol = data(i).odo.wL *resolution;
@@ -128,7 +128,7 @@ for i = 1:2%length(data)
 	
 	
 	% suppression points
-	figure
+	% figure
 	for k = 1:height(table)
 		if ~isempty(t(k).dot)
 			if table.dir(k)
@@ -149,19 +149,18 @@ for i = 1:2%length(data)
 				h = abs(dot( [x y] - ones(size(x))*p , ones(size(x))*u  , 2 ));
 				ind = find( h<threshold(iter) );
 			end
-			t2(k).dot = t(k).dot( ind , : );
-			hold on
-			plot(t(k).dot(:,1),t(k).dot(:,2),'x')
-			if table.dir(k)
-			plot([0 2],[d(2) 2*d(1)+d(2)],'r')
-			else
-				plot([d(2) d(1)+d(2)],[0 1],'r')
-			end
-			plot(t2(k).dot(:,1),t2(k).dot(:,2),'k+')
+			t(k).dot = t(k).dot( ind , : );
+			% hold on
+			% plot(t(k).dot(:,1),t(k).dot(:,2),'x')
+			% if table.dir(k)
+			%	plot([0 2],[d(2) 2*d(1)+d(2)],'r')
+			% else
+			% 	plot([d(2) d(1)+d(2)],[0 1],'r')
+			% end
+			% plot(t2(k).dot(:,1),t2(k).dot(:,2),'k+')
 		end
 	end
 	
-	t = t2;
 	
 	% recherche erreur
 	A = [];
@@ -184,7 +183,8 @@ for i = 1:2%length(data)
 	FE = chol(H'*H);
 	R = H*inv(FE);
 	theta = asin(R(1,2));
-	XX  = inv(R)*[X(3);X(4)];
+	% XX  = inv(R)*[X(3);X(4)];
+	XX  = [X(3);X(4)];
 	[XX' theta]
 	
 	xLast = xLast +XX(1);
