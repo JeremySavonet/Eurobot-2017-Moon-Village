@@ -64,6 +64,8 @@ Hal::Hal()
     , _colorSensorBlue( _layer1, 52 * 4, 16 )
     , _colorSensorClear( _layer1, 52 * 4 + 2, 16 )
 
+    , _distanceSensor( _layer1, 53 * 4, 32 )
+
     // Layer 2
     , _odometryTheta( _layer2, 13 * 4 + 2, 16 )
     , _odometryX( _layer2, 14 * 4, 16 )

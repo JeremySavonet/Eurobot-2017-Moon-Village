@@ -75,6 +75,8 @@ public:
     ItemRegister _colorSensorBlue;
     ItemRegister _colorSensorClear;
 
+    ItemRegister _distanceSensor;
+
     // Layer 2
     ItemRegister _odometryTheta;
     ItemRegister _odometryX;

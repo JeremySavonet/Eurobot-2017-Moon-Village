@@ -10,6 +10,7 @@
 
 #include "ColorSensor.hpp"
 #include "Common.hpp"
+#include "DetectionManager.hpp"
 #include "Hal.hpp"
 #include "Input.hpp"
 #include "Output.hpp"
@@ -98,6 +99,7 @@ private:
     ColorSensor _colorSensor;
     SystemMode _systemMode;
     RPLidar::RPLidar _lidar;
+    DetectionManager _detectionManager;
 };
 
 }

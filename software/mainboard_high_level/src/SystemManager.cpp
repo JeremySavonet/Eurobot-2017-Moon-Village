@@ -33,6 +33,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     , _colorSensor( "Color_sensor" )
     , _systemMode( SystemManager::SystemMode::Full )
     , _lidar( "/dev/ttyUSB0" )
+    , _detectionManager( "Opponent_detector" )
 {
     _gameTimer.setSingleShot( true );
 
@@ -104,6 +105,22 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             else
             {
                 emit reArming();
+            }
+        } );
+
+    connect(
+        & _detectionManager,
+        & DetectionManager::opponentDetected,
+        this,
+        [ this ]( bool status )
+        {
+            if( status )
+            {
+                qDebug() << "Opponent detected";
+            }
+            else
+            {
+                qDebug() << "We are safe";
             }
         } );
 

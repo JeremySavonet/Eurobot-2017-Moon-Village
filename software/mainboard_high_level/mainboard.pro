@@ -28,7 +28,8 @@ SOURCES += src/Carrousel.cpp \
            src/main.cpp \
            src/Servo.cpp \
            src/TrajectoryManager.cpp \
-           src/ColorSensor.cpp
+           src/ColorSensor.cpp \
+    src/DetectionManager.cpp
 
 HEADERS += \
     include/Defines.hpp \
@@ -47,7 +48,8 @@ HEADERS += \
     include/WestBot/SystemManager.hpp \
     include/WestBot/Servo.hpp \
     include/WestBot/TrajectoryManager.hpp \
-    include/WestBot/ColorSensor.hpp
+    include/WestBot/ColorSensor.hpp \
+    include/WestBot/DetectionManager.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
