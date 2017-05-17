@@ -10,7 +10,10 @@ config.telem.port = 1001;
 
 config.cmd = [0 0
 	100 0
-	0 0];
+	1000 1000
+	800 0
+	1000 -1000
+	100 0];
 
 %%
 
@@ -42,7 +45,7 @@ fopen(odo.h);
 if ~strcmp(get(odo.h,'Status'),'open')
 	error 'TCP closed'
 end
-data.odo = [];
+odo.data = [];
 
 
 
@@ -50,6 +53,7 @@ data.odo = [];
 time = 10;
 cmd = 1;
 exitLoop = 0;
+data = [];
 while ~exitLoop
 	
 	pause(1);
@@ -77,16 +81,21 @@ while ~exitLoop
 		if cmd>=size(config.cmd,1)
 			exitLoop = 1;
 		else
+			pause(1);
 			if odo.h.BytesAvailable>0
-				data.odo = [data.odo fread(odo.h,odo.h.BytesAvailable,'uint8')];
+				odo.data = [odo.data fread(odo.h,odo.h.BytesAvailable,'uint8')];
+				[d,odo.data] = protocolParse(odo.data);
+				d = decodeOdometry(d);
+				data(cmd).odo = d;
 			end
 			
 			fread(telem.h,telem.h.BytesAvailable,'uint8');
 			pause(2);
 			d = uint8(fread(telem.h,telem.h.BytesAvailable,'uint8'));
 			[r,~,theta] = telemParse(d);
-			data.telem(cmd).r = r';
-			data.telem(cmd).theta = theta';
+			r = r';
+			theta = theta';
+			data(cmd).telem = table(r,theta);
 			
 			cmd = cmd+1;
 			pos.x = config.cmd(cmd,1);
@@ -102,9 +111,11 @@ end
 fclose(tcp.h);
 fclose(odo.h);
 fclose(telem.h);
-fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bAcquisition done');
+fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bAcquisition done\n');
 
 %%
+
+break;
 
 odo.data = odo.data(1:odo.i-1);
 telem.data = telem.data(1:telem.i-1);

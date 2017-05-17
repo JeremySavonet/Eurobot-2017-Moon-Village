@@ -2,6 +2,7 @@ function telemStart(tcp)
 
 % stop
 telemStop(tcp);
+pause(1);
 
 % health
 d = uint8([]);

@@ -11,7 +11,7 @@ while 1
 	
 	sync = bitand(data(1),hex2dec('F0')) + bitand(data(2),hex2dec('F0'))/16;
 	if sync~=hex2dec('A5')
-		warning('sync')
+		%warning('sync')
 		data = data(2:end);
 		continue;
 	end
