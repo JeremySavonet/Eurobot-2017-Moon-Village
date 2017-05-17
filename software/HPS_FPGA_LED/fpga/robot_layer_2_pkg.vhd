@@ -28,18 +28,6 @@ package robot_layer_2_pkg is
         -------- TO/FROM LAYER 1 --------
         ---------------------------------
 
-        --------- I2C ----------
-        i2c_0_scl     : in std_logic;
-        i2c_0_sda     : in std_logic;
-        i2c_0_scl_oe  : out std_logic;
-        i2c_0_sda_oe  : out std_logic;
-        i2c_0_reset   : out std_logic;
-
-        i2c_1_scl     : in std_logic;
-        i2c_1_sda     : in std_logic;
-        i2c_1_scl_oe  : out std_logic;
-        i2c_1_sda_oe  : out std_logic;
-        i2c_1_reset   : out std_logic;
 
         --------- UART ----------
         uart_tx       : out std_logic_vector(4-1 downto 0);

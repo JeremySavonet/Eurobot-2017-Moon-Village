@@ -306,6 +306,7 @@
  <interface
    name="dipsw_pio_external_connection"
    internal="dipsw_pio.external_connection" />
+ <interface name="hps_arm_h2f_loan_io" internal="hps_arm.h2f_loan_io" />
  <interface
    name="hps_arm_h2f_reset"
    internal="hps_arm.h2f_reset"
@@ -316,6 +317,9 @@
    internal="hps_arm.hps_io"
    type="conduit"
    dir="end" />
+ <interface name="hps_arm_i2c0" internal="hps_arm.i2c0" />
+ <interface name="hps_arm_i2c0_clk" internal="hps_arm.i2c0_clk" />
+ <interface name="hps_arm_i2c0_scl_in" internal="hps_arm.i2c0_scl_in" />
  <interface
    name="led_pio_external_connection"
    internal="led_pio.external_connection" />
@@ -994,12 +998,15 @@
   <parameter name="writable" value="true" />
  </module>
  <module name="pio_n_layer1" kind="pio_n" version="1.0" enabled="1">
+  <parameter name="ByteEnable" value="false" />
   <parameter name="RegCnt" value="64" />
  </module>
  <module name="pio_n_layer2" kind="pio_n" version="1.0" enabled="1">
+  <parameter name="ByteEnable" value="false" />
   <parameter name="RegCnt" value="64" />
  </module>
  <module name="pio_n_layer3" kind="pio_n" version="1.0" enabled="1">
+  <parameter name="ByteEnable" value="false" />
   <parameter name="RegCnt" value="64" />
  </module>
  <module

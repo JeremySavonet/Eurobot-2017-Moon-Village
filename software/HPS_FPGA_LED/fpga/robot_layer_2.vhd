@@ -25,20 +25,6 @@ entity robot_layer_2 is
         -------- TO/FROM LAYER 1 --------
         ---------------------------------
 
-
-        --------- I2C ----------
-        i2c_0_scl     : in std_logic;
-        i2c_0_sda     : in std_logic;
-        i2c_0_scl_oe  : out std_logic;
-        i2c_0_sda_oe  : out std_logic;
-        i2c_0_reset   : out std_logic;
-
-        i2c_1_scl     : in std_logic;
-        i2c_1_sda     : in std_logic;
-        i2c_1_scl_oe  : out std_logic;
-        i2c_1_sda_oe  : out std_logic;
-        i2c_1_reset   : out std_logic;
-
         --------- UART ----------
         uart_tx       : out std_logic_vector(4-1 downto 0);
         uart_rx       : in  std_logic_vector(4-1 downto 0);
@@ -94,10 +80,6 @@ architecture rtl of robot_layer_2 is
             pio_data_out_value : out std_logic_vector(511 downto 0);                    -- data_out_value
             pio_data_out_write : out std_logic_vector(15 downto 0);                     -- data_out_write
             reset_reset_n      : in  std_logic                      := 'X';              -- reset_n
-			i2c_master_serial_sda_in : in  std_logic                      := 'X';             -- sda_in
-			i2c_master_serial_scl_in : in  std_logic                      := 'X';             -- scl_in
-			i2c_master_serial_sda_oe : out std_logic;                                         -- sda_oe
-			i2c_master_serial_scl_oe : out std_logic;                                         -- scl_oe
 			uart_0_external_rxd      : in  std_logic                      := 'X';             -- rxd
 			uart_0_external_txd      : out std_logic                                          -- txd
         );
@@ -185,7 +167,6 @@ begin
         assert w_pio_data_in_read = w_pio_data_in_read;
         assert w_pio_data_out_write = w_pio_data_out_write;
 
-        i2c_0_reset <= '0';
 
         inst_odometry_rv : component system
         port map (
@@ -195,10 +176,6 @@ begin
             pio_data_in_read        => w_pio_data_in_read,
             pio_data_out_value      => w_pio_data_out_value,
             pio_data_out_write      => w_pio_data_out_write,
-			i2c_master_serial_sda_in => i2c_0_sda,
-			i2c_master_serial_scl_in => i2c_0_scl,
-			i2c_master_serial_sda_oe => i2c_0_sda_oe,
-			i2c_master_serial_scl_oe => i2c_0_scl_oe,
 			uart_0_external_rxd      => uart_rx(0),
 			uart_0_external_txd      => uart_tx(0)
         );

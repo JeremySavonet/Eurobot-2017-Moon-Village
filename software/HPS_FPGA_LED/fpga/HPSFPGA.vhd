@@ -232,19 +232,6 @@ end entity;
 
 architecture hpsfpga_arch of hpsfpga is
 
-    component system is
-        port (
-            clk_clk            : in  std_logic                      := 'X';             -- clk
-            pio_data_in_value  : in  std_logic_vector(511 downto 0) := (others => 'X'); -- data_in_value
-            pio_data_in_read   : out std_logic_vector(15 downto 0);                     -- data_in_read
-            pio_data_out_value : out std_logic_vector(511 downto 0);                    -- data_out_value
-            pio_data_out_write : out std_logic_vector(15 downto 0);                     -- data_out_write
-            reset_reset_n      : in  std_logic                      := 'X'              -- reset_n
-        );
-    end component system;
-
-
-
 
 
 	component hps_fpga is
@@ -335,45 +322,6 @@ architecture hpsfpga_arch of hpsfpga is
 
 
 
-    function reverse_vector (a: in std_logic_vector) return std_logic_vector is
-        variable result: std_logic_vector(a'RANGE);
-        alias aa: std_logic_vector(a'REVERSE_RANGE) is a;
-    begin
-        for i in aa'RANGE loop
-            result(i) := aa(i);
-        end loop;
-        return result;
-    end; -- function reverse_any_vector
-
-    -- changes the endianess BIG <-> LITTLE
-    function ChangeEndian(vec : std_ulogic_vector) return std_ulogic_vector is
-        variable vRet      : std_ulogic_vector(vec'range);
-        constant cNumBytes : natural := vec'length / 8;
-    begin
-        for i in 0 to cNumBytes-1 loop
-          for j in 7 downto 0 loop
-            vRet(8*i + j) := vec(8*(cNumBytes-1-i) + j);
-          end loop;  -- j
-        end loop;  -- i
-
-        return vRet;
-    end function ChangeEndian;
-
-
-    function ChangeEndian(vec : std_logic_vector) return std_logic_vector is
-    begin
-        return std_logic_vector(ChangeEndian(std_ulogic_vector(vec)));
-    end function ChangeEndian;
-
-    signal w_m0_pio_0_in  : std_logic_vector(32-1 downto 0);
-    signal w_m0_pio_0_out : std_logic_vector(32-1 downto 0);
-
-    signal w_m1_pio_0_in  : std_logic_vector(32-1 downto 0);
-    signal w_m1_pio_0_out : std_logic_vector(32-1 downto 0);
-
-    signal w_odometry_pio_in : std_logic_vector(32-1 downto 0);
-
-
     signal w_pio_n_layer1_data_in_value            : std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
     signal w_pio_n_layer1_data_in_read             : std_logic_vector(64-1 downto 0);                     -- data_in_read
     signal w_pio_n_layer1_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
@@ -387,18 +335,6 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_pio_n_layer3_data_out_value           : std_logic_vector(2048-1 downto 0);                    -- data_out_value
     signal w_pio_n_layer3_data_out_write           : std_logic_vector(64-1 downto 0);                      -- data_out_write
 
-        --------- I2C ----------
-    signal w_i2c_0_scl     : std_logic;
-    signal w_i2c_0_sda     : std_logic;
-    signal w_i2c_0_scl_oe  : std_logic;
-    signal w_i2c_0_sda_oe  : std_logic;
-    signal w_i2c_0_reset   : std_logic;
-
-    signal w_i2c_1_scl     : std_logic;
-    signal w_i2c_1_sda     : std_logic;
-    signal w_i2c_1_scl_oe  : std_logic;
-    signal w_i2c_1_sda_oe  : std_logic;
-    signal w_i2c_1_reset   : std_logic;
 
         --------- UART ----------
     signal w_uart_tx       : std_logic_vector(4-1 downto 0);
@@ -437,8 +373,25 @@ architecture hpsfpga_arch of hpsfpga is
     signal w_angle_target  : std_logic_vector(32-1 downto 0);
 
 
+    signal r_reset : std_logic;
+    signal r_cnt : natural := 0;
 
 begin
+
+   
+    p_sync: process(FPGA_CLK1_50)
+    begin
+        if rising_edge(FPGA_CLK1_50) then
+            r_reset <= '1';
+            
+            if r_cnt = 10000 then
+                r_reset <= '0';
+            else
+                r_cnt <= r_cnt + 1;
+            end if;
+        end if;
+    
+    end process;
 
 
 
@@ -589,23 +542,11 @@ begin
 	    ----------/ NANO SOC SW --------/
 	    SW                  => SW,
 
+
         ---------------------------------
         -------- TO/FROM LAYER 2 --------
         ---------------------------------
 
-
-        --------- I2C ----------
-        i2c_0_scl     => w_i2c_0_scl,
-        i2c_0_sda     => w_i2c_0_sda,
-        i2c_0_scl_oe  => w_i2c_0_scl_oe,
-        i2c_0_sda_oe  => w_i2c_0_sda_oe,
-        i2c_0_reset   => w_i2c_0_reset,
-
-        i2c_1_scl     => w_i2c_1_scl,
-        i2c_1_sda     => w_i2c_1_sda,
-        i2c_1_scl_oe  => w_i2c_1_scl_oe,
-        i2c_1_sda_oe  => w_i2c_1_sda_oe,
-        i2c_1_reset   => w_i2c_1_reset,
 
         --------- UART ----------
         uart_tx       => w_uart_tx,
@@ -637,19 +578,6 @@ begin
         ---------------------------------
         -------- TO/FROM LAYER 1 --------
         ---------------------------------
-
-        --------- I2C ----------
-        i2c_0_scl     => w_i2c_0_scl,
-        i2c_0_sda     => w_i2c_0_sda,
-        i2c_0_scl_oe  => w_i2c_0_scl_oe,
-        i2c_0_sda_oe  => w_i2c_0_sda_oe,
-        i2c_0_reset   => w_i2c_0_reset,
-
-        i2c_1_scl     => w_i2c_1_scl,
-        i2c_1_sda     => w_i2c_1_sda,
-        i2c_1_scl_oe  => w_i2c_1_scl_oe,
-        i2c_1_sda_oe  => w_i2c_1_sda_oe,
-        i2c_1_reset   => w_i2c_1_reset,
 
         --------- UART ----------
         uart_tx       => w_uart_tx,
@@ -735,6 +663,10 @@ begin
         angle_target    => w_angle_target
 
     );
+
+
+
+
 ----=======================================================
 ----  Structural coding
 ----=======================================================
@@ -744,20 +676,20 @@ begin
 	    clk_clk                               =>  FPGA_CLK1_50 ,                               --                            clkclk
 	    reset_reset_n                         =>  '1' ,                         --                          resetreset_n
 
-		 hps_arm_h2f_reset_reset_n => hps_fpga_reset_n,
+        hps_arm_h2f_reset_reset_n => hps_fpga_reset_n,
 		 
-            pio_n_layer1_data_in_value            => w_pio_n_layer1_data_in_value,            --    pio_n_layer1.data_in_value
-            pio_n_layer1_data_in_read             => w_pio_n_layer1_data_in_read,             --                .data_in_read
-            pio_n_layer1_data_out_value           => w_pio_n_layer1_data_out_value,           --                .data_out_value
-            pio_n_layer1_data_out_write           => w_pio_n_layer1_data_out_write,           --                .data_out_write
-            pio_n_layer2_data_in_value            => w_pio_n_layer2_data_in_value,            --    pio_n_layer2.data_in_value
-            pio_n_layer2_data_in_read             => w_pio_n_layer2_data_in_read,             --                .data_in_read
-            pio_n_layer2_data_out_value           => w_pio_n_layer2_data_out_value,           --                .data_out_value
-            pio_n_layer2_data_out_write           => w_pio_n_layer2_data_out_write,           --                .data_out_write
-            pio_n_layer3_data_in_value            => w_pio_n_layer3_data_in_value,            --    pio_n_layer3.data_in_value
-            pio_n_layer3_data_in_read             => w_pio_n_layer3_data_in_read,             --                .data_in_read
-            pio_n_layer3_data_out_value           => w_pio_n_layer3_data_out_value,           --                .data_out_value
-            pio_n_layer3_data_out_write           => w_pio_n_layer3_data_out_write,            --                .data_out_write
+        pio_n_layer1_data_in_value            => w_pio_n_layer1_data_in_value,            --    pio_n_layer1.data_in_value
+        pio_n_layer1_data_in_read             => w_pio_n_layer1_data_in_read,             --                .data_in_read
+        pio_n_layer1_data_out_value           => w_pio_n_layer1_data_out_value,           --                .data_out_value
+        pio_n_layer1_data_out_write           => w_pio_n_layer1_data_out_write,           --                .data_out_write
+        pio_n_layer2_data_in_value            => w_pio_n_layer2_data_in_value,            --    pio_n_layer2.data_in_value
+        pio_n_layer2_data_in_read             => w_pio_n_layer2_data_in_read,             --                .data_in_read
+        pio_n_layer2_data_out_value           => w_pio_n_layer2_data_out_value,           --                .data_out_value
+        pio_n_layer2_data_out_write           => w_pio_n_layer2_data_out_write,           --                .data_out_write
+        pio_n_layer3_data_in_value            => w_pio_n_layer3_data_in_value,            --    pio_n_layer3.data_in_value
+        pio_n_layer3_data_in_read             => w_pio_n_layer3_data_in_read,             --                .data_in_read
+        pio_n_layer3_data_out_value           => w_pio_n_layer3_data_out_value,           --                .data_out_value
+        pio_n_layer3_data_out_write           => w_pio_n_layer3_data_out_write,            --                .data_out_write
 
 
 
@@ -809,7 +741,6 @@ begin
 	    hps_arm_hps_io_hps_io_uart0_inst_RX     =>  HPS_UART_RX ,     --                               hps_io_uart0_inst_RX
 	    hps_arm_hps_io_hps_io_uart0_inst_TX     =>  HPS_UART_TX ,     --                               hps_io_uart0_inst_TX
 	
-	    -- HPS I2C0
 	    hps_arm_hps_io_hps_io_i2c0_inst_SDA     =>  HPS_I2C0_SDAT ,     --                               hps_io_i2c0_inst_SDA
 	    hps_arm_hps_io_hps_io_i2c0_inst_SCL     =>  HPS_I2C0_SCLK ,     --                               hps_io_i2c0_inst_SCL
 	
@@ -834,6 +765,7 @@ begin
 	    memory_mem_odt                        =>  HPS_DDR3_ODT ,                        --                mem_odt
 	    memory_mem_dm                         =>  HPS_DDR3_DM ,                         --                mem_dm
 	    memory_oct_rzqin                      =>  HPS_DDR3_RZQ                          --                .oct_rzqin      
+
     );
 
 

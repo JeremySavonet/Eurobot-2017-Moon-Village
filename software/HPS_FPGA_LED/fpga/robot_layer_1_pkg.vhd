@@ -153,25 +153,10 @@ package robot_layer_1_pkg is
 	    ----------/ NANO SOC SW --------/
 	    SW                  : in    std_logic_vector(4-1 downto 0);
 
-
-
         ---------------------------------
         -------- TO/FROM LAYER 2 --------
         ---------------------------------
 
-
-        --------- I2C ----------
-        i2c_0_scl     : out std_logic;
-        i2c_0_sda     : out std_logic;
-        i2c_0_scl_oe  : in std_logic;
-        i2c_0_sda_oe  : in std_logic;
-        i2c_0_reset   : in std_logic;
-
-        i2c_1_scl     : out std_logic;
-        i2c_1_sda     : out std_logic;
-        i2c_1_scl_oe  : in std_logic;
-        i2c_1_sda_oe  : in std_logic;
-        i2c_1_reset   : in std_logic;
 
         --------- UART ----------
         uart_tx       : in  std_logic_vector(4-1 downto 0);
