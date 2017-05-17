@@ -29,7 +29,7 @@ SOURCES += src/Carrousel.cpp \
            src/Servo.cpp \
            src/TrajectoryManager.cpp \
            src/ColorSensor.cpp \
-    src/DetectionManager.cpp
+           src/DetectionManager.cpp
 
 HEADERS += \
     include/Defines.hpp \

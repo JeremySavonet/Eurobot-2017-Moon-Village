@@ -125,6 +125,8 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         } );
 
     displayColor( _colorButton->digitalRead() );
+
+    _detectionManager.init( _hal );
 }
 
 SystemManager::~SystemManager()
