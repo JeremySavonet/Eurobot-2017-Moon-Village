@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QThread>
+#include <QTimer>
 
 #include <WestBot/Carrousel.hpp>
 
@@ -12,11 +13,24 @@ namespace
     const int THRESHOLD = 20;
 }
 
-Carrousel::Carrousel( Hal& hal )
-    : _hal( hal )
+Carrousel::Carrousel( Hal& hal, QObject* parent )
+    : QObject( parent )
+    , _hal( hal )
     , _reference( 0 )
     , _nbTickPerTour( 0 )
+    , _positionTimeout( false )
 {
+    _positionTimer = new QTimer();
+
+    connect(
+        _positionTimer,
+        & QTimer::timeout,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Cannot reach position. Maybe it's blocked=====> drop!";
+            _positionTimeout = true;
+        } );
 }
 
 bool Carrousel::init()
@@ -109,6 +123,9 @@ float Carrousel::position()
 
 void Carrousel::setPosition( float targetPos )
 {
+    _positionTimeout = false;
+    _positionTimer->start( 1000 ); // timeout of 1s. When reached drop the command.
+
     float diff = targetPos - position();
     if( diff > 3.0 )
     {
@@ -124,6 +141,14 @@ void Carrousel::setPosition( float targetPos )
         ( int32_t ) ( diff * ( ( float ) _nbTickPerTour / 6.0f ) );
 
     setTarget( currentPosition() + posInTick );
+
+    while( currentPosition() < targetPos && ! _positionTimeout )
+    {
+        QThread::msleep( 10 );
+        qDebug()
+            << "Wait carrousel to be in pos:" << targetPos
+            << "current pos is:" << currentPosition();
+    }
 }
 
 //

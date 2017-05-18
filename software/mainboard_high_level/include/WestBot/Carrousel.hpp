@@ -3,14 +3,19 @@
 #ifndef WESTBOT_CARROUSEL_HPP_
 #define WESTBOT_CARROUSEL_HPP_
 
+#include <QObject>
+
 #include "Hal.hpp"
+
+class QTimer;
 
 namespace WestBot {
 
-class Carrousel
+class Carrousel : public QObject
 {
 public:
-    Carrousel( Hal& hal );
+    Carrousel( Hal& hal, QObject* parent = nullptr );
+    ~Carrousel() override = default;
 
     bool init();
 
@@ -47,6 +52,8 @@ private:
     Hal _hal;
     int32_t _reference;
     int32_t _nbTickPerTour;
+    QTimer* _positionTimer;
+    bool _positionTimeout;
 };
 
 }
