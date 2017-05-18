@@ -118,6 +118,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             if( status )
             {
                 qDebug() << "Opponent detected";
+                emit opponentDetected();
             }
             else
             {

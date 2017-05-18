@@ -65,6 +65,16 @@ StrategyManager::StrategyManager(
             qDebug() << "Rearming.";
             _trajectoryManager.enable();
         } );
+
+    connect(
+        & _systemManager,
+        & SystemManager::opponentDetected,
+        this,
+        [ this ]()
+        {
+            qDebug() << "stop...";
+            _trajectoryManager.stop();
+        } );
 }
 
 // Public methods
@@ -90,7 +100,7 @@ void StrategyManager::turnCarrousel()
 {
     float pos = _carrousel.position();
 
-    _carrousel.setPosition( pos + 1.0 );
+    _carrousel.setPosition( pos - 1.0 );
 }
 
 void StrategyManager::ejectCylinder()
@@ -146,7 +156,50 @@ void StrategyManager::doStrat( const Color& color )
 {
     qDebug() << "Do strat for color:" << color;
 
+    _ejector.write( SERVO_7_EJECTOR_FUSEE );
+    QThread::msleep( 250 );
+
+    openArmsFull();
+    QThread::msleep( 250 );
+
+    _armLeft.write( 9000 );
+    _armRight.write( 9000 );
+
+    //_ejector.write( SERVO_7_EJECTOR_STANDBY );
+
+    QThread::msleep( 250 );
+
+    turnCarrousel();
+    QThread::msleep( 3000 );
+    turnCarrousel();
+    QThread::msleep( 3000 );
+    turnCarrousel();
+    QThread::msleep( 3000 );
+    turnCarrousel();
+    QThread::msleep( 3000 );
+    turnCarrousel();
+    QThread::msleep( 3000 );
+
+//    turnCarrousel();
+//    QThread::msleep( 1500 );
+//    turnCarrousel();
+//    QThread::msleep( 1500 );
+
+    /*
+    QThread::msleep( 250 );
+    turnCarrousel();
+    QThread::msleep( 250 );
+    turnCarrousel();
+    QThread::msleep( 250 );
+    */
+
+    /*
     _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
+
+    _trajectoryManager.turnAAbs( 180.0 );
+
+    _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
+    */
 }
 
 void StrategyManager::doFunnyAction()

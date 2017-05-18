@@ -19,6 +19,7 @@
 
 #define SERVO_7_EJECTOR_STANDBY 31217
 #define SERVO_7_EJECTOR_EJECT 11533
+#define SERVO_7_EJECTOR_FUSEE 14000
 
 namespace WestBot {
 

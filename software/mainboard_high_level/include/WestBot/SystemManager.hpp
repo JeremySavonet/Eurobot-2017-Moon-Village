@@ -64,6 +64,7 @@ signals:
     void reArming();
 
     void doStrat( const Color& color );
+    void opponentDetected();
 
 private:
     void createStateMachine();
