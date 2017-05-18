@@ -24,6 +24,7 @@ StrategyManager::StrategyManager(
     , _armRight( armRight )
     , _armLeft( armLeft )
     , _ejector( ejector )
+    , _stratIsRunning( false )
 {
     connect(
         & _systemManager,
@@ -42,6 +43,7 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Funny action time...";
+            _stratIsRunning = false;
             doFunnyAction();
         } );
 
@@ -54,6 +56,7 @@ StrategyManager::StrategyManager(
             qDebug() << "Hard stop requested.";
             _trajectoryManager.hardStop();
             _trajectoryManager.disable();
+            _stratIsRunning = false;
         } );
 
     connect(
@@ -156,50 +159,54 @@ void StrategyManager::doStrat( const Color& color )
 {
     qDebug() << "Do strat for color:" << color;
 
-    _ejector.write( SERVO_7_EJECTOR_FUSEE );
-    QThread::msleep( 250 );
+    // Strat loop
+    while( _stratIsRunning )
+    {
+        _ejector.write( SERVO_7_EJECTOR_FUSEE );
+        QThread::msleep( 250 );
 
-    openArmsFull();
-    QThread::msleep( 250 );
+        openArmsFull();
+        QThread::msleep( 250 );
 
-    _armLeft.write( 9000 );
-    _armRight.write( 9000 );
+        _armLeft.write( 9000 );
+        _armRight.write( 9000 );
 
-    //_ejector.write( SERVO_7_EJECTOR_STANDBY );
+        //_ejector.write( SERVO_7_EJECTOR_STANDBY );
 
-    QThread::msleep( 250 );
+        QThread::msleep( 250 );
 
-    turnCarrousel();
-    QThread::msleep( 3000 );
-    turnCarrousel();
-    QThread::msleep( 3000 );
-    turnCarrousel();
-    QThread::msleep( 3000 );
-    turnCarrousel();
-    QThread::msleep( 3000 );
-    turnCarrousel();
-    QThread::msleep( 3000 );
+        turnCarrousel();
+        QThread::msleep( 3000 );
+        turnCarrousel();
+        QThread::msleep( 3000 );
+        turnCarrousel();
+        QThread::msleep( 3000 );
+        turnCarrousel();
+        QThread::msleep( 3000 );
+        turnCarrousel();
+        QThread::msleep( 3000 );
 
-//    turnCarrousel();
-//    QThread::msleep( 1500 );
-//    turnCarrousel();
-//    QThread::msleep( 1500 );
+    //    turnCarrousel();
+    //    QThread::msleep( 1500 );
+    //    turnCarrousel();
+    //    QThread::msleep( 1500 );
 
-    /*
-    QThread::msleep( 250 );
-    turnCarrousel();
-    QThread::msleep( 250 );
-    turnCarrousel();
-    QThread::msleep( 250 );
-    */
+        /*
+        QThread::msleep( 250 );
+        turnCarrousel();
+        QThread::msleep( 250 );
+        turnCarrousel();
+        QThread::msleep( 250 );
+        */
 
-    /*
-    _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
+        /*
+        _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
 
-    _trajectoryManager.turnAAbs( 180.0 );
+        _trajectoryManager.turnAAbs( 180.0 );
 
-    _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
-    */
+        _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
+        */
+    }
 }
 
 void StrategyManager::doFunnyAction()

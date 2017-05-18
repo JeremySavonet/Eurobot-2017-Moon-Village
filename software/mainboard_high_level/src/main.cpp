@@ -91,6 +91,7 @@ int main( int argc, char *argv[] )
         return EXIT_FAILURE;
     }
 
+    // Set carrousel offset
     carrousel.setPosition( 1.05 );
 
     Servo s0( "Arm_right" );

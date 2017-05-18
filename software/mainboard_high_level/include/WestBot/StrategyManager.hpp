@@ -56,6 +56,7 @@ private:
     Servo& _armRight;
     Servo& _armLeft;
     Servo& _ejector;
+    bool _stratIsRunning;
 };
 
 }
