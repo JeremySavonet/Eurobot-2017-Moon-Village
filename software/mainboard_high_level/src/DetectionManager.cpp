@@ -1,5 +1,6 @@
 // Copyright (c) 2017 All Rights Reserved WestBot
 
+#include <QDebug>
 #include <QTimer>
 
 #include <WestBot/DetectionManager.hpp>

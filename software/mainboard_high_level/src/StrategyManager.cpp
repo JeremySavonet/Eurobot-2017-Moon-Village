@@ -36,6 +36,7 @@ StrategyManager::StrategyManager(
         [ this ]( const Color& color )
         {
             qDebug() << "Ready to start strategy thread...";
+            _stratIsRunning = true;
             doStrat( color );
         } );
 
@@ -46,7 +47,10 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Funny action time...";
+            _trajectoryManager.hardStop();
+            _trajectoryManager.disable();
             _stratIsRunning = false;
+
             doFunnyAction();
         } );
 
@@ -123,11 +127,18 @@ void StrategyManager::closeArms()
     _armLeft.write( SERVO_6_ARM_L_CLOSED );
 }
 
-void StrategyManager::turnCarrousel()
+void StrategyManager::turnCarrouselCW()
 {
     float pos = _carrousel.position();
 
     _carrousel.setPosition( pos - 1.0 );
+}
+
+void StrategyManager::turnCarrouselCCW()
+{
+    float pos = _carrousel.position();
+
+    _carrousel.setPosition( pos + 1.0 );
 }
 
 void StrategyManager::ejectCylinder()
@@ -151,7 +162,7 @@ void StrategyManager::collectCylinderAtPosition( float theta, float x, float y )
 
     _trajectoryManager.moveToXYAbs( theta, x, y );
 
-    turnCarrousel();
+    turnCarrouselCW();
 
     qDebug() << "Done collecting...";
 }
@@ -169,10 +180,10 @@ void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
 
     _trajectoryManager.moveToXYAbs( theta, x, y );
 
-    turnCarrousel();
-    turnCarrousel();
-    turnCarrousel();
-    turnCarrousel();
+    turnCarrouselCW();
+    turnCarrouselCW();
+    turnCarrouselCW();
+    turnCarrouselCW();
 
     qDebug() << "Done collecting...";
 }
@@ -189,8 +200,13 @@ void StrategyManager::strategyWaitMs( int ms )
 
 void StrategyManager::stopRobot()
 {
-    _trajectoryManager.hardStop();
-    strategyWaitMs( 200 );
+    qDebug() << ">>>>>> OPPONENT DETECTED <<<<<<";
+
+    if( _stratIsRunning )
+    {
+        _trajectoryManager.hardStop();
+        strategyWaitMs( 200 );
+    }
 }
 
 bool StrategyManager::gotoAvoidPosition(
@@ -249,8 +265,53 @@ void StrategyManager::doStrat( const Color& color )
     while( _stratIsRunning )
     {
         qDebug() << ">>>>> RUNNING <<<<<";
-        strategyWaitMs( 250 );
-        QCoreApplication::processEvents();
+
+        if( color == Color::Yellow )
+        {
+            openArmsFull();
+
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
+
+            closeArms();
+
+            turnCarrouselCW();
+
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 800.0, 0.0 );
+
+            _trajectoryManager.turnAAbs( 180 );
+
+            turnCarrouselCCW();
+
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, 0.0 );
+
+            openArms90();
+
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 600.0, 0.0 );
+        }
+        else
+        {
+            openArmsFull();
+
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 490.0, 40.0 );
+
+            closeArms();
+
+            turnCarrouselCW();
+
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 840.0, 0.0 );
+
+            _trajectoryManager.turnAAbs( -180 );
+
+            turnCarrouselCCW();
+
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 470.0, 0.0 );
+
+            openArms90();
+
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 640.0, 0.0 );
+        }
+
+        _stratIsRunning = false;
     }
 }
 

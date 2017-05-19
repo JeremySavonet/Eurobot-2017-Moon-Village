@@ -41,7 +41,8 @@ public:
     void openArmsFull();
     void openArmsForFusee();
     void closeArms();
-    void turnCarrousel();
+    void turnCarrouselCW();
+    void turnCarrouselCCW();
     void ejectCylinder();
     void checkCylinderInCarrouselAtPosition( float position );
     void collectCylinderAtPosition( float theta, float x, float y );

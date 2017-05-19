@@ -139,13 +139,6 @@ int main( int argc, char *argv[] )
         turbine );
 
     qDebug() << "==== System ready ! ==== ";
-    // TODO: LED_SYS_READY = ON
-
-    while( 1 )
-    {
-        QThread::msleep( 250 );
-        QCoreApplication::processEvents();
-    }
 
     return app.exec();
 }

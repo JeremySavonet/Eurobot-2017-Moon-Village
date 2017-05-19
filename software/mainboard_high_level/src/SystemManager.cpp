@@ -12,7 +12,7 @@ using namespace WestBot;
 
 namespace
 {
-    const int GAME_DURATION = 10 * 1000; // 90s
+    const int GAME_DURATION = 90 * 1000; // 90s
 }
 
 SystemManager::SystemManager( Hal& hal, QObject* parent )
@@ -108,6 +108,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             if( value == DigitalValue::ON )
             {
                 emit hardStop();
+                _aliveTimer.stop();
             }
             else
             {

@@ -126,7 +126,7 @@ float Carrousel::position()
 void Carrousel::setPosition( float targetPos )
 {
     _positionTimeout = false;
-    _positionTimer->start( 1000 ); // timeout of 1s. When reached drop the command.
+    //_positionTimer->start( 1000 ); // timeout of 1s. When reached drop the command.
 
     float diff = targetPos - position();
     if( diff > 3.0 )
@@ -144,7 +144,7 @@ void Carrousel::setPosition( float targetPos )
 
     setTarget( currentPosition() + posInTick );
 
-    while( currentPosition() < targetPos && ! _positionTimeout )
+   /* while( currentPosition() < targetPos && ! _positionTimeout )
     {
         QThread::msleep( 10 );
         qDebug()
@@ -159,6 +159,7 @@ void Carrousel::setPosition( float targetPos )
         _positionTimeout = false;
         setEnable( true );
     }
+    */
 }
 
 void Carrousel::enable( bool enable )
