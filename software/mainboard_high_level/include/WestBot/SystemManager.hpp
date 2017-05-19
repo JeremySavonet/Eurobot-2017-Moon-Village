@@ -45,6 +45,7 @@ public:
 
     void start();
     void stop();
+    void reset();
 
     void setMode( SystemMode mode );
     SystemMode mode() const;

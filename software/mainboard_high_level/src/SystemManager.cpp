@@ -155,6 +155,9 @@ SystemManager::~SystemManager()
 // Public methods
 void SystemManager::init()
 {
+    // Always reset the system at startup
+    reset();
+
     // Config PID Distance
     _hal._pidDistanceEnable.write( 0 );
     _hal._pidDistanceOverride.write( 0 );
@@ -196,6 +199,15 @@ void SystemManager::start()
 void SystemManager::stop()
 {
     _stateMachine.stop();
+}
+
+void SystemManager::reset()
+{
+    _hal._resetAll.write( 1 );
+    QThread::msleep( 10 );
+    _hal._resetAll.write( 0 );
+
+    qDebug() << "System was reset";
 }
 
 void SystemManager::setMode( SystemManager::SystemMode mode )

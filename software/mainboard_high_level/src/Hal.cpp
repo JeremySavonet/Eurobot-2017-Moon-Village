@@ -14,8 +14,8 @@ Hal::Hal()
     : _layer1( _memoryManager , PIO_N_LAYER1_BASE )
     , _layer2( _memoryManager, PIO_N_LAYER2_BASE )
     , _layer3( _memoryManager, PIO_N_LAYER3_BASE )
-    // Layer 1
-    , _resetL1( _layer1, 0, 32  )
+    // Layer 1   
+    , _resetAll( _layer1, 0 * 4, 32  )
     , _initOkL1( _layer1, 1 * 4, 8 )
     , _modeSimu( _layer1, 1 * 4 + 1, 8 )
     , _voltage24V( _layer1, 2 * 4, 32 )
