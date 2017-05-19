@@ -1,5 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
 #include <QTimer>
@@ -149,6 +150,7 @@ void Carrousel::setPosition( float targetPos )
         qDebug()
             << "Wait carrousel to be in pos:" << targetPos
             << "current pos is:" << currentPosition();
+        QCoreApplication::processEvents();
     }
 
     // Reset and enable module after timeout.

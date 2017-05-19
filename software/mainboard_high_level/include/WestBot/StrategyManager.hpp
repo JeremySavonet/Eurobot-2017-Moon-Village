@@ -48,8 +48,18 @@ public:
     void collectTotemAtPosition( float theta, float x, float y );
     bool isCarrouselCanHandleTotems( int totemsNumber );
 
+    // Wait
+    void strategyWaitMs( int ms );
+
     // Avoidance
-    void gotoAvoidPosition();
+    void stopRobot();
+    bool gotoAvoidPosition( int xMm, int yMm, int aDeg, int trajEndFlags );
+    bool gotoAvoidPositionRetry(
+        int xMm,
+        int yMm,
+        int aDeg,
+        int trajEndFlags,
+        int numRetries );
 
 private:
     void doStrat( const Color& color );

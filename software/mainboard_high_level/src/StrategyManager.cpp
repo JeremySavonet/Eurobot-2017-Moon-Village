@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
 
@@ -77,7 +78,7 @@ StrategyManager::StrategyManager(
         this,
         [ this ]()
         {
-            gotoAvoidPosition();
+            stopRobot();
         } );
 }
 
@@ -176,18 +177,68 @@ void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
     qDebug() << "Done collecting...";
 }
 
-void StrategyManager::gotoAvoidPosition()
-{
-    qDebug() << "Go to avoid position";
-
-    _trajectoryManager.stop();
-}
-
 bool StrategyManager::isCarrouselCanHandleTotems( int totemsNumber )
 {
     return true;
 }
 
+void StrategyManager::strategyWaitMs( int ms )
+{
+    QThread::msleep( ms );
+}
+
+void StrategyManager::stopRobot()
+{
+    _trajectoryManager.hardStop();
+    strategyWaitMs( 200 );
+}
+
+bool StrategyManager::gotoAvoidPosition(
+    int xMm,
+    int yMm,
+    int aDeg,
+    int trajEndFlags )
+{
+    qDebug() << "Enter go to avoid position";
+
+    // TODO:
+    // Create a point at opponent position
+    // Create a point a current position
+    // Find path to avoid position point
+    // Build point vector
+    // Iterate through this vector and send forward xy abs command
+
+    return true;
+}
+
+bool StrategyManager::gotoAvoidPositionRetry(
+    int xMm,
+    int yMm,
+    int aDeg,
+    int trajEndFlags,
+    int numRetries )
+{
+    qDebug() << "Enter go to avoid position retry";
+
+    bool finished = false;
+    int counter = 0;
+
+    while( ! finished )
+    {
+        qDebug() << "Try attempt number" << counter;
+        finished = gotoAvoidPosition( xMm, yMm, aDeg, trajEndFlags );
+        counter++;
+
+        // Exit when maximum number of retries is reached
+        // Negative number of retries means infinite number of retries
+        if( numRetries >= 0 && counter > numRetries )
+        {
+            break;
+        }
+    }
+
+    return finished;
+}
 
 // Private methods
 void StrategyManager::doStrat( const Color& color )
@@ -197,28 +248,9 @@ void StrategyManager::doStrat( const Color& color )
     // Strat loop
     while( _stratIsRunning )
     {
-          collectTotemAtPosition( 10.0, 200.0, 200.0 );
-
-    //    turnCarrousel();
-    //    QThread::msleep( 1500 );
-    //    turnCarrousel();
-    //    QThread::msleep( 1500 );
-
-        /*
-        QThread::msleep( 250 );
-        turnCarrousel();
-        QThread::msleep( 250 );
-        turnCarrousel();
-        QThread::msleep( 250 );
-        */
-
-        /*
-        _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
-
-        _trajectoryManager.turnAAbs( 180.0 );
-
-        _trajectoryManager.moveToXYAbs( 0.0, 200.0, 200.0 );
-        */
+        qDebug() << ">>>>> RUNNING <<<<<";
+        strategyWaitMs( 250 );
+        QCoreApplication::processEvents();
     }
 }
 
