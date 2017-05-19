@@ -75,8 +75,7 @@ StrategyManager::StrategyManager(
         this,
         [ this ]()
         {
-            qDebug() << "stop...";
-            _trajectoryManager.stop();
+            gotoAvoidPosition();
         } );
 }
 
@@ -91,6 +90,18 @@ void StrategyManager::openArmsFull()
 {
     _armRight.write( SERVO_0_ARM_R_OPEN );
     _armLeft.write( SERVO_6_ARM_L_OPEN );
+}
+
+void StrategyManager::openArmsForFusee()
+{
+    _ejector.write( SERVO_7_EJECTOR_FUSEE );
+    QThread::msleep( 250 );
+
+    openArmsFull();
+    QThread::msleep( 250 );
+
+    _armLeft.write( SERV0_DISABLE_CONSIGN );
+    _armRight.write( SERV0_DISABLE_CONSIGN );
 }
 
 void StrategyManager::closeArms()
@@ -134,16 +145,20 @@ void StrategyManager::collectCylinderAtPosition( float theta, float x, float y )
 
 void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
 {
-    openArmsFull();
+    if( ! isCarrouselCanHandleTotems( 4 ) )
+    {
+        qDebug() << "Carrousel is not empty and can only handle"
+                 << 2 << "totems";
+        return;
+    }
+
+    openArmsForFusee();
 
     _trajectoryManager.moveToXYAbs( theta, x, y );
 
     turnCarrousel();
-    QThread::msleep( 250 );
     turnCarrousel();
-    QThread::msleep( 250 );
     turnCarrousel();
-    QThread::msleep( 250 );
     turnCarrousel();
 
     qDebug() << "Done collecting...";
@@ -151,8 +166,16 @@ void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
 
 void StrategyManager::gotoAvoidPosition()
 {
+    qDebug() << "Go to avoid position";
 
+    _trajectoryManager.stop();
 }
+
+bool StrategyManager::isCarrouselCanHandleTotems( int totemsNumber )
+{
+    return true;
+}
+
 
 // Private methods
 void StrategyManager::doStrat( const Color& color )
@@ -162,29 +185,7 @@ void StrategyManager::doStrat( const Color& color )
     // Strat loop
     while( _stratIsRunning )
     {
-        _ejector.write( SERVO_7_EJECTOR_FUSEE );
-        QThread::msleep( 250 );
-
-        openArmsFull();
-        QThread::msleep( 250 );
-
-        _armLeft.write( 9000 );
-        _armRight.write( 9000 );
-
-        //_ejector.write( SERVO_7_EJECTOR_STANDBY );
-
-        QThread::msleep( 250 );
-
-        turnCarrousel();
-        QThread::msleep( 3000 );
-        turnCarrousel();
-        QThread::msleep( 3000 );
-        turnCarrousel();
-        QThread::msleep( 3000 );
-        turnCarrousel();
-        QThread::msleep( 3000 );
-        turnCarrousel();
-        QThread::msleep( 3000 );
+          collectTotemAtPosition( 10.0, 200.0, 200.0 );
 
     //    turnCarrousel();
     //    QThread::msleep( 1500 );

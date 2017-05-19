@@ -7,6 +7,8 @@
 
 #include "Hal.hpp"
 
+#define SERV0_DISABLE_CONSIGN 9000
+
 #define SERVO_0_ARM_R_CLOSED 31217
 #define SERVO_0_ARM_R_OPEN 15590
 #define SERVO_0_ARM_R_OPEN90 20000
