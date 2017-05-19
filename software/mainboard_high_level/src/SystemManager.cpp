@@ -43,8 +43,6 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         qWarning() << "Cannot connect to RPLidar";
     }
 
-    qDebug() << "RPLidar connected";
-
     connect(
         & _gameTimer,
         & QTimer::timeout,
@@ -57,6 +55,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             emit doFunnyAction();
         } );
 
+    // Task to notify that the robot is alive
     connect(
         & _aliveTimer,
         & QTimer::timeout,
@@ -73,7 +72,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             {
                 if( _stopButton->digitalRead() == DigitalValue::ON )
                 {
-                    qWarning() << "Could not start game if AU on";
+                    qWarning() << "Could not start game if AU is on";
                 }
                 else
                 {
@@ -84,6 +83,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                     else
                     {
                         emit error( "Could not attach color sensor" );
+                        qDebug() << "Failed to attach color sensor";
                     }
                 }
             }

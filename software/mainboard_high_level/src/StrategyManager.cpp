@@ -61,8 +61,20 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Hard stop requested.";
+
+            // Stop traj
             _trajectoryManager.hardStop();
             _trajectoryManager.disable();
+
+            // Stop all servos
+            disableServos();
+
+            // Stop carrousel
+            _carrousel.enable( false );
+
+            // Stop turbine
+            _turbine.enable( false );
+
             _stratIsRunning = false;
         } );
 
@@ -73,7 +85,19 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             qDebug() << "Rearming.";
+
+            // Enable traj
             _trajectoryManager.enable();
+
+            // Init arms position
+            openArms90();
+
+            // Enable carrousel
+            _carrousel.enable( true );
+
+            // Enable turbine
+            _turbine.enable( true );
+
         } );
 
     connect(
@@ -87,6 +111,13 @@ StrategyManager::StrategyManager(
 }
 
 // Public methods
+void StrategyManager::disableServos()
+{
+    _armLeft.write( SERV0_DISABLE_CONSIGN );
+    _armRight.write( SERV0_DISABLE_CONSIGN );
+    _ejector.write( SERV0_DISABLE_CONSIGN );
+}
+
 void StrategyManager::turbineInsuffle()
 {
     _turbine.setValue( TURBINE_INSUFFLE_VALUE );
@@ -152,8 +183,6 @@ void StrategyManager::checkCylinderInCarrouselAtPosition( float position )
 {
     _carrousel.setPosition( position );
     QThread::msleep( 250 );
-
-    // TODO: Check color
 }
 
 void StrategyManager::collectCylinderAtPosition( float theta, float x, float y )
@@ -190,6 +219,7 @@ void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
 
 bool StrategyManager::isCarrouselCanHandleTotems( int totemsNumber )
 {
+    Q_UNUSED( totemsNumber );
     return true;
 }
 
@@ -200,12 +230,11 @@ void StrategyManager::strategyWaitMs( int ms )
 
 void StrategyManager::stopRobot()
 {
-    qDebug() << ">>>>>> OPPONENT DETECTED <<<<<<";
-
     if( _stratIsRunning )
     {
         _trajectoryManager.hardStop();
         strategyWaitMs( 200 );
+        qDebug() << "Changing trajectory...";
     }
 }
 
@@ -215,7 +244,11 @@ bool StrategyManager::gotoAvoidPosition(
     int aDeg,
     int trajEndFlags )
 {
+    Q_UNUSED( trajEndFlags );
+
     qDebug() << "Enter go to avoid position";
+    qDebug()
+        << "Want to move at X:" << xMm << " Y:" << yMm << " A:" << aDeg;
 
     // TODO:
     // Create a point at opponent position
@@ -264,8 +297,6 @@ void StrategyManager::doStrat( const Color& color )
     // Strat loop
     while( _stratIsRunning )
     {
-        qDebug() << ">>>>> RUNNING <<<<<";
-
         if( color == Color::Yellow )
         {
             openArmsFull();

@@ -35,6 +35,7 @@ public:
     ~StrategyManager() override = default;
 
     // A set of actions
+    void disableServos();
     void turbineInsuffle();
     void turbineExpulse();
     void openArms90();
