@@ -18,6 +18,7 @@
 #include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
 #include <WestBot/TrajectoryManager.hpp>
+#include <WestBot/Turbine.hpp>
 
 #include <hps_arm.h> // For our base address
 
@@ -99,7 +100,7 @@ int main( int argc, char *argv[] )
 
     if( ! s0.isAttached() )
     {
-        qWarning() << "Failed to attached servo arm right...";
+        qWarning() << "Failed to attach servo arm right...";
         return EXIT_FAILURE;
     }
 
@@ -108,7 +109,7 @@ int main( int argc, char *argv[] )
 
     if( ! s6.isAttached() )
     {
-        qWarning() << "Failed to attached servo arm left...";
+        qWarning() << "Failed to attach servo arm left...";
         return EXIT_FAILURE;
     }
 
@@ -117,7 +118,14 @@ int main( int argc, char *argv[] )
 
     if( ! s7.isAttached() )
     {
-        qWarning() << "Failed to attached servo ejector...";
+        qWarning() << "Failed to attach servo ejector...";
+        return EXIT_FAILURE;
+    }
+
+    Turbine turbine( "Turbine" );
+    if( ! turbine.attach( hal ) )
+    {
+        qWarning() << "Failed to attach turbine...";
         return EXIT_FAILURE;
     }
 

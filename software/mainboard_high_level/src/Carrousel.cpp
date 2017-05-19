@@ -159,6 +159,11 @@ void Carrousel::setPosition( float targetPos )
     }
 }
 
+void Carrousel::enable( bool enable )
+{
+    setEnable( enable );
+}
+
 //
 // Private methods
 //

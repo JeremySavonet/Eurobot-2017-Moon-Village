@@ -23,6 +23,8 @@ public:
 
     void setPosition( float position );
 
+    void enable( bool enable );
+
 private:
     void setPeriod( int32_t period );
     void setEnable( bool enabled );

@@ -66,6 +66,10 @@ Hal::Hal()
 
     , _distanceSensor( _layer1, 53 * 4, 32 )
 
+    , _esc0Enable( _layer1, 46 * 4 + 2, 8 )
+    , _esc0Override( _layer1, 46 * 4 + 3, 8 )
+    , _esc0Value( _layer1, 46 * 4, 16 )
+
     // Layer 2
     , _odometryTheta( _layer2, 13 * 4 + 2, 16 )
     , _odometryX( _layer2, 14 * 4, 16 )

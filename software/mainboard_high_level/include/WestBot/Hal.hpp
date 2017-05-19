@@ -77,6 +77,10 @@ public:
 
     ItemRegister _distanceSensor;
 
+    ItemRegister _esc0Enable;
+    ItemRegister _esc0Override;
+    ItemRegister _esc0Value;
+
     // Layer 2
     ItemRegister _odometryTheta;
     ItemRegister _odometryX;
