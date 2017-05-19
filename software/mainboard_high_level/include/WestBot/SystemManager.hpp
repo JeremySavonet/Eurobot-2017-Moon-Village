@@ -87,12 +87,15 @@ private:
     // Hard stop state when AU button is pushed
     QState* createHardStopState( QState* parent );
 
+    void robotAlive();
+
 private:
     void displayColor( const DigitalValue& value );
 
     Hal _hal;
     QStateMachine _stateMachine;
     QTimer _gameTimer;
+    QTimer _aliveTimer;
     Input::Ptr _startButton;
     Input::Ptr _colorButton;
     Input::Ptr _stopButton;

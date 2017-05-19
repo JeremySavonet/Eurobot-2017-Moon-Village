@@ -58,6 +58,12 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         } );
 
     connect(
+        & _aliveTimer,
+        & QTimer::timeout,
+        this,
+        & SystemManager::robotAlive );
+
+    connect(
         _startButton.get(),
         & Input::stateChanged,
         this,
@@ -407,7 +413,7 @@ QState* SystemManager::createStartGameState( QState* parent )
             _lidar.startMotor();
 
             _gameTimer.start( GAME_DURATION );
-
+            _aliveTimer.start( 250 ); // Start blinking led
             emit readyForWar();
         } );
 
@@ -526,5 +532,23 @@ void SystemManager::displayColor( const DigitalValue& value )
         _color = Color::Yellow;
         _ledBlue->digitalWrite( DigitalValue::OFF );
         _ledYellow->digitalWrite( DigitalValue::ON );
+    }
+}
+
+void SystemManager::robotAlive()
+{
+    if( _color == Color::Blue )
+    {
+        _ledBlue->digitalWrite( DigitalValue::OFF );
+        QThread::msleep( 250 );
+        _ledBlue->digitalWrite( DigitalValue::ON );
+        QThread::msleep( 250 );
+    }
+    else
+    {
+        _ledYellow->digitalWrite( DigitalValue::OFF );
+        QThread::msleep( 250 );
+        _ledYellow->digitalWrite( DigitalValue::ON );
+        QThread::msleep( 250 );
     }
 }
