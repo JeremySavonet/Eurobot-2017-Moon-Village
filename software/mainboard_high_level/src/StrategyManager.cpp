@@ -16,6 +16,7 @@ StrategyManager::StrategyManager(
     Servo& armRight,
     Servo& armLeft,
     Servo& ejector,
+    Turbine& turbine,
     QObject* parent )
     : QObject( parent )
     , _systemManager( systemManager )
@@ -24,6 +25,7 @@ StrategyManager::StrategyManager(
     , _armRight( armRight )
     , _armLeft( armLeft )
     , _ejector( ejector )
+    , _turbine( turbine )
     , _stratIsRunning( false )
 {
     connect(
@@ -80,6 +82,16 @@ StrategyManager::StrategyManager(
 }
 
 // Public methods
+void StrategyManager::turbineInsuffle()
+{
+    _turbine.setValue( TURBINE_INSUFFLE_VALUE );
+}
+
+void StrategyManager::turbineExpulse()
+{
+    _turbine.setValue( TURBINE_EXPULSE_VALUE );
+}
+
 void StrategyManager::openArms90()
 {
     _armRight.write( SERVO_0_ARM_R_OPEN90 );

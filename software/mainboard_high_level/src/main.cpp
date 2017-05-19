@@ -135,7 +135,8 @@ int main( int argc, char *argv[] )
         carrousel,
         s0,
         s6,
-        s7 );
+        s7,
+        turbine );
 
     qDebug() << "==== System ready ! ==== ";
     // TODO: LED_SYS_READY = ON

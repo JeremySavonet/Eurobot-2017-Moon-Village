@@ -8,6 +8,9 @@
 #include "Hal.hpp"
 #include "ItemRegister.hpp"
 
+#define TURBINE_INSUFFLE_VALUE 120
+#define TURBINE_EXPULSE_VALUE -120
+
 namespace WestBot {
 
 class Turbine

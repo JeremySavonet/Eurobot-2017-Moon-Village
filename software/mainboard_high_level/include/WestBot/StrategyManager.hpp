@@ -11,6 +11,7 @@
 #include "Servo.hpp"
 #include "SystemManager.hpp"
 #include "TrajectoryManager.hpp"
+#include "Turbine.hpp"
 
 namespace WestBot
 {
@@ -29,10 +30,13 @@ public:
         Servo& armRight,
         Servo& armLeft,
         Servo& ejector,
+        Turbine& turbine,
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
     // A set of actions
+    void turbineInsuffle();
+    void turbineExpulse();
     void openArms90();
     void openArmsFull();
     void openArmsForFusee();
@@ -58,6 +62,8 @@ private:
     Servo& _armRight;
     Servo& _armLeft;
     Servo& _ejector;
+    Turbine& _turbine;
+
     bool _stratIsRunning;
 };
 
