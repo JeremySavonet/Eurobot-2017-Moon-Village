@@ -36,6 +36,10 @@ protected:
 
 private:
     void parseData( const SocketPtr& socket );
+
+    void parseConfiguration( const QJsonDocument& configuration );
+    void parseCliCommand( const QByteArray& command );
+
     void sendConfiguration( const SocketPtr& socket );
 
 private:

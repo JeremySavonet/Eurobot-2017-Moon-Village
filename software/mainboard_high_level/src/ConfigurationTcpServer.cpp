@@ -2,6 +2,9 @@
 
 #include <QDebug>
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QList>
 #include <QNetworkInterface>
 #include <QString>
@@ -103,7 +106,28 @@ void ConfigurationTcpServer::showConnectionInformation() const
 
 void ConfigurationTcpServer::parseData( const SocketPtr& socket )
 {
-    qDebug() << socket->readAll();
+    const QByteArray data = socket->readAll();
+    QJsonDocument configuration = QJsonDocument::fromJson( data );
+
+    if( configuration.isObject() )
+    {
+        parseConfiguration( configuration );
+    }
+    else
+    {
+        parseCliCommand( data );
+    }
+}
+
+void ConfigurationTcpServer::parseConfiguration(
+    const QJsonDocument& configuration )
+{
+    qDebug() << "Parse configuration:" << configuration;
+}
+
+void ConfigurationTcpServer::parseCliCommand( const QByteArray& command )
+{
+    qDebug() << "Parse cli command:" << command;
 }
 
 void ConfigurationTcpServer::sendConfiguration( const SocketPtr& socket )
@@ -112,15 +136,15 @@ void ConfigurationTcpServer::sendConfiguration( const SocketPtr& socket )
     socket->flush();
     socket->waitForBytesWritten( 3000 );
 
-    const QHash< QString, QVariant > conf = _configurationManager.settings();
-    for( auto it = conf.constBegin(); it != conf.constEnd(); ++it )
-    {
-        QString message = "PARAM " % it.key() % ' ' % it.value().toString();
-        socket->write( message.toLatin1() );
-        socket->flush();
+//    const QHash< QString, QVariant > conf = _configurationManager.settings();
+//    for( auto it = conf.constBegin(); it != conf.constEnd(); ++it )
+//    {
+//        QString message = "PARAM " % it.key() % ' ' % it.value().toString();
+//        socket->write( message.toLatin1() );
+//        socket->flush();
 
-        qDebug() << "Byte written:" << message.toLatin1();
-    }
+//        qDebug() << "Byte written:" << message.toLatin1();
+//    }
 
-    qDebug() << "Send configuration done";
+//    qDebug() << "Send configuration done";
 }
