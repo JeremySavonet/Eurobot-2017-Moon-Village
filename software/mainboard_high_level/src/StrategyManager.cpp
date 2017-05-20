@@ -130,8 +130,8 @@ void StrategyManager::turbineExpulse()
 
 void StrategyManager::openArms90()
 {
-    _armRight.write( SERVO_0_ARM_R_OPEN90 );
-    _armLeft.write( SERVO_6_ARM_L_OPEN90 );
+    _armRight.write( SERVO_0_ARM_R_OPEN60 );
+    _armLeft.write( SERVO_6_ARM_L_OPEN60 );
 }
 
 void StrategyManager::openArmsFull()
@@ -174,21 +174,17 @@ void StrategyManager::turnCarrouselCCW()
 
 void StrategyManager::ejectCylinder()
 {
-    closeArms();
-
-    strategyWaitMs( 500 );
-
     _armRight.write( SERVO_0_ARM_R_DROP );
     _armLeft.write( SERVO_6_ARM_L_DROP );
 
-    strategyWaitMs( 500 );
+    strategyWaitMs( 200 );
 
     _ejector.write( SERVO_7_EJECTOR_EJECT );
 
-    strategyWaitMs( 500 );
+    strategyWaitMs( 250 );
 
     openArms90();
-    strategyWaitMs( 250 );
+    strategyWaitMs( 500 );
 
     _ejector.write( SERVO_7_EJECTOR_STANDBY );
     strategyWaitMs( 500 );
@@ -316,6 +312,102 @@ void StrategyManager::doStrat( const Color& color )
     {
         turnCarrouselCCW();
 
+        strategyWaitMs( 1000 );
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
+
+        closeArms();
+
+        turnCarrouselCW();
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 400.0, -565.0 );
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 895.0, -565.0 );
+
+        turnCarrouselCCW();
+
+        ejectCylinder();
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 910.0, -565.0 );
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
+
+        _armRight.write( SERVO_0_ARM_R_DROP );
+        _armLeft.write( SERVO_6_ARM_L_DROP );
+        strategyWaitMs( 500 );
+        disableServos();
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 935.0, -565.0 );
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 840.0, -565.0 );
+
+        turnCarrouselCW();
+
+        strategyWaitMs( 500 );
+
+        // Eject cylinre 2 =============//
+
+        _armRight.write( SERVO_0_ARM_R_DROP );
+        _armLeft.write( SERVO_6_ARM_L_DROP );
+
+        strategyWaitMs( 200 );
+
+        _ejector.write( SERVO_7_EJECTOR_EJECT );
+
+        strategyWaitMs( 75 );
+
+        _armRight.write( SERVO_0_ARM_R_OPEN40 );
+        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
+        strategyWaitMs( 1000 );
+
+        _ejector.write( SERVO_7_EJECTOR_STANDBY );
+        strategyWaitMs( 500 );
+
+        disableServos();
+
+        // ======================= //
+
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 808.0, -565.0 );
+
+        _armRight.write( SERVO_0_ARM_R_OPEN40 );
+        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
+        strategyWaitMs( 500 );
+        disableServos();
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -565.0 );
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
+
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 900.0, -565.0 );
+
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 1140.0, -565.0 );
+
+        ////////////////////////////:
+
+        // SI ON RECALL EN AVENCANT
+//        _trajectoryManager.moveBackwardToXYAbs( 0.0, 812.0, -565.0 );
+//        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -565.0 );
+
+
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, -565.0 );
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, 0.0 );
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 50.0, 0.0 );
+
+
+
+//        closeArms();
+//        strategyWaitMs( 500 );
+//        disableServos();
+
+//        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -560.0 );
+//        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -560.0 );
+
+//        _armRight.write( SERVO_0_ARM_R_DROP );
+//        _armLeft.write( SERVO_6_ARM_L_DROP );
+//        strategyWaitMs( 500 );
+//        disableServos();
+
+//        _trajectoryManager.moveBackwardToXYAbs( 0.0, 400.0, -560.0 );
+
+        /*turnCarrouselCCW();
+
         strategyWaitMs( 2000 );
 
         ejectCylinder();
@@ -331,6 +423,7 @@ void StrategyManager::doStrat( const Color& color )
         _trajectoryManager.moveForwardToXYAbs( 0.0, 180.0, 0.0 );
 
         _trajectoryManager.moveBackwardToXYAbs( 0.0, 0.0, 0.0 );
+        */
 
 //        if( color == Color::Yellow )
 //        {

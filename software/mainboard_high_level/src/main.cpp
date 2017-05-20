@@ -75,25 +75,11 @@ int main( int argc, char *argv[] )
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
 
-    TrajectoryManager trajectoryManager( hal );
-    trajectoryManager.init();
-
     qDebug() << "Platform ready...";
 
 #ifdef SIMU
     hal._modeSimu.write( 1 );
 #endif
-
-    Carrousel carrousel( hal );
-
-    if( ! carrousel.init() )
-    {
-        qWarning() << "Failed to init carrousel module...";
-        return EXIT_FAILURE;
-    }
-
-    // Set carrousel offset
-    carrousel.setPosition( 1.05 );
 
     Servo s0( "Arm_right" );
     s0.attach( hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
@@ -128,6 +114,20 @@ int main( int argc, char *argv[] )
         qWarning() << "Failed to attach turbine...";
         return EXIT_FAILURE;
     }
+
+    Carrousel carrousel( hal );
+
+    if( ! carrousel.init() )
+    {
+        qWarning() << "Failed to init carrousel module...";
+        return EXIT_FAILURE;
+    }
+
+    // Set carrousel offset
+    carrousel.setPosition( 1.05 );
+
+    TrajectoryManager trajectoryManager( hal );
+    trajectoryManager.init();
 
     StrategyManager strategyManager(
         system,
