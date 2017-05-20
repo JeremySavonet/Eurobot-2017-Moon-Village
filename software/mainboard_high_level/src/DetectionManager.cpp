@@ -45,4 +45,6 @@ void DetectionManager::check()
         emit opponentDetected( false );
         _opponentDetected = false;
     }
+
+    qDebug() << "Proximity sensor value:" << distanceValue;
 }

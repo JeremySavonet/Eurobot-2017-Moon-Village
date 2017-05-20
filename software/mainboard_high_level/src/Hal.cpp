@@ -15,7 +15,7 @@ Hal::Hal()
     , _layer2( _memoryManager, PIO_N_LAYER2_BASE )
     , _layer3( _memoryManager, PIO_N_LAYER3_BASE )
     // Layer 1   
-    , _resetAll( _layer1, 0 * 4, 32  )
+    , _resetAll( _layer1, 0 * 4, 8 )
     , _initOkL1( _layer1, 1 * 4, 8 )
     , _modeSimu( _layer1, 1 * 4 + 1, 8 )
     , _voltage24V( _layer1, 2 * 4, 32 )
@@ -153,6 +153,7 @@ void Hal::init()
 
     for( int i = 0; i < 64; ++i )
     {
+        _layer1.write( i * 4, 32, 0 );
         qDebug()
             << "Read register" << i << ":"
             << QString::number( _layer1.read( i * 4, 32 ), 16 );
@@ -164,6 +165,7 @@ void Hal::init()
 
     for( int i = 0; i < 64; ++i )
     {
+        _layer2.write( i * 4, 32, 0 );
         qDebug()
             << "Read register" << i << ":"
             << QString::number( _layer2.read( i * 4, 32 ), 16 );
@@ -175,6 +177,7 @@ void Hal::init()
 
     for( int i = 0; i < 64; ++i )
     {
+        _layer3.write( i * 4, 32, 0 );
         qDebug()
             << "Read register" << i << ":"
             << QString::number( _layer3.read( i * 4, 32 ), 16 );

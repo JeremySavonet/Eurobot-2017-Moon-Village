@@ -140,5 +140,10 @@ int main( int argc, char *argv[] )
 
     qDebug() << "==== System ready ! ==== ";
 
+    qDebug()
+        << "X:" << hal._odometryX.read< int16_t >()
+        << " Y:" << hal._odometryY.read< int16_t >()
+        << " Theta:" << hal._odometryTheta.read< int16_t >();
+
     return app.exec();
 }
