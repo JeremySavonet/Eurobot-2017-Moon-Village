@@ -174,9 +174,26 @@ void StrategyManager::turnCarrouselCCW()
 
 void StrategyManager::ejectCylinder()
 {
+    closeArms();
+
+    strategyWaitMs( 500 );
+
+    _armRight.write( SERVO_0_ARM_R_DROP );
+    _armLeft.write( SERVO_6_ARM_L_DROP );
+
+    strategyWaitMs( 500 );
+
     _ejector.write( SERVO_7_EJECTOR_EJECT );
-    QThread::msleep( 250 );
+
+    strategyWaitMs( 500 );
+
+    openArms90();
+    strategyWaitMs( 250 );
+
     _ejector.write( SERVO_7_EJECTOR_STANDBY );
+    strategyWaitMs( 500 );
+
+    disableServos();
 }
 
 void StrategyManager::checkCylinderInCarrouselAtPosition( float position )
@@ -297,50 +314,68 @@ void StrategyManager::doStrat( const Color& color )
     // Strat loop
     while( _stratIsRunning )
     {
-        if( color == Color::Yellow )
-        {
-            openArmsFull();
+        turnCarrouselCCW();
 
-            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
+        strategyWaitMs( 2000 );
 
-            closeArms();
+        ejectCylinder();
 
-            turnCarrouselCW();
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 180.0, 0.0 );
 
-            _trajectoryManager.moveForwardToXYAbs( 0.0, 800.0, 0.0 );
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 0.0, 0.0 );
 
-            _trajectoryManager.turnAAbs( 180 );
+        turnCarrouselCW();
 
-            turnCarrouselCCW();
+        ejectCylinder();
 
-            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, 0.0 );
+        _trajectoryManager.moveForwardToXYAbs( 0.0, 180.0, 0.0 );
 
-            openArms90();
+        _trajectoryManager.moveBackwardToXYAbs( 0.0, 0.0, 0.0 );
 
-            _trajectoryManager.moveBackwardToXYAbs( 0.0, 600.0, 0.0 );
-        }
-        else
-        {
-            openArmsFull();
+//        if( color == Color::Yellow )
+//        {
+//            openArmsFull();
 
-            _trajectoryManager.moveForwardToXYAbs( 0.0, 490.0, 40.0 );
+//            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
 
-            closeArms();
+//            closeArms();
 
-            turnCarrouselCW();
+//            turnCarrouselCW();
 
-            _trajectoryManager.moveForwardToXYAbs( 0.0, 840.0, 0.0 );
+//            _trajectoryManager.moveForwardToXYAbs( 0.0, 800.0, 0.0 );
 
-            _trajectoryManager.turnAAbs( -180 );
+//            _trajectoryManager.turnAAbs( 180 );
 
-            turnCarrouselCCW();
+//            turnCarrouselCCW();
 
-            _trajectoryManager.moveForwardToXYAbs( 0.0, 470.0, 0.0 );
+//            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, 0.0 );
 
-            openArms90();
+//            openArms90();
 
-            _trajectoryManager.moveBackwardToXYAbs( 0.0, 640.0, 0.0 );
-        }
+//            _trajectoryManager.moveBackwardToXYAbs( 0.0, 600.0, 0.0 );
+//        }
+//        else
+//        {
+//            openArmsFull();
+
+//            _trajectoryManager.moveForwardToXYAbs( 0.0, 490.0, 40.0 );
+
+//            closeArms();
+
+//            turnCarrouselCW();
+
+//            _trajectoryManager.moveForwardToXYAbs( 0.0, 840.0, 0.0 );
+
+//            _trajectoryManager.turnAAbs( -180 );
+
+//            turnCarrouselCCW();
+
+//            _trajectoryManager.moveForwardToXYAbs( 0.0, 470.0, 0.0 );
+
+//            openArms90();
+
+//            _trajectoryManager.moveBackwardToXYAbs( 0.0, 640.0, 0.0 );
+//        }
 
         _stratIsRunning = false;
     }
