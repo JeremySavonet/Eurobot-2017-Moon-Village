@@ -28,8 +28,7 @@ ColorSensor::ColorSensor( const QString& name )
 
 }
 
-bool ColorSensor::attach( Hal& hal,
-                          Color colorTarget )
+bool ColorSensor::attach( Hal& hal )
 {
     if( ! _isAttached )
     {
@@ -46,9 +45,7 @@ bool ColorSensor::attach( Hal& hal,
         }
     }
 
-    _colorTarget = colorTarget;
-
-    qDebug() << "Sensor module is attached with color" << colorTarget;
+    qDebug() << "Sensor module is attached";
 
     _isAttached = true;
 

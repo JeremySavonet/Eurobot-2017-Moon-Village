@@ -16,6 +16,8 @@ public:
 
     void init();
 
+    void clearRegisters();
+
 private:
     MemoryManager _memoryManager;
     Memory _layer1;

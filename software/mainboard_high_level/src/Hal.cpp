@@ -1,6 +1,6 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-#define DEBUG
+//#define DEBUG
 
 #include <QDebug>
 
@@ -153,7 +153,6 @@ void Hal::init()
 
     for( int i = 0; i < 64; ++i )
     {
-        _layer1.write( i * 4, 32, 0 );
         qDebug()
             << "Read register" << i << ":"
             << QString::number( _layer1.read( i * 4, 32 ), 16 );
@@ -165,7 +164,6 @@ void Hal::init()
 
     for( int i = 0; i < 64; ++i )
     {
-        _layer2.write( i * 4, 32, 0 );
         qDebug()
             << "Read register" << i << ":"
             << QString::number( _layer2.read( i * 4, 32 ), 16 );
@@ -177,7 +175,6 @@ void Hal::init()
 
     for( int i = 0; i < 64; ++i )
     {
-        _layer3.write( i * 4, 32, 0 );
         qDebug()
             << "Read register" << i << ":"
             << QString::number( _layer3.read( i * 4, 32 ), 16 );
@@ -186,3 +183,22 @@ void Hal::init()
 
     qInfo() << "Successfully initialized Hal module";
 }
+
+void Hal::clearRegisters()
+{
+    for( int i = 1; i < 64; ++i )
+    {
+        _layer1.write( i * 4, 32, 0 );
+    }
+
+    for( int i = 0; i < 64; ++i )
+    {
+        _layer2.write( i * 4, 32, 0 );
+    }
+
+    for( int i = 0; i < 64; ++i )
+    {
+        _layer3.write( i * 4, 32, 0 );
+    }
+}
+

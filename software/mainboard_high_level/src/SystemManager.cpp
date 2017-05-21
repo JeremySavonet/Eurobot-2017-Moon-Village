@@ -36,13 +36,6 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     , _detectionManager( "Opponent_detector" )
     , _positionManager( _lidar )
 {
-    _gameTimer.setSingleShot( true );
-
-    if( ! _lidar.connect() )
-    {
-        qWarning() << "Cannot connect to RPLidar";
-    }
-
     connect(
         & _gameTimer,
         & QTimer::timeout,
@@ -76,15 +69,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                 }
                 else
                 {
-                    if( _colorSensor.attach( _hal, _color ) )
-                    {
-                        emit started();
-                    }
-                    else
-                    {
-                        emit error( "Could not attach color sensor" );
-                        qDebug() << "Failed to attach color sensor";
-                    }
+                    emit started();
                 }
             }
         } );
@@ -142,11 +127,6 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             qDebug()
                 << "New position is: Theta:" << theta << " X:" << x << " Y:" << y;
         } );
-
-    displayColor( _colorButton->digitalRead() );
-
-    _detectionManager.init( _hal );
-    _positionManager.init();
 }
 
 SystemManager::~SystemManager()
@@ -195,6 +175,26 @@ void SystemManager::init()
     _hal._pidAngleTarget.write( _hal._pidAnglePosition.read< float >() );
     _hal._pidAngleEnable.write( 1 );
 
+    // Color sensor
+    _colorSensor.attach( _hal );
+
+    // Distance sensor
+    _detectionManager.init( _hal );
+
+    _positionManager.init();
+
+    // Override output registers
+    _hal._outputOverride.write( 0x01010101 );
+
+    displayColor( _colorButton->digitalRead() );
+
+    if( ! _lidar.connect() )
+    {
+        qWarning() << "Cannot connect to RPLidar";
+    }
+
+    _gameTimer.setSingleShot( true );
+
     createStateMachine();
 }
 
@@ -211,7 +211,9 @@ void SystemManager::stop()
 void SystemManager::reset()
 {
     _hal._resetAll.write( 1 );
-    QThread::msleep( 10 );
+
+    _hal.clearRegisters();
+
     _hal._resetAll.write( 0 );
 
     qDebug() << "System was reset";

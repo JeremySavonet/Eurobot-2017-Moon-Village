@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QTimer>
+#include <QThread>
 
 #include <WestBot/DetectionManager.hpp>
 
@@ -24,6 +25,12 @@ DetectionManager::DetectionManager( const QString& name, QObject* parent )
 void DetectionManager::init( Hal& hal )
 {
     _distanceSensor = std::make_shared< ItemRegister >( hal._distanceSensor );
+
+    while( _distanceSensor->read< uint8_t >() == 0 )
+    {
+        QThread::msleep( 10 );
+        qDebug() << "Wait distance sensor to be ready...";
+    }
 
     _eventTimer->start( 100 );
 

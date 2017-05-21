@@ -16,8 +16,7 @@ class ColorSensor
 public:
     ColorSensor( const QString& name );
 
-    bool attach( Hal& hal,
-                 Color colorTarget = Color::Unknown );
+    bool attach( Hal& hal );
 
     void changeTarget( Color colorTarget );
 

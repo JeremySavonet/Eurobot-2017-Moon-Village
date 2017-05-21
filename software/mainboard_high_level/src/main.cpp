@@ -63,19 +63,10 @@ int main( int argc, char *argv[] )
 
     // Init the Hardware Abstraction Layer
     Hal hal;
-    hal.init(); // Open the FPGA memory and load our module
-
-    hal._outputOverride.write( 0x01010101 );
 
     // Init the System manager
     SystemManager system( hal );
     system.init(); // Create the state machine
-    system.setMode( SystemManager::SystemMode::Full ); // Set the system in full mode
-
-    // Here we are BITCHESSSSSS !!!
-    system.start(); // Start the state machine
-
-    qDebug() << "Platform ready...";
 
 #ifdef SIMU
     hal._modeSimu.write( 1 );
@@ -126,6 +117,13 @@ int main( int argc, char *argv[] )
     // Set carrousel offset
     carrousel.setPosition( 1.05 );
 
+    // ========= Start the system =========
+
+    // Here we are BITCHESSSSSS !!!
+    system.start(); // Start the state machine
+
+    qDebug() << "Platform ready...";
+
     TrajectoryManager trajectoryManager( hal );
     trajectoryManager.init();
 
@@ -140,10 +138,19 @@ int main( int argc, char *argv[] )
 
     qDebug() << "==== System ready ! ==== ";
 
-    qDebug()
-        << "X:" << hal._odometryX.read< int16_t >()
-        << " Y:" << hal._odometryY.read< int16_t >()
-        << " Theta:" << hal._odometryTheta.read< int16_t >();
+    // ODOMETRY check
+    int16_t x = hal._odometryX.read< int16_t >();
+    int16_t y = hal._odometryY.read< int16_t >();
+    int16_t theta = hal._odometryTheta.read< int16_t >();
+
+    qDebug() << "X:" << x << " Y:" << y << " Theta:" << theta;
+
+    int16_t safe = x + y + theta;
+
+    if( safe > 0 )
+    {
+        while( 1 );
+    }
 
     return app.exec();
 }
