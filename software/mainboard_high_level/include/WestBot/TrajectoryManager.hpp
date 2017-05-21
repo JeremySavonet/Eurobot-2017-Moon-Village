@@ -79,18 +79,18 @@ public:
     void stop();
     void hardStop();
 
-    void moveDRel( float distance );
-    void moveOnlyDRel( float distance );
-    void turnARel( float theta );
-    void turnAAbs( float theta );
-    void turnOnlyARel( float theta );
-    void turnOnlyAAbs( float theta );
+    void moveDRel( float distance, bool correction );
+    void moveOnlyDRel( float distance, bool correction );
+    void turnARel( float theta, bool correction );
+    void turnAAbs( float theta, bool correction );
+    void turnOnlyARel( float theta, bool correction );
+    void turnOnlyAAbs( float theta, bool correction );
     void turnToXY( float x, float y );
     void turnToXYBehind( float x, float y );
     void moveToXYAbs( float theta, float x, float y );
     void moveForwardToXYAbs( float theta, float x, float y );
     void moveBackwardToXYAbs( float theta, float x, float y );
-    void moveToDARel( float theta, float distance );
+    void moveToDARel( float theta, float distance, bool correction );
     void moveToXYRel( float x, float y );
 
 private:

@@ -29,7 +29,7 @@ void DetectionManager::init( Hal& hal )
     while( _distanceSensor->read< uint8_t >() == 0 )
     {
         QThread::msleep( 10 );
-        qDebug() << "Wait distance sensor to be ready...";
+        //qDebug() << "Wait distance sensor to be ready...";
     }
 
     _eventTimer->start( 100 );
@@ -52,6 +52,4 @@ void DetectionManager::check()
         emit opponentDetected( false );
         _opponentDetected = false;
     }
-
-    //qDebug() << "Proximity sensor value:" << distanceValue;
 }

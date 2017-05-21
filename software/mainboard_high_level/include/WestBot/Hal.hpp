@@ -142,7 +142,10 @@ public:
     ItemRegister _trajCmdPosTheta;
     ItemRegister _trajCmdPosX;
     ItemRegister _trajCmdPosY;
-    ItemRegister _trajCmdDDistance;
+    ItemRegister _trajCmdADAngleDeg;
+    ItemRegister _trajCmdADDistance;
+    ItemRegister _trajCmdADCorrection;
+
     ItemRegister _trajOutAck;
     ItemRegister _trajOutState;
     ItemRegister _trajOutBlocked;

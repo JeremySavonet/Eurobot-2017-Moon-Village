@@ -41,7 +41,7 @@ bool ColorSensor::attach( Hal& hal )
         while( _sensorValid->read< uint16_t >() != 0x01 )
         {
             QThread::msleep( 10 );
-            qDebug() << "Wait sensor module to be ready...";
+            //qDebug() << "Wait sensor module to be ready...";
         }
     }
 
