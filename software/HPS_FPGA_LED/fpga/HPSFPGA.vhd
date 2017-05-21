@@ -374,7 +374,7 @@ architecture hpsfpga_arch of hpsfpga is
 
 
     signal r_reset : std_logic;
-    signal r_cnt : natural := 0;
+    --signal r_cnt : natural := 0;
 
 begin
 
@@ -382,13 +382,7 @@ begin
     p_sync: process(FPGA_CLK1_50)
     begin
         if rising_edge(FPGA_CLK1_50) then
-            r_reset <= '1';
-            
-            if r_cnt = 10000 then
-                r_reset <= '0';
-            else
-                r_cnt <= r_cnt + 1;
-            end if;
+            r_reset <= not hps_fpga_reset_n or w_pio_n_layer1_data_out_value(0);
         end if;
     
     end process;
@@ -398,6 +392,9 @@ begin
     --led(8-1 downto 4) <= w_ledg_out(4-1 downto 0);
 	buzzer <= '0';
 
+    
+
+
     inst_layer_1: robot_layer_1
     generic map (
         CLK_FREQUENCY_HZ => 50_000_000,
@@ -406,7 +403,7 @@ begin
     port map (
 
         clk     => FPGA_CLK1_50,
-        reset   => not hps_fpga_reset_n,
+        reset   => r_reset,
 
         regs_data_in_value      => w_pio_n_layer1_data_in_value,
         regs_data_in_read       => w_pio_n_layer1_data_in_read,              
@@ -568,7 +565,7 @@ begin
     )
     port map (
         clk     => FPGA_CLK1_50,
-        reset   => not hps_fpga_reset_n,
+        reset   => r_reset,
 
         regs_data_in_value      => w_pio_n_layer2_data_in_value,
         regs_data_in_read       => w_pio_n_layer2_data_in_read,              
@@ -628,7 +625,7 @@ begin
     )
     port map (
         clk     => FPGA_CLK1_50,
-        reset   => not hps_fpga_reset_n,
+        reset   => r_reset,
 
         regs_data_in_value      => w_pio_n_layer3_data_in_value,
         regs_data_in_read       => w_pio_n_layer3_data_in_read,              
