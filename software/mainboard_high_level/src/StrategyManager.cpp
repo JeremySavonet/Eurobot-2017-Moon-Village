@@ -310,165 +310,119 @@ void StrategyManager::doStrat( const Color& color )
     // Strat loop
     while( _stratIsRunning )
     {
-        turnCarrouselCCW();
+        if( color == Color::Yellow )
+        {
+            turnCarrouselCCW();
 
-        strategyWaitMs( 1000 );
+            strategyWaitMs( 1000 );
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
 
-        closeArms();
+            closeArms();
 
-        turnCarrouselCW();
+            turnCarrouselCW();
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 400.0, -565.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 400.0, -565.0 );
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 895.0, -565.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 895.0, -565.0 );
 
-        turnCarrouselCCW();
+            turnCarrouselCCW();
 
-        ejectCylinder();
+            ejectCylinder();
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 910.0, -565.0 );
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 910.0, -565.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
 
-        _armRight.write( SERVO_0_ARM_R_DROP );
-        _armLeft.write( SERVO_6_ARM_L_DROP );
-        strategyWaitMs( 500 );
-        disableServos();
+            _armRight.write( SERVO_0_ARM_R_DROP );
+            _armLeft.write( SERVO_6_ARM_L_DROP );
+            strategyWaitMs( 500 );
+            disableServos();
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 935.0, -565.0 );
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 840.0, -565.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 935.0, -565.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 840.0, -565.0 );
 
-        turnCarrouselCW();
+            turnCarrouselCW();
 
-        strategyWaitMs( 500 );
+            strategyWaitMs( 500 );
 
-        // Eject cylinre 2 =============//
+            // Eject cylinre 2 =============//
 
-        _armRight.write( SERVO_0_ARM_R_DROP );
-        _armLeft.write( SERVO_6_ARM_L_DROP );
+            _armRight.write( SERVO_0_ARM_R_DROP );
+            _armLeft.write( SERVO_6_ARM_L_DROP );
 
-        strategyWaitMs( 200 );
+            strategyWaitMs( 200 );
 
-        _ejector.write( SERVO_7_EJECTOR_EJECT );
+            _ejector.write( SERVO_7_EJECTOR_EJECT );
 
-        strategyWaitMs( 75 );
+            strategyWaitMs( 75 );
 
-        _armRight.write( SERVO_0_ARM_R_OPEN40 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
-        strategyWaitMs( 1000 );
+            _armRight.write( SERVO_0_ARM_R_OPEN40 );
+            _armLeft.write( SERVO_6_ARM_L_OPEN40 );
+            strategyWaitMs( 1000 );
 
-        _ejector.write( SERVO_7_EJECTOR_STANDBY );
-        strategyWaitMs( 500 );
+            _ejector.write( SERVO_7_EJECTOR_STANDBY );
+            strategyWaitMs( 500 );
 
-        disableServos();
+            disableServos();
 
-        // ======================= //
+            // ======================= //
 
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 808.0, -565.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 808.0, -565.0 );
 
-        _armRight.write( SERVO_0_ARM_R_OPEN40 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
-        strategyWaitMs( 500 );
-        disableServos();
+            _armRight.write( SERVO_0_ARM_R_OPEN40 );
+            _armLeft.write( SERVO_6_ARM_L_OPEN40 );
+            strategyWaitMs( 500 );
+            disableServos();
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -565.0 );
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -565.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
 
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 900.0, -565.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 900.0, -565.0 );
 
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 1140.0, -565.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 1140.0, -565.0 );
 
-        ////////////////////////////:
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, -565.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, 0.0 );
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 50.0, 0.0 );
+        }
+        else
+        {
+            turnCarrouselCCW();
 
-        // SI ON RECALL EN AVENCANT
-//        _trajectoryManager.moveBackwardToXYAbs( 0.0, 812.0, -565.0 );
-//        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -565.0 );
+            strategyWaitMs( 1000 );
 
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 850.0, 180.0 );
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, -565.0 );
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, 0.0 );
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 50.0, 0.0 );
+            closeArms();
 
+            turnCarrouselCW();
 
+            strategyWaitMs( 1000 );
 
-//        closeArms();
-//        strategyWaitMs( 500 );
-//        disableServos();
+            openArmsFull();
 
-//        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -560.0 );
-//        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -560.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 1110.0, -400.0 );
 
-//        _armRight.write( SERVO_0_ARM_R_DROP );
-//        _armLeft.write( SERVO_6_ARM_L_DROP );
-//        strategyWaitMs( 500 );
-//        disableServos();
+            closeArms();
 
-//        _trajectoryManager.moveBackwardToXYAbs( 0.0, 400.0, -560.0 );
+            turnCarrouselCW();
 
-        /*turnCarrouselCCW();
+            strategyWaitMs( 1000 );
 
-        strategyWaitMs( 2000 );
+            openArmsFull();
 
-        ejectCylinder();
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 750.0, -620.0 );
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 180.0, 0.0 );
+            closeArms();
 
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 0.0, 0.0 );
+            turnCarrouselCW();
 
-        turnCarrouselCW();
+            strategyWaitMs( 1000 );
 
-        ejectCylinder();
+            _trajectoryManager.moveBackwardToXYAbs( 0.0, 1100.0, -350.0 );
+            _trajectoryManager.moveForwardToXYAbs( 0.0, 1150.0, -285.0 );
 
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 180.0, 0.0 );
-
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 0.0, 0.0 );
-        */
-
-//        if( color == Color::Yellow )
-//        {
-//            openArmsFull();
-
-//            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
-
-//            closeArms();
-
-//            turnCarrouselCW();
-
-//            _trajectoryManager.moveForwardToXYAbs( 0.0, 800.0, 0.0 );
-
-//            _trajectoryManager.turnAAbs( 180 );
-
-//            turnCarrouselCCW();
-
-//            _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, 0.0 );
-
-//            openArms90();
-
-//            _trajectoryManager.moveBackwardToXYAbs( 0.0, 600.0, 0.0 );
-//        }
-//        else
-//        {
-//            openArmsFull();
-
-//            _trajectoryManager.moveForwardToXYAbs( 0.0, 490.0, 40.0 );
-
-//            closeArms();
-
-//            turnCarrouselCW();
-
-//            _trajectoryManager.moveForwardToXYAbs( 0.0, 840.0, 0.0 );
-
-//            _trajectoryManager.turnAAbs( -180 );
-
-//            turnCarrouselCCW();
-
-//            _trajectoryManager.moveForwardToXYAbs( 0.0, 470.0, 0.0 );
-
-//            openArms90();
-
-//            _trajectoryManager.moveBackwardToXYAbs( 0.0, 640.0, 0.0 );
-//        }
+        }
 
         _stratIsRunning = false;
     }
