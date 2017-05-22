@@ -1,9 +1,9 @@
-clear all
+clear variables
 close all
 clc
 
 
-load('test1')
+load('test3')
 
 R = 1;
 entraxe = 0.188 ;
@@ -16,10 +16,11 @@ telemR = sqrt(telemX^2+telemY^2);
 
 x0 = 0.035;
 y0 = 0;
+theta0 = 0;
 
 xLast = x0;
 yLast = y0;
-thetaLast = 0;
+thetaLast = theta0;
 
 table = [0 0 -1500 0 1500
 	1 0 1500 2000 1500
@@ -33,35 +34,33 @@ table = array2table(table,'VariableNames',{'dir' 'ax' 'ay' 'bx' 'by'});
 color = ['b' 'r' 'k' 'g' 'm' 'y'];
 
 
-for i = 1%:2%length(data)
+for i = 1%:length(data)
 	
 	if ~isempty(data(i).odo)
-		ol = data(i).odo.wL *resolution;
-		or = data(i).odo.wR *resolution;
+		ol = data(i).odo.wL;
+		or = data(i).odo.wR;
 
-		theta = zeros(size(or));
-		x = zeros(size(or));
-		y = zeros(size(or));
+		theta = zeros(size(or),'single');
+		x = zeros(size(or),'single');
+		y = zeros(size(or),'single');
 		theta(1) = thetaLast;
 		x(1) = xLast;
 		y(1) = yLast;
 
 		for j = 2:length(or)
-			sl = ol(j)-ol(j-1);
-			sr = or(j)-or(j-1);
+			sl = ( ol(j)-ol(j-1) ) *resolution;
+			sr = ( or(j)-or(j-1) ) *resolution;
 			theta(j) = theta(j-1)+(sr-sl)/entraxe;
 			d = (sl+sr)/2;
 			x(j) = x(j-1) + d*cos((theta(j)+theta(j-1))/2);
 			y(j) = y(j-1) + d*sin((theta(j)+theta(j-1))/2);
-% 			x(j) = x(j-1) + d*cos((theta(j)));
-% 			y(j) = y(j-1) + d*sin((theta(j)));
 		end
 		thetaLast = theta(end);
 		xLast = x(end);
 		yLast = y(end);
 	end
 	
-	figure(100)
+	figure(1)
 	hold all
 	if ~isempty(data(i).odo)
 		plot( x,y )
@@ -69,6 +68,22 @@ for i = 1%:2%length(data)
 		axis equal
 		grid on
 	end
+	
+	% 	figure
+	% 	if ~isempty(data(i).odo)
+	% 		subplot(3,1,1)
+	% 		hold on
+	% 		plot(x-x0)
+	% 		plot( data(i).odo.x/1000,'r')
+	% 		subplot(3,1,2)
+	% 		hold on
+	% 		plot(y-y0)
+	% 		plot( data(i).odo.y/1000,'r')
+	% 		subplot(3,1,3)
+	% 		hold on
+	% 		plot(theta)
+	% 		plot( data(i).odo.theta,'r')
+	% 	end
 	
 	tr = data(i).telem.r/1000;
 	ttheta = data(i).telem.theta;
@@ -78,20 +93,13 @@ for i = 1%:2%length(data)
 	tr = tr(tr>0.1);
 	
 	% add error
-	xLast = xLast +0.05;
-	thetaLast = thetaLast +0.05;
+% 	xLast = xLast +0.05;
+% 	thetaLast = thetaLast +0.05;
 	
 	% changement de repère
 	ttheta = thetaLast + telemTheta0 + ttheta;
 	tx = xLast + telemR*cos(thetaLast+telemTheta) + tr.*cos(ttheta);
 	ty = yLast + telemR*sin(thetaLast+telemTheta) + tr.*sin(ttheta);
-	
-	figure(200+i)
-	hold on
-	plot( data(i).telem.r/1000.*cos(data(i).telem.theta), data(i).telem.r/1000.*sin(data(i).telem.theta),'g.')
-	plot( tx, ty,'.')
-	axis equal
-	grid on
 	
 	% recherche élément le plus proche
 	for k = 1:size(table,1)
@@ -110,9 +118,10 @@ for i = 1%:2%length(data)
 			elseif (table.ax(k)-table.bx(k))*(tx(j)-table.bx(k)) + (table.ay(k)-table.by(k))*(ty(j)-table.by(k)) < 0
 				d(k) = sqrt( (tx(j)-table.bx(k))^2 + (ty(j)-table.by(k))^2 );
 			else
-				d(k) = norm(cross([B-A 0],[P-A 0]))/norm(B-A);
-				% d(k) = (table.ax(k)-table.bx(k))*(ty(j)-table.by(k)) + (table.ay(k)-table.by(k))*(tx(j)-table.bx(k));
-				% d(k) = d(k)/sqrt((table.ax(k)-table.bx(k))^2+(table.ay(k)-table.by(k))^2);
+				% d(k) = norm(cross([B-A 0],[P-A 0]))/norm(B-A);
+				d(k) = (table.bx(k)-table.ax(k))*(ty(j)-table.ay(k)) + (table.by(k)-table.ay(k))*(tx(j)-table.ax(k));
+				d(k) = abs(d(k));
+				d(k) = d(k)/sqrt((table.ax(k)-table.bx(k))^2+(table.ay(k)-table.by(k))^2);
 			end
 		end
 		
@@ -126,6 +135,15 @@ for i = 1%:2%length(data)
 		t(k).dot = t(k).dot(1:t(k).len,:);
 	end
 	
+	figure
+	hold on
+	axis equal
+	for k = 1:height(table)
+		plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , color(k) )
+		if ~isempty(t(k).dot)
+			plot( t(k).dot(:,1) , t(k).dot(:,2) , ['.' color(k)] )
+		end
+	end
 	
 	% suppression points
 	% figure
@@ -140,8 +158,8 @@ for i = 1%:2%length(data)
 			end
 			ind = 1:length(x);
 			
-			threshold = [0.03 0.01 0.007];
-			for iter = 1:3
+			threshold = 0.007;%[0.03 0.01 0.007];
+			for iter = 1:length(threshold)
 				d = [x(ind) ones(size(x(ind)))] \ y(ind);
 				u = [-d(1) 1];
 				u = u/norm(u);
@@ -161,34 +179,36 @@ for i = 1%:2%length(data)
 		end
 	end
 	
-	
-	% recherche erreur
-	A = [];
-	B = [];
+	% recherche erreur odo
+	mes = [];
+	ref = [];
 	for k = 1:height(table)
 		if ~isempty(t(k).dot)
 			x = t(k).dot(:,1);
 			y = t(k).dot(:,2);
+			xref = table.ax(k);
+			yref = table.ay(k);
 			if ~table.dir(k)
-				A = [A ; x y ones(size(x)) zeros(size(x)) ];
-				B = [B; table.ax(k)*ones(size(x))];
+				mes = [mes ; x y ones(size(x)) zeros(size(x)) ];
+				ref = [ref; xref*ones(size(x))];
 			else
-				A = [A ; y -x zeros(size(x)) ones(size(x)) ];
-				B = [B; table.ay(k)*ones(size(x))];
+				mes = [mes ; y -x zeros(size(x)) ones(size(x)) ];
+				ref = [ref; yref*ones(size(x))];
 			end
 		end
 	end
-	X = A\B;
-	H = [X(1) X(2);-X(2) X(1)];
-	FE = chol(H'*H);
-	R = H*inv(FE);
+	A = mes\ref;
+	X = A(3);
+	Y = A(4);
+	R = [A(1) A(2);-A(2) A(1)];
+	R = R*inv(chol(R'*R));
 	theta = asin(R(1,2));
-	% XX  = inv(R)*[X(3);X(4)];
-	XX  = [X(3);X(4)];
-	[XX' theta]
+	% XX  = inv(R)*[A(3);A(4)];
+	% XX  = [A(3);A(4)];
+	[X Y theta]
 	
-	xLast = xLast +XX(1);
-	yLast = yLast +XX(2);
+	xLast = xLast +X;
+	yLast = yLast +Y;
 	thetaLast = thetaLast -theta;
 	
 	clear x y
@@ -201,11 +221,11 @@ for i = 1%:2%length(data)
 		end
 	end
 	
-	YY = [R,[0 ;0];[0 0  1]]*[[eye(2),XX];0 0 1]*[x';y';ones(size(x'))];
+	YY = [R,[0 ;0];[0 0  1]]*[[eye(2),[X;Y]];0 0 1]*[x';y';ones(size(x'))];
 	figure
 	hold on
-	plot(YY(1,:),YY(2,:),'.')
 	axis equal
+	plot(YY(1,:),YY(2,:),'.')
 % 	plot( tx, ty,'kx')
 	for k = 1:height(table)
 		plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , color(k) )

@@ -12,4 +12,6 @@ TEMPLATE = app
 INCLUDEPATH += include \
                3rdparty/Eigen
 
+HEADERS += 3rdparty/Eigen/src/*
+
 SOURCES += src/main.cpp
