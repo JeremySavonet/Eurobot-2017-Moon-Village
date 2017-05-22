@@ -4,71 +4,20 @@
 
 using namespace WestBot;
 
-MoveAction::MoveAction(
-    TrajectoryManager& trajectoryManager,
-    TrajectoryManager::TrajectoryType type,
-    float thetaDistance,
-    bool correction )
-    : Action()
-    , _trajectoryManager( trajectoryManager )
-    ,  _type( type )
-    , _theta( thetaDistance )
-    , _distance( thetaDistance )
-    , _x( 0.0 )
-    , _y( 0.0 )
-    , _correction( correction )
+// Static for private constructors
+MoveAction MoveAction::moveThetaCorrection( float theta, bool correction )
 {
+
 }
 
-MoveAction::MoveAction(
-    TrajectoryManager& trajectoryManager,
-    TrajectoryManager::TrajectoryType type,
-    float x,
-    float y )
-    : Action()
-    , _trajectoryManager( trajectoryManager )
-    ,  _type( type )
-    , _theta( 0.0 )
-    , _distance( 0.0 )
-    ,  _x( x )
-    , _y( y )
-    , _correction( false )
-{
-}
-
-MoveAction::MoveAction(
-    TrajectoryManager& trajectoryManager,
-    TrajectoryManager::TrajectoryType type,
-    float theta,
-    float x,
-    float y )
-    : Action()
-    , _trajectoryManager( trajectoryManager )
-    ,  _type( type )
-    , _theta( theta )
-    , _distance( 0.0 )
-    , _x( x )
-    , _y( y )
-    , _correction( false )
-{
-}
-
-MoveAction::MoveAction(
-    TrajectoryManager& trajectoryManager,
-    TrajectoryManager::TrajectoryType type,
+MoveAction MoveAction::moveDistanceCorrection( float distance, bool correction );
+MoveAction MoveAction::moveThetaDistanceCorrection(
     float theta,
     float distance,
-    bool correction )
-    : Action()
-    , _trajectoryManager( trajectoryManager )
-    ,  _type( type )
-    , _theta( theta )
-    , _distance( distance )
-    ,_x( 0.0 )
-    , _y( 0.0 )
-    , _correction( correction )
-{
-}
+    bool correction );
+
+MoveAction MoveAction::moveXY( float x, float y );
+MoveAction MoveAction::moveThetaXY( float theta, float x, float y );
 
 void MoveAction::execute()
 {
@@ -150,3 +99,22 @@ void MoveAction::execute()
 
     emit complete();
 }
+
+// Private methods
+MoveAction::MoveAction(
+    TrajectoryManager& trajectoryManager,
+    TrajectoryManager::TrajectoryType type,
+    float theta,
+    float x,
+    float y )
+    : Action()
+    , _trajectoryManager( trajectoryManager )
+    ,  _type( type )
+    , _theta( theta )
+    , _distance( 0.0 )
+    , _x( x )
+    , _y( y )
+    , _correction( false )
+{
+}
+
