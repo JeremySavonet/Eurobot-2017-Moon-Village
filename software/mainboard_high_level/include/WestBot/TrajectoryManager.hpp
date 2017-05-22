@@ -36,6 +36,29 @@ namespace WestBot {
 class TrajectoryManager
 {
 public:
+
+    enum class TrajectoryType
+    {
+        TYPE_TRAJ_DISABLE = 0,
+        TYPE_TRAJ_ENABLE = 1,
+        TYPE_TRAJ_STOP = 2,
+        TYPE_TRAJ_HARDSTOP = 3,
+        TYPE_TRAJ_D_REL = 4,
+        TYPE_TRAJ_ONLY_D_REL = 5,
+        TYPE_TRAJ_A_REL = 6,
+        TYPE_TRAJ_A_ABS = 7,
+        TYPE_TRAJ_ONLY_A_REL = 8,
+        TYPE_TRAJ_ONLY_A_ABS = 9,
+        TYPE_TRAJ_D_A_REL = 10,
+        TYPE_TRAJ_TURNTO_XY = 11,
+        TYPE_TRAJ_TURNTO_XY_BEHIND = 12,
+        TYPE_TRAJ_GOTO_XY_ABS = 13,
+        TYPE_TRAJ_GOTO_FORWARD_XY_ABS = 14,
+        TYPE_TRAJ_GOTO_BACKWARD_XY_ABS = 15,
+        TYPE_TRAJ_GOTO_D_A_REL = 16,
+        TYPE_TRAJ_GOTO_XY_REL = 17
+    };
+
     // State of the trajectory manager.
     enum class TrajectoryState
     {

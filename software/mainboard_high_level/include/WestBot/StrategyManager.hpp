@@ -3,9 +3,11 @@
 #ifndef WESTBOT_STRATEGYMANAGER_HPP_
 #define WESTBOT_STRATEGYMANAGER_HPP_
 
+#include <QList>
 #include <QObject>
 #include <QString>
 
+#include "Action.hpp"
 #include "Carrousel.hpp"
 #include "Common.hpp"
 #include "Servo.hpp"
@@ -64,6 +66,7 @@ public:
         int numRetries );
 
 private:
+    void buildStrat( const Color& color );
     void doStrat( const Color& color );
     void doFunnyAction();
 
@@ -75,6 +78,8 @@ private:
     Servo& _armLeft;
     Servo& _ejector;
     Turbine& _turbine;
+
+    QList< Action::Ptr > _actions;
 
     bool _stratIsRunning;
 };
