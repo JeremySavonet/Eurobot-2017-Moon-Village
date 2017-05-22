@@ -1084,22 +1084,20 @@ begin
         w_regs_data_in_value_mask((1+REGS_COLOR_BC_OFFSET)*4-1      downto (0+REGS_COLOR_BC_OFFSET)*4)      <= "1111";
         w_regs_data_in_value_mask((1+8+REGS_DISTANCE_OFFSET)*4-1    downto (0+REGS_DISTANCE_OFFSET)*4)   <= (others=>'1');
 
-        p_async: process(regs_data_out_value,w_pio_data_out_value,ad1_drdy,r_adc_muxed_data,r_distance) is
+        p_async: process(regs_data_out_value,w_pio_data_out_value,r_distance) is
         begin
             w_pio_data_in_value(1*32-1 downto 0*32)      <= X"00000000";
 
 
-            w_pio_data_in_value((1+ORCA_REGS_ADC_CFG_OFFSET)*32-1 downto (0+ORCA_REGS_ADC_CFG_OFFSET)*32) <= X"00000000";
-            w_pio_data_in_value((1+ORCA_REGS_ADC_CFG_OFFSET)*32-1 downto (0+ORCA_REGS_ADC_CFG_OFFSET)*32)(0) <= ad1_drdy;
+            w_pio_data_in_value((1+ORCA_REGS_ADC_CFG_OFFSET)*32-1 downto (0+ORCA_REGS_ADC_CFG_OFFSET)*32) <= X"0000000" & "000" & regs_data_out_value(8);
+            w_pio_data_in_value((1+ORCA_REGS_ADC_VALUE_OFFSET)*32-1 downto (0+ORCA_REGS_ADC_VALUE_OFFSET)*32) <= X"0000000" & "000" & regs_data_out_value(8);
+            --w_pio_data_in_value((1+ORCA_REGS_ADC_CFG_OFFSET)*32-1 downto (0+ORCA_REGS_ADC_CFG_OFFSET)*32)(0) <= regs_data_out_value(8);
 
             
             for i in 0 to r_distance'length-1 loop
                 w_regs_data_in_value((1+i+REGS_DISTANCE_OFFSET)*32-1    downto (0+i+REGS_DISTANCE_OFFSET)*32) <= r_distance(i);
             end loop;
 
-            for i in 0 to r_adc_muxed_data'length-1 loop
-                --w_regs_data_in_value((1+i+REGS_ADC_SERVO_OFFSET)*32-1    downto (0+i+REGS_ADC_SERVO_OFFSET)*32) <= r_adc_muxed_data(i);
-            end loop;
 
         end process;
 
