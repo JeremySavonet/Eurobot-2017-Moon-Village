@@ -15,6 +15,11 @@ namespace
     const uint16_t COLOR_GREEN_THRESHOLD = 100;
     const uint16_t COLOR_BLUE_THRESHOLD = 100;
     const uint16_t COLOR_CLEAR_THRESHOLD = 100;
+
+    const int MOTOR_COLOR_1T_PER_SECOND = 16500;
+    const int RET_OK = 0;
+    const int RET_ERROR_UNKNOWN = 1;
+    const int RET_ERROR_COLOR_SINGLE_OPPOSITE = 2;
 }
 
 ColorSensor::ColorSensor( const QString& name )
@@ -120,4 +125,145 @@ Color ColorSensor::sensorCheck()
 bool ColorSensor::isAttached() const
 {
     return _isAttached;
+}
+
+// WIP ALGO BRICE: <===============
+void ColorSensor::process()
+{
+    uint8_t search_blue = 0;
+    uint8_t ret;
+
+    redo_search:
+    // equivalent to:
+    //uint8_t set_color(uint8_t search_blue)
+    {
+        uint16_t vMin = 65535;
+        uint16_t vMax = 0;
+
+        uint16_t j;
+        uint8_t ok = 0;
+
+        while( ok == 0 )
+        {
+            uint16_t value;
+
+            //motor_3_value.write(MOTOR_COLOR_1T_PER_SECOND);
+
+            for( j = 0; j < 1000; j++ )
+            {
+                value = _sensorClear->read< uint16_t >();
+                if( value < vMin )
+                {
+                    vMin = value;
+                }
+                if( value > vMax )
+                {
+                    vMax = value;
+                }
+
+                QThread::msleep( 1 );
+            }
+
+            //motor_3_value.write( 0 );
+
+            qDebug() << "lowest is " << vMin;
+            qDebug() << "higuest is " << vMax;
+
+            if( abs( vMin - vMax ) < vMax / 2 )
+            {
+                uint16_t blue = _sensorBlue->read< uint16_t >();
+                qDebug() << "Blue is " << blue;
+
+                if( ( search_blue == 1 && blue >= vMin / 3 ) ||
+                    ( search_blue == 0 && blue < vMin / 3 ) )
+                {
+                    ret = RET_OK;
+                    qDebug() << "Single color: OK";
+                }
+                else
+                {
+                    ret = RET_ERROR_COLOR_SINGLE_OPPOSITE;
+                    qDebug() << "Single color opposite: NOK";
+                }
+
+                ok = 1;
+                break;
+            }
+
+            QThread::msleep( 500 );
+
+            for( uint16_t retry = 0; retry < 2 * 1000; retry++ )
+            {
+                //motor_3_value.write( MOTOR_COLOR_1T_PER_SECOND );
+
+                {
+                    value = _sensorClear->read< uint16_t >();
+
+                    if( abs( value - vMax ) <= vMax / 5 )
+                    {
+                        qDebug() << "MAX FOUND" << value << vMax;
+
+                        //motor_3_value.write(-MOTOR_COLOR_1T_PER_SECOND );
+                        QThread::msleep( 250 );
+                        //motor_3_value.write( 0 );
+                        QThread::msleep( 100 );
+
+                        uint16_t blue_value = _sensorBlue->read< uint16_t >();
+                        uint16_t clear_value = _sensorClear->read< uint16_t >();
+
+                        qDebug() << "COLOR TO CHECK" << blue_value << clear_value << vMin << vMax;
+
+                        if( ( search_blue == 0 ) &&
+                            ( blue_value < clear_value / 3 ) &&
+                            ( abs( clear_value - vMax ) > vMax / 5 ) )
+                        {
+                            qDebug() << "YELLOW found!";
+                            ok = 1;
+                            ret = RET_OK;
+                            break;
+                        }
+                        else if( ( search_blue == 1 ) &&
+                                 ( blue_value >= clear_value / 3 ) &&
+                                 ( abs( clear_value - vMax ) > vMax / 5 ) )
+                        {
+                            qDebug() << "BLUE found!";
+                            ok = 1;
+                            ret = RET_OK;
+                            break;
+                        }
+                        else
+                        {
+                            qDebug() << "Not Found, Retry (or stop)" << value << vMin;
+
+                            //motor_3_value.write( MOTOR_COLOR_1T_PER_SECOND );
+                            QThread::msleep( 500 );
+                            //motor_3_value.write(0);
+                        }
+                    }
+                    else
+                    {
+                        QThread::msleep( 1 );
+                    }
+                }
+            }
+
+            ok = 1;
+            ret = RET_ERROR_UNKNOWN;
+            //motor_3_value.write( 0 );
+        }
+    }
+
+    qDebug() << "Ret=" << ret << "Search Blue=" << search_blue;
+    QThread::msleep( 5000 );
+
+    if( search_blue )
+    {
+        search_blue = 0;
+    }
+    else
+    {
+        search_blue = 1;
+    }
+
+    goto redo_search;
 }

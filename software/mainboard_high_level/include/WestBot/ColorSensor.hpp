@@ -31,6 +31,8 @@ public:
     bool isAttached() const;
 
 private:
+    void process();
+
     const QString _name;
 
     ItemRegister::Ptr _sensorValid;
