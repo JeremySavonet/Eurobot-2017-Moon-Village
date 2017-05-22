@@ -37,23 +37,7 @@ public:
     ~StrategyManager() override = default;
 
     // A set of actions
-    void disableServos();
-    void turbineInsuffle();
-    void turbineExpulse();
-    void openArms90();
-    void openArmsFull();
-    void openArmsForFusee();
-    void closeArms();
-    void turnCarrouselCW();
-    void turnCarrouselCCW();
     void ejectCylinder();
-    void checkCylinderInCarrouselAtPosition( float position );
-    void collectCylinderAtPosition( float theta, float x, float y );
-    void collectTotemAtPosition( float theta, float x, float y );
-    bool isCarrouselCanHandleTotems( int totemsNumber );
-
-    // Wait
-    void strategyWaitMs( int ms );
 
     // Avoidance
     void stopRobot();
@@ -69,6 +53,8 @@ private:
     void buildStrat( const Color& color );
     void doStrat( const Color& color );
     void doFunnyAction();
+    void disableServos();
+    void enableServos();
 
 private:
     SystemManager& _systemManager;

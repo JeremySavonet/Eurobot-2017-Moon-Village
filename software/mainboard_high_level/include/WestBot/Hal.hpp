@@ -27,6 +27,7 @@ private:
 public:
     // Layer 1   
     ItemRegister _resetAll; // Reset for layer 1 / layer 2 / layer 3
+    ItemRegister _colorEnable;
     ItemRegister _initOkL1;
     ItemRegister _modeSimu;
     ItemRegister _voltage24V;

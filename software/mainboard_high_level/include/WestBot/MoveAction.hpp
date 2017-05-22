@@ -15,21 +15,6 @@ class MoveAction : public Action
 public:
     using Ptr = std::shared_ptr< MoveAction >;
 
-    static MoveAction moveThetaCorrection( float theta, bool correction );
-    static MoveAction moveDistanceCorrection( float distance, bool correction );
-    static MoveAction moveThetaDistanceCorrection(
-        float theta,
-        float distance,
-        bool correction );
-
-    static MoveAction moveXY( float x, float y );
-    static MoveAction move thetaXY( float theta, float x, float y );
-
-    ~MoveAction() override = default;
-
-    void execute() override;
-
-private:
     MoveAction(
         TrajectoryManager& trajectoryManager,
         TrajectoryManager::TrajectoryType type,
@@ -38,6 +23,42 @@ private:
         float x,
         float y,
         bool correction );
+
+    /*
+    static MoveAction moveThetaCorrection(
+        TrajectoryManager& trajectoryManager,
+        TrajectoryManager::TrajectoryType type,
+        float theta,
+        bool correction );
+
+    static MoveAction moveDistanceCorrection(
+        TrajectoryManager& trajectoryManager,
+        TrajectoryManager::TrajectoryType type,
+        float distance,
+        bool correction );
+
+    static MoveAction moveThetaDistanceCorrection(
+        TrajectoryManager& trajectoryManager,
+        TrajectoryManager::TrajectoryType type,
+        float theta,
+        float distance,
+        bool correction );
+
+    static MoveAction moveXY(
+        TrajectoryManager& trajectoryManager,
+        TrajectoryManager::TrajectoryType type,
+        float x,
+        float y );
+
+    static MoveAction moveThetaXY(
+        TrajectoryManager& trajectoryManager,
+        TrajectoryManager::TrajectoryType type,
+        float theta,
+        float x,
+        float y );
+    */
+
+    void execute() override;
 
     TrajectoryManager& _trajectoryManager;
     TrajectoryManager::TrajectoryType _type;

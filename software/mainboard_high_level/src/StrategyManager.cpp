@@ -6,7 +6,13 @@
 #include <QDebug>
 #include <QThread>
 
+#include <WestBot/FunnyAction.hpp>
 #include <WestBot/MoveAction.hpp>
+#include <WestBot/MoveArmsAction.hpp>
+#include <WestBot/TurbineAction.hpp>
+#include <WestBot/TurnCarrouselAction.hpp>
+#include <WestBot/WaitAction.hpp>
+
 #include <WestBot/StrategyManager.hpp>
 
 using namespace WestBot;
@@ -91,14 +97,13 @@ StrategyManager::StrategyManager(
             _trajectoryManager.enable();
 
             // Init arms position
-            openArms90();
+            enableServos();
 
             // Enable carrousel
             _carrousel.enable( true );
 
             // Enable turbine
             _turbine.enable( true );
-
         } );
 
     connect(
@@ -112,146 +117,12 @@ StrategyManager::StrategyManager(
 }
 
 // Public methods
-void StrategyManager::disableServos()
-{
-    _armLeft.write( SERV0_DISABLE_CONSIGN );
-    _armRight.write( SERV0_DISABLE_CONSIGN );
-    _ejector.write( SERV0_DISABLE_CONSIGN );
-}
-
-void StrategyManager::turbineInsuffle()
-{
-    _turbine.setValue( TURBINE_INSUFFLE_VALUE );
-}
-
-void StrategyManager::turbineExpulse()
-{
-    _turbine.setValue( TURBINE_EXPULSE_VALUE );
-}
-
-void StrategyManager::openArms90()
-{
-    _armRight.write( SERVO_0_ARM_R_OPEN60 );
-    _armLeft.write( SERVO_6_ARM_L_OPEN60 );
-}
-
-void StrategyManager::openArmsFull()
-{
-    _armRight.write( SERVO_0_ARM_R_OPEN );
-    _armLeft.write( SERVO_6_ARM_L_OPEN );
-}
-
-void StrategyManager::openArmsForFusee()
-{
-    _ejector.write( SERVO_7_EJECTOR_FUSEE );
-    QThread::msleep( 250 );
-
-    openArmsFull();
-    QThread::msleep( 250 );
-
-    _armLeft.write( SERV0_DISABLE_CONSIGN );
-    _armRight.write( SERV0_DISABLE_CONSIGN );
-}
-
-void StrategyManager::closeArms()
-{
-    _armRight.write( SERVO_0_ARM_R_CLOSED );
-    _armLeft.write( SERVO_6_ARM_L_CLOSED );
-}
-
-void StrategyManager::turnCarrouselCW()
-{
-    float pos = _carrousel.position();
-
-    _carrousel.setPosition( pos - 1.0 );
-}
-
-void StrategyManager::turnCarrouselCCW()
-{
-    float pos = _carrousel.position();
-
-    _carrousel.setPosition( pos + 1.0 );
-}
-
-void StrategyManager::ejectCylinder()
-{
-    _armRight.write( SERVO_0_ARM_R_DROP );
-    _armLeft.write( SERVO_6_ARM_L_DROP );
-
-    strategyWaitMs( 200 );
-
-    _ejector.write( SERVO_7_EJECTOR_EJECT );
-
-    strategyWaitMs( 250 );
-
-    openArms90();
-    strategyWaitMs( 500 );
-
-    _ejector.write( SERVO_7_EJECTOR_STANDBY );
-    strategyWaitMs( 500 );
-
-    disableServos();
-}
-
-void StrategyManager::checkCylinderInCarrouselAtPosition( float position )
-{
-    _carrousel.setPosition( position );
-    QThread::msleep( 250 );
-}
-
-void StrategyManager::collectCylinderAtPosition( float theta, float x, float y )
-{
-    openArmsFull();
-
-    _trajectoryManager.moveToXYAbs( theta, x, y );
-
-    turnCarrouselCW();
-
-    qDebug() << "Done collecting...";
-}
-
-void StrategyManager::collectTotemAtPosition( float theta, float x, float y )
-{
-    if( ! isCarrouselCanHandleTotems( 4 ) )
-    {
-        qDebug() << "Carrousel is not empty and can only handle"
-                 << 2 << "totems";
-        return;
-    }
-
-    openArmsForFusee();
-
-    _trajectoryManager.moveToXYAbs( theta, x, y );
-
-    turnCarrouselCW();
-    turnCarrouselCW();
-    turnCarrouselCW();
-    turnCarrouselCW();
-
-    qDebug() << "Done collecting...";
-}
-
-bool StrategyManager::isCarrouselCanHandleTotems( int totemsNumber )
-{
-    Q_UNUSED( totemsNumber );
-    return true;
-}
-
-void StrategyManager::strategyWaitMs( int ms )
-{
-    QThread::msleep( ms );
-}
-
 void StrategyManager::stopRobot()
 {
     if( _stratIsRunning )
     {
         _trajectoryManager.hardStop();
         _trajectoryManager.disable();
-        strategyWaitMs( 2000 );
-        qDebug() << "Changing trajectory...";
-        _trajectoryManager.enable();
-        _trajectoryManager.moveOnlyDRel( -100.0, false );
     }
 }
 
@@ -309,36 +180,81 @@ bool StrategyManager::gotoAvoidPositionRetry(
 // Private methods
 void StrategyManager::buildStrat( const Color& color )
 {
+    TurnCarrouselAction::Ptr turnCW =
+        std::make_shared< TurnCarrouselAction >(
+            _carrousel,
+            TurnCarrouselAction::Sens::CW );
+
+    TurnCarrouselAction::Ptr turnCCW =
+        std::make_shared< TurnCarrouselAction >(
+            _carrousel,
+            TurnCarrouselAction::Sens::CCW );
+
+    WaitAction::Ptr wait1s =
+        std::make_shared< WaitAction >( 1000 );
+
+    MoveArmsAction::Ptr closeArms =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            MoveArmsAction::Position::CLOSED );
+
+    MoveArmsAction::Ptr eject =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            MoveArmsAction::Position::EJECT );
+
     if( color == Color::Yellow )
     {
-        MoveAction::Ptr move1 = std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-            0.0,
-            430.0,
-            -3.0 );
+        MoveAction::Ptr move1 =
+            std::make_shared< MoveAction >(
+                _trajectoryManager,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+                0.0,
+                0.0,
+                430.0,
+                -3.0,
+                false );
 
+        MoveAction::Ptr move2 =
+            std::make_shared< MoveAction >(
+                _trajectoryManager,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+                0.0,
+                0.0,
+                400.0,
+                -565.0,
+                false );
+
+        MoveAction::Ptr move3 =
+            std::make_shared< MoveAction >(
+                _trajectoryManager,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+                0.0,
+                0.0,
+                895.0,
+                -565.0,
+                false );
+
+        _actions.clear();
+        _actions.push_back( turnCCW );
+        _actions.push_back( wait1s );
         _actions.push_back( move1 );
+        _actions.push_back( closeArms );
+        _actions.push_back( wait1s );
+        _actions.push_back( turnCW );
+        _actions.push_back( wait1s );
+        _actions.push_back( move2 );
+        _actions.push_back( move3 );
+        _actions.push_back( turnCCW );
+        _actions.push_back( wait1s );
+        _actions.push_back( eject );
+        _actions.push_back( wait1s );
 
         /*
-        turnCarrouselCCW();
-
-        strategyWaitMs( 1000 );
-
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 430.0, -3.0 );
-
-        closeArms();
-
-        turnCarrouselCW();
-
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 400.0, -565.0 );
-
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 895.0, -565.0 );
-
-        turnCarrouselCCW();
-
-        ejectCylinder();
-
         _trajectoryManager.moveForwardToXYAbs( 0.0, 910.0, -565.0 );
         _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
 
@@ -438,24 +354,50 @@ void StrategyManager::buildStrat( const Color& color )
 
 void StrategyManager::doStrat( const Color& color )
 {
-    qDebug() << "Do strat for color:" << color;
-
+    // Build the strat for selected color
     buildStrat( color );
 
+    qDebug() << "Do strat for color:" << color;
+
     // Strat loop
-    while( _stratIsRunning )
+    for( const auto& action: _actions )
     {
+        action->execute();
 
-        for( const auto& action: _actions )
+        if( ! _stratIsRunning )
         {
-            action->execute();
+            _actions.push_front( action );
+            qDebug() << "Finish current action and stop after";
+            break;
         }
-
-        _stratIsRunning = false;
     }
+
+    _actions.clear();
 }
 
 void StrategyManager::doFunnyAction()
 {
+    // Stop and disable robot
     _trajectoryManager.hardStop();
+    _trajectoryManager.disable();
+
+    // Execute funny action
+    FunnyAction funnyAction;
+    funnyAction.execute();
+}
+
+// Helpers to be safe
+void StrategyManager::disableServos()
+{
+    _armLeft.write( SERV0_DISABLE_CONSIGN );
+    _armRight.write( SERV0_DISABLE_CONSIGN );
+    _ejector.write( SERV0_DISABLE_CONSIGN );
+}
+
+void StrategyManager::enableServos()
+{
+    _ejector.write( SERVO_7_EJECTOR_STANDBY );
+    QThread::msleep( 200 );
+    _armLeft.write( SERVO_6_ARM_L_OPEN90 );
+    _armRight.write( SERVO_0_ARM_R_OPEN90 );
 }

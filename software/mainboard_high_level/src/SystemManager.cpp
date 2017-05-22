@@ -225,11 +225,17 @@ void SystemManager::stop()
 
 void SystemManager::reset()
 {
+    _hal._colorEnable.write( 0 );
+
+    QThread::msleep( 200 );
+
     _hal._resetAll.write( 1 );
 
     _hal.clearRegisters();
 
     _hal._resetAll.write( 0 );
+
+    _hal._colorEnable.write( 1 );
 
     qDebug() << "System was reset";
 }

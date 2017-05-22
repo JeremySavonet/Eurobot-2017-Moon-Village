@@ -32,8 +32,13 @@ SOURCES += src/Carrousel.cpp \
            src/DetectionManager.cpp \
            src/PositionManager.cpp \
            src/Turbine.cpp \
-    src/Action.cpp \
-    src/MoveAction.cpp
+           src/Action.cpp \
+           src/MoveAction.cpp \
+           src/TurnCarrouselAction.cpp \
+           src/WaitAction.cpp \
+    src/MoveArmsAction.cpp \
+    src/TurbineAction.cpp \
+    src/FunnyAction.cpp
 
 HEADERS += \
     include/Defines.hpp \
@@ -57,7 +62,12 @@ HEADERS += \
     include/WestBot/PositionManager.hpp \
     include/WestBot/Turbine.hpp \
     include/WestBot/Action.hpp \
-    include/WestBot/MoveAction.hpp
+    include/WestBot/MoveAction.hpp \
+    include/WestBot/TurnCarrouselAction.hpp \
+    include/WestBot/WaitAction.hpp \
+    include/WestBot/MoveArmsAction.hpp \
+    include/WestBot/TurbineAction.hpp \
+    include/WestBot/FunnyAction.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
