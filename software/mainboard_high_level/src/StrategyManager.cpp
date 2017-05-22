@@ -246,8 +246,11 @@ void StrategyManager::stopRobot()
     if( _stratIsRunning )
     {
         _trajectoryManager.hardStop();
-        strategyWaitMs( 200 );
+        _trajectoryManager.disable();
+        strategyWaitMs( 2000 );
         qDebug() << "Changing trajectory...";
+        _trajectoryManager.enable();
+        _trajectoryManager.moveOnlyDRel( -100.0, false );
     }
 }
 

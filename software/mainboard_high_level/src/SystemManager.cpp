@@ -140,7 +140,7 @@ SystemManager::~SystemManager()
 }
 
 // Public methods
-void SystemManager::init()
+bool SystemManager::init()
 {
     // Always reset the system at startup
     reset();
@@ -176,12 +176,24 @@ void SystemManager::init()
     _hal._pidAngleEnable.write( 1 );
 
     // Color sensor
-    _colorSensor.attach( _hal );
+    if( ! _colorSensor.attach( _hal ) )
+    {
+        qWarning() << "Failed to attach color sensor module";
+        return false;
+    }
 
     // Distance sensor
-    _detectionManager.init( _hal );
+    if( ! _detectionManager.init( _hal ) )
+    {
+        qWarning() << "Failed to init proximity sensor module";
+        return false;
+    }
 
-    _positionManager.init();
+    if( ! _positionManager.init() )
+    {
+        qWarning() << "Failed to init position manager module";
+        return false;
+    }
 
     // Override output registers
     _hal._outputOverride.write( 0x01010101 );
@@ -190,12 +202,15 @@ void SystemManager::init()
 
     if( ! _lidar.connect() )
     {
-        qWarning() << "Cannot connect to RPLidar";
+        qWarning() << "Failed to connect to RPLidar";
+        return false;
     }
 
     _gameTimer.setSingleShot( true );
 
     createStateMachine();
+
+    return true;
 }
 
 void SystemManager::start()

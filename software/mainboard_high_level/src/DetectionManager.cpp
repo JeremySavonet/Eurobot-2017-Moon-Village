@@ -1,5 +1,6 @@
 // Copyright (c) 2017 All Rights Reserved WestBot
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QTimer>
 #include <QThread>
@@ -22,19 +23,39 @@ DetectionManager::DetectionManager( const QString& name, QObject* parent )
         & DetectionManager::check );
 }
 
-void DetectionManager::init( Hal& hal )
+bool DetectionManager::init( Hal& hal )
 {
+    bool isTimeout = false;
+
+    QTimer timeout;
+    timeout.setSingleShot( true );
+    timeout.start( 1000 );
+    QObject::connect(
+        & timeout,
+        & QTimer::timeout,
+        [ &isTimeout ]()
+        {
+            isTimeout = true;
+        } );
+
     _distanceSensor = std::make_shared< ItemRegister >( hal._distanceSensor );
 
-    while( _distanceSensor->read< uint8_t >() == 0 )
+    while( ! isTimeout && _distanceSensor->read< uint8_t >() == 0 )
     {
+        if( isTimeout )
+        {
+            return false;
+        }
+
         QThread::msleep( 10 );
-        //qDebug() << "Wait distance sensor to be ready...";
+        QCoreApplication::processEvents();
     }
 
     _eventTimer->start( 100 );
 
     check();
+
+    return true;
 }
 
 // Private methods

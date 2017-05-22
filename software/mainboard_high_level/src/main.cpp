@@ -13,7 +13,6 @@
 #include <WestBot/Configuration.hpp>
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
-#include <WestBot/Output.hpp>
 #include <WestBot/Servo.hpp>
 #include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
@@ -66,7 +65,13 @@ int main( int argc, char *argv[] )
 
     // Init the System manager
     SystemManager system( hal );
-    system.init(); // Create the state machine
+
+    // Init state machine and peripherals (sensors, position,...)
+    if( ! system.init() )
+    {
+        qWarning() << "Failed to init system manager";
+        return EXIT_FAILURE;
+    }
 
 #ifdef SIMU
     hal._modeSimu.write( 1 );
@@ -145,6 +150,7 @@ int main( int argc, char *argv[] )
 
     qDebug() << "X:" << x << " Y:" << y << " Theta:" << theta;
 
+    // TODO: REWORK THIS
     int16_t safe = x + y + theta;
 
     if( safe > 0 )

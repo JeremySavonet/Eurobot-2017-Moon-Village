@@ -1,7 +1,9 @@
 // Copyright (c) 2017 All Rights Reserved WestBot
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
+#include <QTimer>
 
 #include <WestBot/ColorSensor.hpp>
 
@@ -29,7 +31,20 @@ ColorSensor::ColorSensor( const QString& name )
 }
 
 bool ColorSensor::attach( Hal& hal )
-{
+{    
+    bool isTimeout = false;
+
+    QTimer timeout;
+    timeout.setSingleShot( true );
+    timeout.start( 1000 );
+    QObject::connect(
+        & timeout,
+        & QTimer::timeout,
+        [ &isTimeout ]()
+        {
+            isTimeout = true;
+        } );
+
     if( ! _isAttached )
     {
         _sensorValid = std::make_shared< ItemRegister >( hal._colorSensorValid );
@@ -38,12 +53,20 @@ bool ColorSensor::attach( Hal& hal )
         _sensorBlue = std::make_shared< ItemRegister >( hal._colorSensorBlue );
         _sensorClear = std::make_shared< ItemRegister >( hal._colorSensorClear );
 
-        while( _sensorValid->read< uint16_t >() != 0x01 )
+        while( ! isTimeout && _sensorValid->read< uint16_t >() != 0x01 )
         {
+            if( isTimeout )
+            {
+                _isAttached = false;
+                return false;
+            }
+
             QThread::msleep( 10 );
-            //qDebug() << "Wait sensor module to be ready...";
+            QCoreApplication::processEvents();
         }
     }
+
+    timeout.stop();
 
     qDebug() << "Sensor module is attached";
 

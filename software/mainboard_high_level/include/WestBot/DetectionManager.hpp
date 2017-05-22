@@ -21,7 +21,7 @@ public:
     DetectionManager( const QString& name, QObject* parent = nullptr );
     ~DetectionManager() override = default;
 
-    void init( Hal& hal );
+    bool init( Hal& hal );
 
 signals:
     void opponentDetected( bool status );

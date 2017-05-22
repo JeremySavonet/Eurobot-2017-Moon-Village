@@ -19,7 +19,7 @@ public:
     PositionManager( RPLidar::RPLidar& lidar, QObject* parent = nullptr );
     ~PositionManager() override = default;
 
-    void init();
+    bool init();
 
     // Helpers for position
     void capture();

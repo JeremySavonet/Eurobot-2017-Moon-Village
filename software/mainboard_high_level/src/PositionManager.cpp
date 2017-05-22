@@ -19,9 +19,9 @@ PositionManager::PositionManager( RPLidar::RPLidar& lidar, QObject* parent )
         & PositionManager::process );
 }
 
-void PositionManager::init()
+bool PositionManager::init()
 {
-
+    return true;
 }
 
 void PositionManager::capture()
