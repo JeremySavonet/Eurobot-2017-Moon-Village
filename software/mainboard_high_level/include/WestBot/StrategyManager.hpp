@@ -66,7 +66,7 @@ private:
     Turbine& _turbine;
 
     QList< Action::Ptr > _actions;
-
+    Action::Ptr _currentAction;
     bool _stratIsRunning;
 };
 
