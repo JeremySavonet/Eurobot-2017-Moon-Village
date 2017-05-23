@@ -16,6 +16,9 @@
 #define SERVO_0_ARM_R_OPEN90 20000
 #define SERVO_0_ARM_R_DROP 30275
 
+#define SERVO_1_UNBLOCK_STANDBY 26100 // non engagé
+#define SERVO_1_UNBLOCK_ACTION 18300 // engagé pour débloquage
+
 #define SERVO_6_ARM_L_CLOSED 12713
 #define SERVO_6_ARM_L_OPEN 29217
 #define SERVO_6_ARM_L_OPEN40 14000

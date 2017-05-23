@@ -32,6 +32,7 @@ public:
         Servo& armRight,
         Servo& armLeft,
         Servo& ejector,
+        Servo& unblock,
         Turbine& turbine,
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
@@ -63,6 +64,7 @@ private:
     Servo& _armRight;
     Servo& _armLeft;
     Servo& _ejector;
+    Servo& _unblock;
     Turbine& _turbine;
 
     QList< Action::Ptr > _actions;

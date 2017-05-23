@@ -24,6 +24,7 @@ StrategyManager::StrategyManager(
     Servo& armRight,
     Servo& armLeft,
     Servo& ejector,
+    Servo& unblock,
     Turbine& turbine,
     QObject* parent )
     : QObject( parent )
@@ -33,6 +34,7 @@ StrategyManager::StrategyManager(
     , _armRight( armRight )
     , _armLeft( armLeft )
     , _ejector( ejector )
+    , _unblock( unblock )
     , _turbine( turbine )
     , _currentAction( nullptr )
     , _stratIsRunning( false )
@@ -220,6 +222,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armRight,
             _armLeft,
             _ejector,
+            _unblock,
             MoveArmsAction::Position::DISABLE );
 
     MoveArmsAction::Ptr closeArms =
@@ -227,6 +230,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armRight,
             _armLeft,
             _ejector,
+           _unblock,
             MoveArmsAction::Position::CLOSED );
 
     MoveArmsAction::Ptr eject =
@@ -234,6 +238,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armRight,
             _armLeft,
             _ejector,
+            _unblock,
             MoveArmsAction::Position::EJECT );
 
     MoveArmsAction::Ptr drop =
@@ -241,6 +246,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armRight,
             _armLeft,
             _ejector,
+            _unblock,
             MoveArmsAction::Position::DROP );
 
     MoveArmsAction::Ptr openArmsFull =
@@ -248,6 +254,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armRight,
             _armLeft,
             _ejector,
+            _unblock,
             MoveArmsAction::Position::OPEN_FULL );
 
     if( color == Color::Yellow )
@@ -506,10 +513,12 @@ void StrategyManager::disableServos()
     _armLeft.write( SERV0_DISABLE_CONSIGN );
     _armRight.write( SERV0_DISABLE_CONSIGN );
     _ejector.write( SERV0_DISABLE_CONSIGN );
+    _ejector.write( SERV0_DISABLE_CONSIGN );
 }
 
 void StrategyManager::enableServos()
 {
+    _unblock.write( SERVO_1_UNBLOCK_STANDBY );
     _ejector.write( SERVO_7_EJECTOR_STANDBY );
     QThread::msleep( 200 );
     _armLeft.write( SERVO_6_ARM_L_OPEN90 );

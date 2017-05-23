@@ -25,13 +25,16 @@ public:
         OPEN_FULL,
         OPEN_FUSEE,
         DISABLE,
-        EJECT
+        EJECT,
+        UNBLOCK,
+        STANDBY_UNBLOCK
     };
 
     MoveArmsAction(
         Servo& armRight,
         Servo& armLeft,
         Servo& ejector,
+        Servo& unblock,
         Position position );
 
     void execute() override;
@@ -40,6 +43,7 @@ private:
     Servo& _armRight;
     Servo& _armLeft;
     Servo& _ejector;
+    Servo& _unblock;
     Position _position;
 };
 

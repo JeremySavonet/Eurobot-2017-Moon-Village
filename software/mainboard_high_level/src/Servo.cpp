@@ -80,9 +80,8 @@ bool Servo::attach( Hal& hal,
     _minAngle = min;
     _maxAngle = max;
 
-    _servoEnable->write( 0x00 );
-    _servoOverride->write( 0x01 );
     _servo->write( min );
+    _servoOverride->write( 0x01 );
     _servoEnable->write( 0x03 );
 
     QThread::msleep( 500 );

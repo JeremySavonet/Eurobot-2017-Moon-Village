@@ -10,11 +10,13 @@ MoveArmsAction::MoveArmsAction(
      Servo& armRight,
      Servo& armLeft,
      Servo& ejector,
+     Servo& unblock,
      Position position )
     : Action()
     , _armRight( armRight )
     , _armLeft( armLeft )
     , _ejector( ejector )
+    , _unblock( unblock )
     , _position( position )
 {
 }
@@ -111,6 +113,18 @@ void MoveArmsAction::execute()
         _armLeft.write( SERV0_DISABLE_CONSIGN );
         _armRight.write( SERV0_DISABLE_CONSIGN );
         _ejector.write( SERV0_DISABLE_CONSIGN );
+    }
+        break;
+
+    case Position::UNBLOCK:
+    {
+        _unblock.write( SERVO_1_UNBLOCK_ACTION );
+    }
+        break;
+
+    case Position::STANDBY_UNBLOCK:
+    {
+        _unblock.write( SERVO_1_UNBLOCK_STANDBY );
     }
         break;
 

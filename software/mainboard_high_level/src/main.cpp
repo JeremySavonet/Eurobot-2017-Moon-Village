@@ -86,6 +86,15 @@ int main( int argc, char *argv[] )
         return EXIT_FAILURE;
     }
 
+    Servo s1( "Unblock" );
+    s1.attach( hal, 0, SERVO_1_UNBLOCK_STANDBY, SERVO_1_UNBLOCK_ACTION );
+
+    if( ! s1.isAttached() )
+    {
+        qWarning() << "Failed to attach servo unblock...";
+        return EXIT_FAILURE;
+    }
+
     Servo s6( "Arm_left" );
     s6.attach( hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
 
@@ -136,9 +145,10 @@ int main( int argc, char *argv[] )
         system,
         trajectoryManager,
         carrousel,
-        s0,
-        s6,
-        s7,
+        s0, // arm right
+        s6, // arm left
+        s7, // ejector
+        s1, // unblock
         turbine );
 
     qDebug() << "==== System ready ! ==== ";
