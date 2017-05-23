@@ -194,17 +194,12 @@ void Hal::init()
 
 void Hal::clearRegisters()
 {
-    for( int i = 1; i < 64; ++i )
-    {
-        _layer1.write( i * 4, 32, 0 );
-    }
-
-    for( int i = 0; i < 64; ++i )
+    for( int i = 0; i < 64; i++ )
     {
         _layer2.write( i * 4, 32, 0 );
     }
 
-    for( int i = 0; i < 64; ++i )
+    for( int i = 0; i < 64; i++ )
     {
         _layer3.write( i * 4, 32, 0 );
     }

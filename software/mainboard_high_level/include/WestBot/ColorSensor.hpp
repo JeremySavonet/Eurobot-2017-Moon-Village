@@ -22,15 +22,12 @@ public:
 
     const QString& name() const;
 
-    // Read the sensor and return a bool matching the targeted color.
-    bool isInRange();
-
     // Read the sensor and return the guessed color.
-    Color sensorCheck();
+    int sensorCheck();
 
     bool isAttached() const;
 
-    int process();
+    bool checkIsEmpty();
 
 private:
     const QString _name;
@@ -43,6 +40,8 @@ private:
     ItemRegister::Ptr _sensorGreen;
     ItemRegister::Ptr _sensorBlue;
     ItemRegister::Ptr _sensorClear;
+
+    uint32_t _vcAvg;
 
     Color _colorTarget;
     bool _isAttached;

@@ -191,6 +191,38 @@ bool SystemManager::init()
     _hal._pidAngleTarget.write( _hal._pidAnglePosition.read< float >() );
     _hal._pidAngleEnable.write( 1 );
 
+    _armRight.attach( _hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
+
+    if( ! _armRight.isAttached() )
+    {
+        qWarning() << "Failed to attach servo arm right...";
+        return false;
+    }
+
+    _unblock.attach( _hal, 1, SERVO_1_UNBLOCK_STANDBY, SERVO_1_UNBLOCK_ACTION );
+
+    if( ! _unblock.isAttached() )
+    {
+        qWarning() << "Failed to attach servo unblock...";
+        return false;
+    }
+
+    _armLeft.attach( _hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
+
+    if( ! _armLeft.isAttached() )
+    {
+        qWarning() << "Failed to attach servo arm left...";
+        return false;
+    }
+
+    _ejector.attach( _hal, 7, SERVO_7_EJECTOR_STANDBY, SERVO_7_EJECTOR_EJECT );
+
+    if( ! _ejector.isAttached() )
+    {
+        qWarning() << "Failed to attach servo ejector...";
+        return false;
+    }
+
     // Color sensor
     if( ! _colorSensor.attach( _hal ) )
     {
@@ -222,49 +254,22 @@ bool SystemManager::init()
         return false;
     }
 
-    _armRight.attach( _hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
-
-    if( ! _armRight.isAttached() )
-    {
-        qWarning() << "Failed to attach servo arm right...";
-        return false;
-    }
-
-    _unblock.attach( _hal, 0, SERVO_1_UNBLOCK_STANDBY, SERVO_1_UNBLOCK_ACTION );
-
-    if( ! _unblock.isAttached() )
-    {
-        qWarning() << "Failed to attach servo unblock...";
-        return false;
-    }
-
-    _armLeft.attach( _hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
-
-    if( ! _armLeft.isAttached() )
-    {
-        qWarning() << "Failed to attach servo arm left...";
-        return false;
-    }
-
-    _ejector.attach( _hal, 7, SERVO_7_EJECTOR_STANDBY, SERVO_7_EJECTOR_EJECT );
-
-    if( ! _ejector.isAttached() )
-    {
-        qWarning() << "Failed to attach servo ejector...";
-        return false;
-    }
-
     if( ! _turbine.attach( _hal ) )
     {
         qWarning() << "Failed to attach turbine...";
         return false;
     }
 
+    if( ! _colorSensor.checkIsEmpty() )
+    {
+        qDebug() << "Failed to finish init: Carrousel is not empty.";
+        return false;
+    }
 
     if( ! _carrousel.init() )
     {
         qWarning() << "Failed to init carrousel module...";
-        return EXIT_FAILURE;
+        return false;
     }
 
     // Set carrousel offset

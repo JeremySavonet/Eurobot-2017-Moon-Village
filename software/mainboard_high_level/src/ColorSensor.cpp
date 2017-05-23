@@ -20,6 +20,12 @@ namespace
     const int RET_OK = 0;
     const int RET_ERROR_UNKNOWN = 1;
     const int RET_ERROR_COLOR_SINGLE_OPPOSITE = 2;
+
+    const int COLOR_INIT_OK = 0;
+    const int COLOR_INIT_NOK = 1;
+    const int VALUE_COUNT = 100;
+
+    const int AVG_CNT = 10;
 }
 
 ColorSensor::ColorSensor( const QString& name )
@@ -29,6 +35,7 @@ ColorSensor::ColorSensor( const QString& name )
     , _sensorGreen( nullptr )
     , _sensorBlue( nullptr )
     , _sensorClear( nullptr )
+    , _vcAvg( 0 )
     , _colorTarget( Color::Unknown )
     , _isAttached( false )
 {
@@ -81,10 +88,27 @@ bool ColorSensor::attach( Hal& hal )
     _motorInverted->write( 1 );
     _motorOverride->write( 0x01 );
 
+    for( int i = 0; i < VALUE_COUNT; i++ )
+    {
+        uint16_t value;
+        value = _sensorClear->read< uint16_t >();
+        _vcAvg += value;
+        QThread::msleep( 10 );
+    }
+
+    _vcAvg = _vcAvg / VALUE_COUNT;
+
+    qDebug() << "AVG Clear is " << _vcAvg;
+
+    if( _vcAvg > 400 || _vcAvg == 0 )
+    {
+        qDebug() << "ERROR = The carrousel seems to be not empty, init is KO";
+        _isAttached = false;
+        return false;
+    }
+
     qDebug() << "Sensor module is attached";
-
     _isAttached = true;
-
     return true;
 }
 
@@ -98,45 +122,12 @@ const QString& ColorSensor::name() const
     return _name;
 }
 
-bool ColorSensor::isInRange()
-{
-    if( Color::Unknown == _colorTarget )
-    {
-        qWarning() << "No color target defined";
-        return false;
-    }
-
-    const uint16_t red = _sensorRed->read< uint16_t >();
-    const uint16_t green = _sensorGreen->read< uint16_t >();
-    const uint16_t blue = _sensorBlue->read< uint16_t >();
-    const uint16_t clear = _sensorClear->read< uint16_t >();
-
-    qDebug() << "Red:" << red << " Green:" << green << " Blue:" << blue << " Clear:" << clear;
-
-    // TODO: read register, compare to threashold and check with target color
-    return true;
-}
-
-Color ColorSensor::sensorCheck()
-{
-    const uint16_t red = _sensorRed->read< uint16_t >();
-    const uint16_t green = _sensorGreen->read< uint16_t >();
-    const uint16_t blue = _sensorBlue->read< uint16_t >();
-    const uint16_t clear = _sensorClear->read< uint16_t >();
-
-    qDebug() << "Red:" << red << " Green:" << green << " Blue:" << blue << " Clear:" << clear;
-
-    // TODO: read register and compare to threshold
-    return Color::Blue;
-}
-
 bool ColorSensor::isAttached() const
 {
     return _isAttached;
 }
 
-// WIP ALGO BRICE: <===============
-int ColorSensor::process()
+int ColorSensor::sensorCheck()
 {
     uint8_t ret;
     uint16_t vMin = 65535;
@@ -239,4 +230,30 @@ int ColorSensor::process()
     _motorValue->write( 0 );
 
     return RET_ERROR_UNKNOWN;
+}
+
+bool ColorSensor::checkIsEmpty()
+{
+    uint32_t avg = 0;
+    for( int i = 0; i < AVG_CNT; i++ )
+    {
+        uint16_t value;
+        value = _sensorClear->read< uint16_t >();
+        avg += value;
+        QThread::msleep( 10 );
+    }
+
+    avg = avg / AVG_CNT;
+    qDebug() << "AVG is " << avg;
+
+    if( avg > 3 * _vcAvg )
+    {
+        qDebug() << "Slot is not empty;";
+        return false;
+    }
+    else
+    {
+        qDebug() << "Slot is empty;";
+        return true;
+    }
 }
