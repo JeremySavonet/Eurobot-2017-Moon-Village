@@ -10,7 +10,8 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 INCLUDEPATH += include \
-               ../rplidar/include
+               ../rplidar/include \
+                3rdparty/Eigen
 
 LIBS += -L../rplidar/lib -lRPLidar
 
@@ -36,11 +37,13 @@ SOURCES += src/Carrousel.cpp \
            src/MoveAction.cpp \
            src/TurnCarrouselAction.cpp \
            src/WaitAction.cpp \
-    src/MoveArmsAction.cpp \
-    src/TurbineAction.cpp \
-    src/FunnyAction.cpp
+           src/MoveArmsAction.cpp \
+           src/TurbineAction.cpp \
+           src/FunnyAction.cpp \
+           src/Recallage.cpp
 
 HEADERS += \
+    3rdparty/Eigen/src/* \
     include/Defines.hpp \
     include/WestBot/Carrousel.hpp \
     include/WestBot/Common.hpp \
@@ -67,7 +70,8 @@ HEADERS += \
     include/WestBot/WaitAction.hpp \
     include/WestBot/MoveArmsAction.hpp \
     include/WestBot/TurbineAction.hpp \
-    include/WestBot/FunnyAction.hpp
+    include/WestBot/FunnyAction.hpp \
+    include/WestBot/Recallage.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
