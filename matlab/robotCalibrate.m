@@ -72,9 +72,9 @@ for i = 1:length(data)
 		grid on
 	end
 	
-	if i~=length(data)
-		continue;
-	end
+% 	if i~=length(data)
+% 		continue;
+% 	end
 	
 	% 	figure
 	% 	if ~isempty(data(i).odo)
@@ -187,6 +187,32 @@ for i = 1:length(data)
 	end
 	
 	% recherche erreur odo
+% 	mes = [];
+% 	ref = [];
+% 	for k = 1:height(table)
+% 		if ~isempty(t(k).dot)
+% 			x = t(k).dot(:,1);
+% 			y = t(k).dot(:,2);
+% 			xref = table.ax(k);
+% 			yref = table.ay(k);
+% 			if table.dir(k)
+% 				mes = [mes ; y -x zeros(size(x)) ones(size(x)) ];
+% 				ref = [ref; yref*ones(size(x))];
+% 			else
+% 				mes = [mes ; x y ones(size(x)) zeros(size(x)) ];
+% 				ref = [ref; xref*ones(size(x))];
+% 			end
+% 		end
+% 	end
+% 	A = mes\ref;
+% 	X = A(3);
+% 	Y = A(4);
+% 	% theta = asin(A(2));
+% 	R = [A(1) A(2);-A(2) A(1)];
+% 	R = R*inv(chol(R'*R));
+% 	theta = asin(R(1,2));
+% 	[X Y theta]	mes = [];
+
 	mes = [];
 	ref = [];
 	for k = 1:height(table)
@@ -196,21 +222,21 @@ for i = 1:length(data)
 			xref = table.ax(k);
 			yref = table.ay(k);
 			if table.dir(k)
-				mes = [mes ; y -x zeros(size(x)) ones(size(x)) ];
-				ref = [ref; yref*ones(size(x))];
+				mes = [mes ; -x zeros(size(x)) ones(size(x)) ];
+				ref = [ref; yref*ones(size(x))-y];
 			else
-				mes = [mes ; x y ones(size(x)) zeros(size(x)) ];
-				ref = [ref; xref*ones(size(x))];
+				mes = [mes ; y ones(size(x)) zeros(size(x)) ];
+				ref = [ref; xref*ones(size(x))-x];
 			end
 		end
 	end
 	A = mes\ref;
-	X = A(3);
-	Y = A(4);
-	% theta = asin(A(2));
-	R = [A(1) A(2);-A(2) A(1)];
-	R = R*inv(chol(R'*R));
-	theta = asin(R(1,2));
+	X = A(2);
+	Y = A(3);
+	theta = asin(A(1));
+	R = [cos(theta) sin(theta);-sin(theta) cos(theta)];
+% 	R = R*inv(chol(R'*R));
+% 	theta = asin(R(1,2));
 	[X Y theta]
 	
 % 	xLast = xLast +X;
