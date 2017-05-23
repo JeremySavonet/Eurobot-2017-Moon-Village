@@ -35,6 +35,9 @@ private:
 
     const QString _name;
 
+    ItemRegister::Ptr _motorOverride;
+    ItemRegister::Ptr _motorInverted;
+    ItemRegister::Ptr _motorValue;
     ItemRegister::Ptr _sensorValid;
     ItemRegister::Ptr _sensorRed;
     ItemRegister::Ptr _sensorGreen;

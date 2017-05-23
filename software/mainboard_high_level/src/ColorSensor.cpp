@@ -52,6 +52,10 @@ bool ColorSensor::attach( Hal& hal )
 
     if( ! _isAttached )
     {
+        _motorOverride = std::make_shared< ItemRegister >( hal._motor3Override );
+        _motorInverted = std::make_shared< ItemRegister >( hal._motor3Inverted );
+        _motorValue = std::make_shared< ItemRegister >( hal._motor3Value );
+
         _sensorValid = std::make_shared< ItemRegister >( hal._colorSensorValid );
         _sensorRed = std::make_shared< ItemRegister >( hal._colorSensorRed );
         _sensorGreen = std::make_shared< ItemRegister >( hal._colorSensorGreen );
@@ -72,6 +76,10 @@ bool ColorSensor::attach( Hal& hal )
     }
 
     timeout.stop();
+
+    _motorValue->write( 0 );
+    _motorInverted->write( 1 );
+    _motorOverride->write( 0x00 );
 
     qDebug() << "Sensor module is attached";
 
@@ -147,7 +155,7 @@ void ColorSensor::process()
         {
             uint16_t value;
 
-            //motor_3_value.write(MOTOR_COLOR_1T_PER_SECOND);
+            _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
 
             for( j = 0; j < 1000; j++ )
             {
@@ -164,7 +172,7 @@ void ColorSensor::process()
                 QThread::msleep( 1 );
             }
 
-            //motor_3_value.write( 0 );
+            _motorValue->write( 0 );
 
             qDebug() << "lowest is " << vMin;
             qDebug() << "higuest is " << vMax;
@@ -194,7 +202,7 @@ void ColorSensor::process()
 
             for( uint16_t retry = 0; retry < 2 * 1000; retry++ )
             {
-                //motor_3_value.write( MOTOR_COLOR_1T_PER_SECOND );
+                _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
 
                 {
                     value = _sensorClear->read< uint16_t >();
@@ -203,9 +211,9 @@ void ColorSensor::process()
                     {
                         qDebug() << "MAX FOUND" << value << vMax;
 
-                        //motor_3_value.write(-MOTOR_COLOR_1T_PER_SECOND );
+                        _motorValue->write( -MOTOR_COLOR_1T_PER_SECOND );
                         QThread::msleep( 250 );
-                        //motor_3_value.write( 0 );
+                        _motorValue->write( 0 );
                         QThread::msleep( 100 );
 
                         uint16_t blue_value = _sensorBlue->read< uint16_t >();
@@ -235,9 +243,9 @@ void ColorSensor::process()
                         {
                             qDebug() << "Not Found, Retry (or stop)" << value << vMin;
 
-                            //motor_3_value.write( MOTOR_COLOR_1T_PER_SECOND );
+                            _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
                             QThread::msleep( 500 );
-                            //motor_3_value.write(0);
+                            _motorValue->write(0);
                         }
                     }
                     else
@@ -249,7 +257,7 @@ void ColorSensor::process()
 
             ok = 1;
             ret = RET_ERROR_UNKNOWN;
-            //motor_3_value.write( 0 );
+            _motorValue->write( 0 );
         }
     }
 

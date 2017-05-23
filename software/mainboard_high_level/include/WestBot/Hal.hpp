@@ -84,6 +84,10 @@ public:
     ItemRegister _esc0Override;
     ItemRegister _esc0Value;
 
+    ItemRegister _motor3Override;
+    ItemRegister _motor3Inverted;
+    ItemRegister _motor3Value;
+
     // Layer 2
     ItemRegister _odometryTheta;
     ItemRegister _odometryX;
