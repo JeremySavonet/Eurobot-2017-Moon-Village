@@ -33,8 +33,9 @@ table = array2table(table,'VariableNames',{'dir' 'ax' 'ay' 'bx' 'by'});
 
 color = ['b' 'r' 'k' 'g' 'm' 'y'];
 
+startPosition = [];
 
-for i = 1%:length(data)
+for i = 1:length(data)
 	
 	if ~isempty(data(i).odo)
 		ol = data(i).odo.wL;
@@ -60,6 +61,8 @@ for i = 1%:length(data)
 		yLast = y(end);
 	end
 	
+	startPosition(end+1,:) = [(xLast-0.035)*1000 yLast*1000 thetaLast];
+	
 	figure(1)
 	hold all
 	if ~isempty(data(i).odo)
@@ -67,6 +70,10 @@ for i = 1%:length(data)
 		plot( data(i).odo.x/1000+x0, data(i).odo.y/1000+y0 , 'r')
 		axis equal
 		grid on
+	end
+	
+	if i~=length(data)
+		continue;
 	end
 	
 	% 	figure
@@ -135,15 +142,15 @@ for i = 1%:length(data)
 		t(k).dot = t(k).dot(1:t(k).len,:);
 	end
 	
-	figure
-	hold on
-	axis equal
-	for k = 1:height(table)
-		plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , color(k) )
-		if ~isempty(t(k).dot)
-			plot( t(k).dot(:,1) , t(k).dot(:,2) , ['.' color(k)] )
-		end
-	end
+% 	figure
+% 	hold on
+% 	axis equal
+% 	for k = 1:height(table)
+% 		plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , color(k) )
+% 		if ~isempty(t(k).dot)
+% 			plot( t(k).dot(:,1) , t(k).dot(:,2) , ['.' color(k)] )
+% 		end
+% 	end
 	
 	% suppression points
 	% figure
@@ -158,7 +165,7 @@ for i = 1%:length(data)
 			end
 			ind = 1:length(x);
 			
-			threshold = 0.007;%[0.03 0.01 0.007];
+			threshold = 0.01;%[0.03 0.01 0.007];
 			for iter = 1:length(threshold)
 				d = [x(ind) ones(size(x(ind)))] \ y(ind);
 				u = [-d(1) 1];
@@ -188,27 +195,30 @@ for i = 1%:length(data)
 			y = t(k).dot(:,2);
 			xref = table.ax(k);
 			yref = table.ay(k);
-			if ~table.dir(k)
-				mes = [mes ; x y ones(size(x)) zeros(size(x)) ];
-				ref = [ref; xref*ones(size(x))];
-			else
+			if table.dir(k)
 				mes = [mes ; y -x zeros(size(x)) ones(size(x)) ];
 				ref = [ref; yref*ones(size(x))];
+			else
+				mes = [mes ; x y ones(size(x)) zeros(size(x)) ];
+				ref = [ref; xref*ones(size(x))];
 			end
 		end
 	end
 	A = mes\ref;
 	X = A(3);
 	Y = A(4);
+	% theta = asin(A(2));
 	R = [A(1) A(2);-A(2) A(1)];
 	R = R*inv(chol(R'*R));
 	theta = asin(R(1,2));
-	% XX  = inv(R)*[A(3);A(4)];
-	% XX  = [A(3);A(4)];
 	[X Y theta]
 	
-	xLast = xLast +X;
-	yLast = yLast +Y;
+% 	xLast = xLast +X;
+% 	yLast = yLast +Y;
+	xLast2 =  xLast*cos(theta) +yLast*sin(theta) +X;
+	yLast2 = -xLast*sin(theta) +yLast*cos(theta) +Y;
+	xLast = xLast2;
+	yLast = yLast2;
 	thetaLast = thetaLast -theta;
 	
 	clear x y
@@ -221,14 +231,20 @@ for i = 1%:length(data)
 		end
 	end
 	
-	YY = [R,[0 ;0];[0 0  1]]*[[eye(2),[X;Y]];0 0 1]*[x';y';ones(size(x'))];
+	YY = [R,[0 ;0];[0 0 1]]*[[eye(2),[X;Y]];0 0 1]*[x';y';ones(size(x'))];
+	% YY = [A(1) A(2) A(3);-A(2) A(1) A(4);0 0 1]*[x';y';ones(size(x'))];
+	% YY = [cos(theta) sin(theta) A(3);-sin(theta) cos(theta) A(4);0 0 1]*[x';y';ones(size(x'))];
 	figure
 	hold on
 	axis equal
-	plot(YY(1,:),YY(2,:),'.')
+	plot(YY(1,:),YY(2,:),'c.')
 % 	plot( tx, ty,'kx')
 	for k = 1:height(table)
-		plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , color(k) )
+		if table.dir(k)
+			plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , [color(k) '--'] )
+		else
+			plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , [color(k)] )
+		end
 		if ~isempty(t(k).dot)
 			plot( t(k).dot(:,1) , t(k).dot(:,2) , ['.' color(k)] )
 % 			plot( t2(k).dot(:,1) , t2(k).dot(:,2) , ['x' color(k+1)] )
@@ -236,56 +252,8 @@ for i = 1%:length(data)
 	end
 	
 	
-	continue;
 	
-	
-	
-	% recherche droite
-	figure
-	hold on
-	axis equal
-	for k = 1:height(table)
-		plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] , color(k) )
-		if ~isempty(t(k).dot)
-			plot( t(k).dot(:,1) , t(k).dot(:,2) , ['.' color(k)] )
-			if table.dir(k)
-				d = [t(k).dot(:,1) ones(size(t(k).dot(:,1)))] \ t(k).dot(:,2);
-				plot( t(k).dot(:,1) , t(k).dot(:,1)*d(1) + d(2) , color(k) );
-			else
-				d = [t(k).dot(:,2) ones(size(t(k).dot(:,1)))] \ t(k).dot(:,1);
-				plot( t(k).dot(:,2)*d(1) + d(2) , t(k).dot(:,2) , color(k) );
-			end
-			droite(k,:) = d;
-			droiteTheta(k) = asin(d(1));
-			droiteNb(k) = size(t(k).dot,1);
-			droiteX(k) = mean(t(k).dot(:,1)) - table.ax(k);
-			droiteY(k) = mean(t(k).dot(:,2)) - table.ay(k);
-		end
-	end
-	
-	errTheta = sum( droiteTheta .* (-2*(table.dir==0)+1)' .* droiteNb ) / sum(droiteNb);
-	k = find(table.dir);
-	errY = sum( droiteY(k) .* droiteNb(k) ) / sum(droiteNb(k));
-	k = find(~table.dir);
-	errX = sum( droiteX(k) .* droiteNb(k) ) / sum(droiteNb(k));
-	
-	[errX errY errTheta]
-	
-	xLast = xLast -errX;
-	yLast = yLast -errY;
-	thetaLast = thetaLast +errTheta;
 
 end
 
-
-%%
-break;
-
-figure
-hold on
-axis equal
-for k = 1:height(table)
-	plot( [table.ax(k);table.bx(k)], [table.ay(k);table.by(k)] ,color(k) )
-end
-plot(tx(j),ty(j),'+')
 
