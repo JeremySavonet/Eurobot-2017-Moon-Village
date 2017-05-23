@@ -75,7 +75,7 @@ private:
     Action::Ptr _currentAction;
     bool _stratIsRunning;
     FunnyAction _funnyAction;
-
+    Color _color;
 };
 
 }

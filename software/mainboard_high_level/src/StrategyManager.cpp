@@ -39,6 +39,7 @@ StrategyManager::StrategyManager(
     , _colorSensor( colorSensor )
     , _currentAction( nullptr )
     , _stratIsRunning( false )
+    , _color( Color::Unknown )
 {
     connect(
         & _systemManager,
@@ -47,6 +48,7 @@ StrategyManager::StrategyManager(
         [ this ]( const Color& color )
         {
             qDebug() << "Ready to start strategy thread...";
+            _color = color;
             _stratIsRunning = true;
             doStrat( color );
         } );
@@ -125,8 +127,12 @@ void StrategyManager::stopRobot()
 {
     if( _stratIsRunning )
     {
+        _stratIsRunning = false;
         _trajectoryManager.hardStop();
         _trajectoryManager.disable();
+
+        qDebug() << ">>>>>>>> LAST ACTION STOPPED:" << _currentAction.get();
+        qDebug() << ">>>>>>>>>>>> REMAINING ACTIONS:" << _actions.size();
 
         MoveAction::Ptr safety =
             std::make_shared< MoveAction >(
@@ -140,10 +146,16 @@ void StrategyManager::stopRobot()
 
         _trajectoryManager.enable();
 
+        qDebug() << ">>>>>>> BEFORE INSERTING NEW ACTION";
+
         // This will insert the safety action to be executed first
         // and then back to the last action
         _actions.push_front( safety );
         _actions.push_front( _currentAction );
+
+        qDebug() << ">>>>>>> AFTER INSERTING NEW ACTION" << _actions.size();
+        _stratIsRunning = true;
+        doStrat( _color );
     }
 }
 
@@ -498,12 +510,18 @@ void StrategyManager::doStrat( const Color& color )
 
     _colorSensor.sensorCheck();
 */
+
+    qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
+
     // Strat loop
     for( const auto& action: _actions )
     {
         _currentAction = action;
         action->execute();
         _actions.removeOne( action );
+        qDebug() << ">>>>>>>> CURRENT ACTION:" << _currentAction.get();
+        qDebug() << ">>>>>>>> REMAINING ACTIONS:" << _actions.size();
+
 
         if( ! _stratIsRunning )
         {
@@ -512,6 +530,7 @@ void StrategyManager::doStrat( const Color& color )
         }
     }
 
+    qDebug() << "Strat is over. Make sure we have clear the action list";
     _actions.clear();
 }
 
