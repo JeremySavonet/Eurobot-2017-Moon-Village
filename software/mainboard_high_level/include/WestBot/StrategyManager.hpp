@@ -11,6 +11,7 @@
 #include "Carrousel.hpp"
 #include "ColorSensor.hpp"
 #include "Common.hpp"
+#include "FunnyAction.hpp"
 #include "Servo.hpp"
 #include "TrajectoryManager.hpp"
 #include "Turbine.hpp"
@@ -73,6 +74,8 @@ private:
     QList< Action::Ptr > _actions;
     Action::Ptr _currentAction;
     bool _stratIsRunning;
+    FunnyAction _funnyAction;
+
 };
 
 }

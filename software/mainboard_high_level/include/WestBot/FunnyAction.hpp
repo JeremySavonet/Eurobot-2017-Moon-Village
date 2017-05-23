@@ -7,6 +7,8 @@
 
 #include "Action.hpp"
 
+class QProcess;
+
 namespace WestBot {
 
 class FunnyAction : public Action
@@ -18,7 +20,8 @@ public:
 
     void execute() override;
 
-    void doFunny( int errorCode );
+private:
+    QProcess* _process;
 };
 
 }

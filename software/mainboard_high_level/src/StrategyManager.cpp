@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QThread>
 
-#include <WestBot/FunnyAction.hpp>
 #include <WestBot/MoveAction.hpp>
 #include <WestBot/MoveArmsAction.hpp>
 #include <WestBot/TurbineAction.hpp>
@@ -505,8 +504,17 @@ void StrategyManager::doFunnyAction()
     _trajectoryManager.disable();
 
     // Execute funny action
-    FunnyAction funnyAction;
-    funnyAction.execute();
+    connect(
+        & _funnyAction,
+        & Action::complete,
+        this,
+        [ this ]()
+        {
+            qDebug() << "Action complete";
+            _funnyAction.deleteLater();
+        } );
+
+    _funnyAction.execute();
 }
 
 // Helpers to be safe
