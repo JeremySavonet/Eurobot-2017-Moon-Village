@@ -393,7 +393,7 @@ int main( int argc, char *argv[] )
     servo7_override.write(0x01);
     servo7_en.write(0x03);
 
-
+//#endif
 
 
     ItemRegister esc0_en( layer1, 46 * 4+2, 8 );
@@ -424,11 +424,14 @@ int main( int argc, char *argv[] )
     QThread::msleep( 500 );
 
     int16_t esc_value=0;
-/*
+
 
     while(1) {
-        esc_value+=1;
-        esc_value%=180;
+
+		if (esc_value >= -130)
+			esc_value-=1;
+
+			//esc_value%=180;
 
         esc0_value.write(esc_value);
 
@@ -438,8 +441,8 @@ int main( int argc, char *argv[] )
         qDebug() << "coucou " << esc_value << " " << inputRegister1.read<uint8_t>() << " " << inputRegister2.read<uint8_t>() << " " << inputRegister3.read<uint8_t>() << " ";
 
     }
-*/
 
+//#if 0
     while(1) {
 
         servo0_value.write(SERVO_0_ARM_R_CLOSED);

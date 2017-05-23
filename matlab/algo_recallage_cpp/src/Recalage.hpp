@@ -12,9 +12,8 @@ typedef struct {
 
 
 
-class Recalage : public QObject
+class Recalage
 {
-	Q_OBJECT
 
 public:
 	Recalage();

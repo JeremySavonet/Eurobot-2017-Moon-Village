@@ -166,48 +166,6 @@ RobotPos Recalage::calibrate(
 		}
 
 		//calcul erreur odometrie
-		/*{
-			MatrixXd in(len,4);
-			VectorXd out(len);
-			int i = 0;
-			for(int k=0; k<tableBorderNb; k++) {
-				if(mesure[k].len==0)
-					continue;
-
-				for(int j =0; j<mesure[k].len; j++) {
-					if(tableBorder[k].dir) {
-						in(i,0) = mesure[k].dot(j,1);
-						in(i,1) = -mesure[k].dot(j,0);
-						in(i,2) = 0;
-						in(i,3) = 1;
-						out(i) = tableBorder[k].ay;
-					}
-					else {
-						in(i,0) = mesure[k].dot(j,0);
-						in(i,1) = mesure[k].dot(j,1);
-						in(i,2) = 1;
-						in(i,3) = 0;
-						out(i) = tableBorder[k].ax;
-					}
-					i++;
-				}
-			}
-
-			MatrixXd A = in.jacobiSvd(ComputeThinU|ComputeThinV).solve(out);
-			errX = A(2,0);
-			errY = A(3,0);
-			MatrixXd R(2,2);
-			R(0,0) = A(0,0);
-			R(0,1) = A(1,0);
-			R(1,0) = -A(1,0);
-			R(1,1) = A(0,0);
-			MatrixXd C;
-			C = R.transpose()*R;
-			LLT<MatrixXd> lltOfA(C);
-			C = lltOfA.matrixL();
-			R = R*C.inverse();
-			errTheta = asin(R(0,1));
-		}*/
 		{
 			MatrixXd in(len,3);
 			VectorXd out(len);
@@ -236,17 +194,6 @@ RobotPos Recalage::calibrate(
 			MatrixXd A = in.jacobiSvd(ComputeThinU|ComputeThinV).solve(out);
 			errX = A(1,0);
 			errY = A(2,0);
-//			MatrixXd R(2,2);
-//			R(0,0) = A(0,0);
-//			R(0,1) = A(1,0);
-//			R(1,0) = -A(1,0);
-//			R(1,1) = A(0,0);
-//			MatrixXd C;
-//			C = R.transpose()*R;
-//			LLT<MatrixXd> lltOfA(C);
-//			C = lltOfA.matrixL();
-//			R = R*C.inverse();
-//			errTheta = asin(R(0,1));
 			errTheta = asin(A(0,0));
 		}
 

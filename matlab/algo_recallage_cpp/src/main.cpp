@@ -9,8 +9,6 @@
 
 #include "Recalage.hpp"
 
-// 3rdParty library
-
 
 
 
