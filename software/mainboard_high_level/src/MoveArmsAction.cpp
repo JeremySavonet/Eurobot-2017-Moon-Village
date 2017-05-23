@@ -27,6 +27,8 @@ void MoveArmsAction::execute()
     {
     case Position::CLOSED:
     {
+        _ejector.write( SERVO_7_EJECTOR_STANDBY );
+        QThread::msleep( 250 );
         _armRight.write( SERVO_0_ARM_R_CLOSED );
         _armLeft.write( SERVO_6_ARM_L_CLOSED );
     }
@@ -34,6 +36,8 @@ void MoveArmsAction::execute()
 
     case Position::ZERO_POS:
     {
+        _ejector.write( SERVO_7_EJECTOR_STANDBY );
+        QThread::msleep( 250 );
         _armRight.write( SERVO_0_ARM_R_0 );
         _armLeft.write( SERVO_6_ARM_L_0 );
     }

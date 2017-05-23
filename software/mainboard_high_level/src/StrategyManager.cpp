@@ -523,7 +523,7 @@ void StrategyManager::disableServos()
     _armLeft.write( SERV0_DISABLE_CONSIGN );
     _armRight.write( SERV0_DISABLE_CONSIGN );
     _ejector.write( SERV0_DISABLE_CONSIGN );
-    _ejector.write( SERV0_DISABLE_CONSIGN );
+    _unblock.write( SERV0_DISABLE_CONSIGN );
 }
 
 void StrategyManager::enableServos()
