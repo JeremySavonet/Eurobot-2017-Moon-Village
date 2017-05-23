@@ -17,6 +17,8 @@ public:
     FunnyAction();
 
     void execute() override;
+
+    void doFunny( int errorCode );
 };
 
 }
