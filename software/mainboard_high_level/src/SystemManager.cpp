@@ -52,18 +52,6 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                         _turbine,
                         _colorSensor )
 {
-    connect(
-        & _gameTimer,
-        & QTimer::timeout,
-        this,
-        [ this ]()
-        {
-            qDebug() << "End of the game, time to switch to the"
-                     << "funny action state";
-
-            emit doFunnyAction();
-        } );
-
     // Task to notify that the robot is alive
     connect(
         & _aliveTimer,
