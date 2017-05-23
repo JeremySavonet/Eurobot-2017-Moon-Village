@@ -8,6 +8,7 @@
 #include <QStateMachine>
 #include <QTimer>
 
+#include "Carrousel.hpp"
 #include "ColorSensor.hpp"
 #include "Common.hpp"
 #include "DetectionManager.hpp"
@@ -15,6 +16,10 @@
 #include "Input.hpp"
 #include "Output.hpp"
 #include "PositionManager.hpp"
+#include "Servo.hpp"
+#include "StrategyManager.hpp"
+#include "TrajectoryManager.hpp"
+#include "Turbine.hpp"
 
 #include <WestBot/RPLidar/RPLidar.hpp>
 
@@ -103,10 +108,18 @@ private:
     Output::Ptr _ledBlue;
     Color _color;
     ColorSensor _colorSensor;
+    Servo _armRight;
+    Servo _armLeft;
+    Servo _ejector;
+    Servo _unblock;
+    Turbine _turbine;
+    Carrousel _carrousel;
+    TrajectoryManager _trajectoryManager;
     SystemMode _systemMode;
     RPLidar::RPLidar _lidar;
     DetectionManager _detectionManager;
     PositionManager _positionManager;
+    StrategyManager _strategyManager;
 };
 
 }

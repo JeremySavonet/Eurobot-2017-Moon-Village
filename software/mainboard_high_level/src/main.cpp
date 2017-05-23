@@ -9,15 +9,10 @@
 
 #include <Defines.hpp>
 
-#include <WestBot/Carrousel.hpp>
 #include <WestBot/Configuration.hpp>
 #include <WestBot/ConfigurationTcpServer.hpp>
 #include <WestBot/Hal.hpp>
-#include <WestBot/Servo.hpp>
-#include <WestBot/StrategyManager.hpp>
 #include <WestBot/SystemManager.hpp>
-#include <WestBot/TrajectoryManager.hpp>
-#include <WestBot/Turbine.hpp>
 
 #include <hps_arm.h> // For our base address
 
@@ -77,79 +72,10 @@ int main( int argc, char *argv[] )
     hal._modeSimu.write( 1 );
 #endif
 
-    Servo s0( "Arm_right" );
-    s0.attach( hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
-
-    if( ! s0.isAttached() )
-    {
-        qWarning() << "Failed to attach servo arm right...";
-        return EXIT_FAILURE;
-    }
-
-    Servo s1( "Unblock" );
-    s1.attach( hal, 0, SERVO_1_UNBLOCK_STANDBY, SERVO_1_UNBLOCK_ACTION );
-
-    if( ! s1.isAttached() )
-    {
-        qWarning() << "Failed to attach servo unblock...";
-        return EXIT_FAILURE;
-    }
-
-    Servo s6( "Arm_left" );
-    s6.attach( hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
-
-    if( ! s6.isAttached() )
-    {
-        qWarning() << "Failed to attach servo arm left...";
-        return EXIT_FAILURE;
-    }
-
-    Servo s7( "Ejector" );
-    s7.attach( hal, 7, SERVO_7_EJECTOR_STANDBY, SERVO_7_EJECTOR_EJECT );
-
-    if( ! s7.isAttached() )
-    {
-        qWarning() << "Failed to attach servo ejector...";
-        return EXIT_FAILURE;
-    }
-
-    Turbine turbine( "Turbine" );
-    if( ! turbine.attach( hal ) )
-    {
-        qWarning() << "Failed to attach turbine...";
-        return EXIT_FAILURE;
-    }
-
-    Carrousel carrousel( hal );
-
-    if( ! carrousel.init() )
-    {
-        qWarning() << "Failed to init carrousel module...";
-        return EXIT_FAILURE;
-    }
-
-    // Set carrousel offset
-    carrousel.setPosition( 1.05 );
-
     // ========= Start the system =========
 
     // Here we are BITCHESSSSSS !!!
     system.start(); // Start the state machine
-
-    qDebug() << "Platform ready...";
-
-    TrajectoryManager trajectoryManager( hal );
-    trajectoryManager.init();
-
-    StrategyManager strategyManager(
-        system,
-        trajectoryManager,
-        carrousel,
-        s0, // arm right
-        s6, // arm left
-        s7, // ejector
-        s1, // unblock
-        turbine );
 
     qDebug() << "==== System ready ! ==== ";
 

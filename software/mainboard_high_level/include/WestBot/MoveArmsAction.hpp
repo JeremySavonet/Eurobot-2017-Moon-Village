@@ -18,11 +18,11 @@ public:
     enum class Position
     {
         CLOSED = 0,
+        ZERO_POS,
         DROP,
-        OPEN_90,
-        OPEN_60,
         OPEN_45,
-        OPEN_FULL,
+        OPEN_90,
+        OPEN_180,
         OPEN_FUSEE,
         DISABLE,
         EJECT,

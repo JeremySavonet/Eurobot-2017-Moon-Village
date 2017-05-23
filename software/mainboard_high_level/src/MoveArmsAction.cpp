@@ -32,6 +32,13 @@ void MoveArmsAction::execute()
     }
         break;
 
+    case Position::ZERO_POS:
+    {
+        _armRight.write( SERVO_0_ARM_R_0 );
+        _armLeft.write( SERVO_6_ARM_L_0 );
+    }
+        break;
+
     case Position::DROP:
     {
         _armRight.write( SERVO_0_ARM_R_DROP );
@@ -46,35 +53,28 @@ void MoveArmsAction::execute()
     }
         break;
 
-    case Position::OPEN_60:
-    {
-        _armRight.write( SERVO_0_ARM_R_OPEN60 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN60 );
-    }
-        break;
-
     case Position::OPEN_45:
     {
-        _armRight.write( SERVO_0_ARM_R_OPEN40 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
+        _armRight.write( SERVO_0_ARM_R_OPEN45 );
+        _armLeft.write( SERVO_6_ARM_L_OPEN45 );
     }
         break;
 
-    case Position::OPEN_FULL:
+    case Position::OPEN_180:
     {
-        _armRight.write( SERVO_0_ARM_R_OPEN );
-        _armLeft.write( SERVO_6_ARM_L_OPEN );
+        _armRight.write( SERVO_0_ARM_R_OPEN180 );
+        _armLeft.write( SERVO_6_ARM_L_OPEN180 );
     }
         break;
 
     case Position::OPEN_FUSEE:
     {
-        _ejector.write( SERVO_7_EJECTOR_FUSEE );
+        _ejector.write( SERVO_7_EJECTOR_STANDBY );
         QThread::msleep( 250 );
 
         // Open arms full
-        _armRight.write( SERVO_0_ARM_R_OPEN );
-        _armLeft.write( SERVO_6_ARM_L_OPEN );
+        _armRight.write( SERVO_0_ARM_R_OPEN180 );
+        _armLeft.write( SERVO_6_ARM_L_OPEN180 );
 
         QThread::msleep( 250 );
 
@@ -103,8 +103,8 @@ void MoveArmsAction::execute()
 
         QThread::msleep( 250 );
 
-        _armRight.write( SERVO_0_ARM_R_OPEN60 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN60 );
+        _armRight.write( SERVO_0_ARM_R_OPEN45 );
+        _armLeft.write( SERVO_6_ARM_L_OPEN45 );
         QThread::msleep( 500 );
 
         _ejector.write( SERVO_7_EJECTOR_STANDBY );

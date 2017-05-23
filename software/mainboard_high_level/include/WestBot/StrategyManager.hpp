@@ -9,14 +9,15 @@
 
 #include "Action.hpp"
 #include "Carrousel.hpp"
+#include "ColorSensor.hpp"
 #include "Common.hpp"
 #include "Servo.hpp"
-#include "SystemManager.hpp"
 #include "TrajectoryManager.hpp"
 #include "Turbine.hpp"
 
 namespace WestBot
 {
+    class SystemManager;
 
 /*!
 * \brief This class manage the robot strategy by handling data from FPGA
@@ -34,6 +35,7 @@ public:
         Servo& ejector,
         Servo& unblock,
         Turbine& turbine,
+        ColorSensor& _colorSensor,
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
@@ -66,6 +68,7 @@ private:
     Servo& _ejector;
     Servo& _unblock;
     Turbine& _turbine;
+    ColorSensor& _colorSensor;
 
     QList< Action::Ptr > _actions;
     Action::Ptr _currentAction;

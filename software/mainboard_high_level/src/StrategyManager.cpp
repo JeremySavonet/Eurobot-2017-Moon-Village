@@ -12,8 +12,8 @@
 #include <WestBot/TurbineAction.hpp>
 #include <WestBot/TurnCarrouselAction.hpp>
 #include <WestBot/WaitAction.hpp>
-
 #include <WestBot/StrategyManager.hpp>
+#include <WestBot/SystemManager.hpp>
 
 using namespace WestBot;
 
@@ -26,6 +26,7 @@ StrategyManager::StrategyManager(
     Servo& ejector,
     Servo& unblock,
     Turbine& turbine,
+    ColorSensor& colorSensor,
     QObject* parent )
     : QObject( parent )
     , _systemManager( systemManager )
@@ -36,6 +37,7 @@ StrategyManager::StrategyManager(
     , _ejector( ejector )
     , _unblock( unblock )
     , _turbine( turbine )
+    , _colorSensor( colorSensor )
     , _currentAction( nullptr )
     , _stratIsRunning( false )
 {
@@ -255,7 +257,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
             _unblock,
-            MoveArmsAction::Position::OPEN_FULL );
+            MoveArmsAction::Position::OPEN_180 );
 
     if( color == Color::Yellow )
     {

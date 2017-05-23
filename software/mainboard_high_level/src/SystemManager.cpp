@@ -31,10 +31,26 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                             "blue" ) )
     , _color( Color::Unknown )
     , _colorSensor( "Color_sensor" )
+    , _armRight( "Arm_right" )
+    , _armLeft( "Arm_left" )
+    , _ejector( "Ejector" )
+    , _unblock( "Unblock" )
+    , _turbine( "Turbine" )
+    , _carrousel( _hal )
+    , _trajectoryManager( _hal )
     , _systemMode( SystemManager::SystemMode::Full )
     , _lidar( "/dev/ttyUSB0" )
     , _detectionManager( "Opponent_detector" )
     , _positionManager( _lidar )
+    , _strategyManager( *this,
+                        _trajectoryManager,
+                        _carrousel,
+                        _armRight,
+                        _armLeft,
+                        _ejector,
+                        _unblock,
+                        _turbine,
+                        _colorSensor )
 {
     connect(
         & _gameTimer,
@@ -205,6 +221,56 @@ bool SystemManager::init()
         qWarning() << "Failed to connect to RPLidar";
         return false;
     }
+
+    _armRight.attach( _hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
+
+    if( ! _armRight.isAttached() )
+    {
+        qWarning() << "Failed to attach servo arm right...";
+        return false;
+    }
+
+    _unblock.attach( _hal, 0, SERVO_1_UNBLOCK_STANDBY, SERVO_1_UNBLOCK_ACTION );
+
+    if( ! _unblock.isAttached() )
+    {
+        qWarning() << "Failed to attach servo unblock...";
+        return false;
+    }
+
+    _armLeft.attach( _hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
+
+    if( ! _armLeft.isAttached() )
+    {
+        qWarning() << "Failed to attach servo arm left...";
+        return false;
+    }
+
+    _ejector.attach( _hal, 7, SERVO_7_EJECTOR_STANDBY, SERVO_7_EJECTOR_EJECT );
+
+    if( ! _ejector.isAttached() )
+    {
+        qWarning() << "Failed to attach servo ejector...";
+        return false;
+    }
+
+    if( ! _turbine.attach( _hal ) )
+    {
+        qWarning() << "Failed to attach turbine...";
+        return false;
+    }
+
+
+    if( ! _carrousel.init() )
+    {
+        qWarning() << "Failed to init carrousel module...";
+        return EXIT_FAILURE;
+    }
+
+    // Set carrousel offset
+    _carrousel.setPosition( 1.05 );
+
+    _trajectoryManager.init();
 
     _gameTimer.setSingleShot( true );
 

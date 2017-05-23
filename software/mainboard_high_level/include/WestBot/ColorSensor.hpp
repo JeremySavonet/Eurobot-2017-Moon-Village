@@ -30,9 +30,9 @@ public:
 
     bool isAttached() const;
 
-private:
-    void process();
+    int process();
 
+private:
     const QString _name;
 
     ItemRegister::Ptr _motorOverride;
