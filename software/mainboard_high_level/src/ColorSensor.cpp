@@ -162,6 +162,8 @@ int ColorSensor::sensorCheck()
         uint16_t blue = _sensorBlue->read< uint16_t >();
         qDebug() << "Blue is " << blue;
 
+        qDebug() << _colorTarget << blue << vMin / 3;
+
         if( ( _colorTarget == Color::Blue && blue >= vMin / 3 ) ||
             ( _colorTarget == Color::Yellow && blue < vMin / 3 ) )
         {

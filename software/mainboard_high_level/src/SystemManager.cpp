@@ -243,11 +243,6 @@ bool SystemManager::init()
         return false;
     }
 
-    // Override output registers
-    _hal._outputOverride.write( 0x01010101 );
-
-    displayColor( _colorButton->digitalRead() );
-
     if( ! _lidar.connect() )
     {
         qWarning() << "Failed to connect to RPLidar";
@@ -276,6 +271,11 @@ bool SystemManager::init()
     _carrousel.setPosition( 1.05 );
 
     _trajectoryManager.init();
+
+    // Override output registers
+    _hal._outputOverride.write( 0x01010101 );
+
+    displayColor( _colorButton->digitalRead() );
 
     _gameTimer.setSingleShot( true );
 
@@ -628,6 +628,8 @@ void SystemManager::displayColor( const DigitalValue& value )
         _ledBlue->digitalWrite( DigitalValue::OFF );
         _ledYellow->digitalWrite( DigitalValue::ON );
     }
+
+    _colorSensor.changeTarget( _color );
 }
 
 void SystemManager::robotAlive()

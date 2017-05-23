@@ -138,6 +138,8 @@ void StrategyManager::stopRobot()
                 0.0,
                 false );
 
+        _trajectoryManager.enable();
+
         // This will insert the safety action to be executed first
         // and then back to the last action
         _actions.push_front( safety );
@@ -341,12 +343,16 @@ void StrategyManager::buildStrat( const Color& color )
         _actions.push_back( turnCCW );
         _actions.push_back( wait1s );
         _actions.push_back( eject );
-        _actions.push_back( wait1s );
+
+        /*_actions.push_back( wait1s );
         _actions.push_back( move4 );
         _actions.push_back( move5 );
         _actions.push_back( drop );
+
         _actions.push_back( wait500Ms );
         _actions.push_back( disableArms );
+        */
+        /*
         _actions.push_back( move6 );
         _actions.push_back( move7 );
         _actions.push_back( turnCW );
@@ -355,7 +361,7 @@ void StrategyManager::buildStrat( const Color& color )
         // Eject cylindre 2
         _actions.push_back( drop );
         _actions.push_back( wait200Ms );
-
+        */
         /*
         // Eject cylinre 2 =============//
 
@@ -479,7 +485,19 @@ void StrategyManager::doStrat( const Color& color )
     buildStrat( color );
 
     qDebug() << "Do strat for color:" << color;
+/*
+    MoveArmsAction::Ptr closeArms =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+           _unblock,
+            MoveArmsAction::Position::CLOSED );
 
+    closeArms->execute();
+
+    _colorSensor.sensorCheck();
+*/
     // Strat loop
     for( const auto& action: _actions )
     {
