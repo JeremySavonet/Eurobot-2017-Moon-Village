@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
+#include <QTime>
 #include <QTimer>
 
 #include <WestBot/ColorSensor.hpp>
@@ -103,12 +104,16 @@ bool ColorSensor::attach( Hal& hal )
 
     if( _vcAvg > 400 || _vcAvg == 0 )
     {
-        qDebug() << "ERROR = The carrousel seems to be not empty, init is KO";
+        qDebug()
+            << QTime::currentTime().toString()
+            << "ERROR = The carrousel seems to be not empty, init is KO";
         _isAttached = false;
         return false;
     }
 
-    qDebug() << "Sensor module is attached";
+    qDebug()
+        << QTime::currentTime().toString()
+        << "Sensor module is attached";
     _isAttached = true;
     return true;
 }
@@ -156,8 +161,8 @@ int ColorSensor::sensorCheck()
 
     _motorValue->write( 0 );
 
-    qDebug() << "lowest is " << v_min;
-    qDebug() << "higuest is " << v_max;
+    qDebug() << QTime::currentTime().toString() << "lowest is " << v_min;
+    qDebug() << QTime::currentTime().toString() << "higuest is " << v_max;
 
     if( abs( v_min - v_max ) < v_max / 2 )
     {
@@ -168,12 +173,12 @@ int ColorSensor::sensorCheck()
             ( _colorTarget == Color::Yellow && blue < v_min / 3 ) )
         {
             ret = RET_OK;
-            qDebug() << "Single color: OK!!";
+            qDebug()<< QTime::currentTime().toString() << "Single color: OK!!";
         }
         else
         {
             ret = RET_ERROR_COLOR_SINGLE_OPPOSITE;
-            qDebug() << "Single color opposite: NOK!!";
+            qDebug() << QTime::currentTime().toString() << "Single color opposite: NOK!!";
         }
 
         return ret;
@@ -189,7 +194,7 @@ int ColorSensor::sensorCheck()
 
             if( abs( value - v_max ) <= v_max / 5 )
             {
-                qDebug() << "MAX FOUND" << value << v_max;
+                qDebug() << QTime::currentTime().toString() << "MAX FOUND" << value << v_max;
 
                 _motorValue->write( -MOTOR_COLOR_1T_PER_SECOND );
                 QThread::msleep( 250 );
@@ -199,13 +204,16 @@ int ColorSensor::sensorCheck()
                 uint16_t blue_value = _sensorBlue->read< uint16_t >();
                 uint16_t clear_value = _sensorClear->read< uint16_t >();
 
-                qDebug() << "COLOR TO CHECK" << blue_value << clear_value << v_min << v_max;
+                qDebug()
+                    << QTime::currentTime().toString()
+                    << "COLOR TO CHECK"
+                    << blue_value << clear_value << v_min << v_max;
 
                 if( ( _colorTarget == Color::Yellow ) &&
                     ( blue_value < clear_value / 3 ) &&
                     ( abs( clear_value - v_max ) > v_max / 5 ) )
                 {
-                    qDebug() << "YELLOW found!";
+                    qDebug() << QTime::currentTime().toString() << "YELLOW found!";
                     ret = RET_OK;
                     return ret;
                 }
@@ -213,13 +221,16 @@ int ColorSensor::sensorCheck()
                          ( blue_value >= clear_value / 3 ) &&
                          ( abs( clear_value - v_max ) > v_max / 5 ) )
                 {
-                    qDebug() << "BLUE found!";
+                    qDebug() << QTime::currentTime().toString() << "BLUE found!";
                     ret = RET_OK;
                     return ret;
                 }
                 else
                 {
-                    qDebug() << "Not Found, Retry (or stop)" << value << v_min;
+                    qDebug()
+                        << QTime::currentTime().toString()
+                        << "Not Found, Retry (or stop)"
+                        << value << v_min;
                     _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
                     QThread::msleep( 500 );
                 }
@@ -248,16 +259,16 @@ bool ColorSensor::checkIsEmpty()
     }
 
     avg = avg / AVG_CNT;
-    qDebug() << "AVG is " << avg;
+    qDebug() << QTime::currentTime().toString() << "AVG is " << avg;
 
     if( avg > 3 * _vcAvg )
     {
-        qDebug() << "Slot is not empty;";
+        qDebug() << QTime::currentTime().toString() << "Slot is not empty;";
         return false;
     }
     else
     {
-        qDebug() << "Slot is empty;";
+        qDebug() << QTime::currentTime().toString() << "Slot is empty;";
         return true;
     }
 }

@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QThread>
+#include <QTime>
 
 #include <WestBot/Servo.hpp>
 
@@ -73,7 +74,9 @@ bool Servo::attach( Hal& hal,
         break;
 
     default:
-        qDebug() << "Not a valid io number to attach servo.";
+        qDebug()
+            << QTime::currentTime().toString()
+            << "Not a valid io number to attach servo.";
         return false;
     }
 

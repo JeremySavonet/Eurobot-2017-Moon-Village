@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QTime>
 #include <QTimer>
 #include <QThread>
 
@@ -67,12 +68,12 @@ void DetectionManager::check()
     {
         emit opponentDetected( true );
         _opponentDetected = true;
+        qDebug() << QTime::currentTime().toString() << "Opponent detected";
     }
     else if( _opponentDetected && distanceValue == 255 )
     {
         emit opponentDetected( false );
         _opponentDetected = false;
+        qDebug() << QTime::currentTime().toString() << "Safe";
     }
-
-    qDebug() << ">>>>>>>>>>>>>>>VALUE" << distanceValue;
 }

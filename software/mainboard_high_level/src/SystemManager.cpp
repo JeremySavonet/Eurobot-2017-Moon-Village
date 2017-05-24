@@ -6,6 +6,7 @@
 #include <QState>
 #include <QString>
 #include <QThread>
+#include <QTime>
 
 #include <Defines.hpp>
 #include <WestBot/SystemManager.hpp>
@@ -78,7 +79,8 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             {
                 if( _stopButton->digitalRead() == DigitalValue::ON )
                 {
-                    qWarning() << "Could not start game if AU is on";
+                    qWarning()
+                        << QTime::currentTime().toString() << "Could not start game if AU is on";
                 }
                 else
                 {
@@ -122,12 +124,13 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
         {
             if( status )
             {
-                qDebug() << "Opponent detected";
+                qDebug()
+                    << QTime::currentTime().toString() << "Opponent detected";
                 emit opponentDetected();
             }
             else
             {
-                qDebug() << "We are safe";
+                qDebug() << QTime::currentTime().toString() << "We are safe";
             }
         } );
 }
@@ -179,7 +182,8 @@ bool SystemManager::init()
 
     if( ! _armRight.isAttached() )
     {
-        qWarning() << "Failed to attach servo arm right...";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach servo arm right...";
         return false;
     }
 
@@ -187,7 +191,8 @@ bool SystemManager::init()
 
     if( ! _unblock.isAttached() )
     {
-        qWarning() << "Failed to attach servo unblock...";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach servo unblock...";
         return false;
     }
 
@@ -195,7 +200,8 @@ bool SystemManager::init()
 
     if( ! _armLeft.isAttached() )
     {
-        qWarning() << "Failed to attach servo arm left...";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach servo arm left...";
         return false;
     }
 
@@ -203,51 +209,58 @@ bool SystemManager::init()
 
     if( ! _ejector.isAttached() )
     {
-        qWarning() << "Failed to attach servo ejector...";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach servo ejector...";
         return false;
     }
 
     // Color sensor
     if( ! _colorSensor.attach( _hal ) )
     {
-        qWarning() << "Failed to attach color sensor module";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach color sensor module";
         return false;
     }
 
     // Distance sensor
     if( ! _detectionManager.init( _hal ) )
     {
-        qWarning() << "Failed to init proximity sensor module";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to init proximity sensor module";
         return false;
     }
 
     if( ! _recallage.init( _hal ) )
     {
-        qWarning() << "Failed to init recallage module";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to init recallage module";
         return false;
     }
 
     if( ! _lidar.connect() )
     {
-        qWarning() << "Failed to connect to RPLidar";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to connect to RPLidar";
         return false;
     }
 
     if( ! _turbine.attach( _hal ) )
     {
-        qWarning() << "Failed to attach turbine...";
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach turbine...";
         return false;
     }
 
     if( ! _colorSensor.checkIsEmpty() )
     {
-        qDebug() << "Failed to finish init: Carrousel is not empty.";
+        qDebug()
+            << QTime::currentTime().toString() << "Failed to finish init: Carrousel is not empty.";
         return false;
     }
 
     if( ! _carrousel.init() )
     {
-        qWarning() << "Failed to init carrousel module...";
+        qWarning() << QTime::currentTime().toString() << "Failed to init carrousel module...";
         return false;
     }
 
@@ -325,7 +338,7 @@ void SystemManager::reset()
 
     _hal._colorEnable.write( 1 );
 
-    qDebug() << "System was reset";
+    qDebug() << QTime::currentTime().toString() << "System was reset";
 }
 
 void SystemManager::setMode( SystemManager::SystemMode mode )
@@ -440,7 +453,7 @@ QState* SystemManager::createInitialState( QState* parent )
         this,
         []()
         {
-            qDebug() << "Enter initial state";
+            qDebug() << QTime::currentTime().toString() << "Enter initial state";
         } );
 
     connect(
@@ -467,7 +480,7 @@ QState* SystemManager::createCheckGameColorState( QState* parent )
         this,
         []()
         {
-            qDebug() << "Enter check color state";
+            qDebug() << QTime::currentTime().toString() << "Enter check color state";
         } );
 
     connect(
@@ -490,6 +503,7 @@ QState* SystemManager::createCheckGameColorState( QState* parent )
             displayColor( value );
 
             qDebug()
+                << QTime::currentTime().toString()
                 << "Exit check color state. Color for the game is:"
                 << _color;
         } );
@@ -507,7 +521,7 @@ QState* SystemManager::createStartGameState( QState* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Enter start game state";
+            qDebug() << QTime::currentTime().toString() << "Enter start game state";
 
             _gameTimer.start( GAME_DURATION );
             _aliveTimer.start( 250 ); // Start blinking led
@@ -529,7 +543,7 @@ QState* SystemManager::createRunningStratState( QState* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Enter running strat state";
+            qDebug() << QTime::currentTime().toString() << "Enter running strat state";
 
             if( _color == Color::Yellow )
             {
@@ -557,7 +571,7 @@ QState* SystemManager::createStopGameState( QState* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Enter stop state";
+            qDebug() << QTime::currentTime().toString() << "Enter stop state";
             emit stopped();
         } );
 
@@ -575,7 +589,7 @@ QState* SystemManager::createErrorState( QState* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Enter error state";
+            qDebug() << QTime::currentTime().toString() << "Enter error state";
             // XXX: WHAT TO DO: Signal with error type
         } );
 
@@ -594,7 +608,7 @@ QState* SystemManager::createHardStopState( QState* parent )
         [ this ]()
         {
             _gameTimer.stop();
-            qDebug() << "Enter hard stop state";
+            qDebug() << QTime::currentTime().toString() << "Enter hard stop state";
         } );
 
     return state;

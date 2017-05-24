@@ -28,22 +28,6 @@ namespace
     const double ALGO_BORDER_FILTER_DROP = 10;
 }
 
-/*
-Recallage::Recallage()
-    : _theta( nullptr )
-    , _distance( nullptr )
-    , _lenght( 0 )
-    , _odoTheta( 0.0 )
-    , _odoX( 0.0 )
-    , _odoY( 0.0 )
-    , _odoThetaReg( nullptr )
-    , _odoXReg( nullptr )
-    , _odoYReg( nullptr )
-{
-
-}
-*/
-
 Recallage::Recallage()
     : _odoThetaReg( nullptr )
     , _odoXReg( nullptr )

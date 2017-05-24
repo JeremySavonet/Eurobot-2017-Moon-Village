@@ -1,6 +1,7 @@
 // Copyright (c) 2017 All Rights Reserved WestBot
 
 #include <QDebug>
+#include <QTime>
 #include <QTimer>
 
 #include <WestBot/Action.hpp>
@@ -19,7 +20,8 @@ Action::Action( QObject* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Action timed out";
+
+            qDebug() << QTime::currentTime().toString() << "Action timed out" ;
         } );
 }
 

@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QProcess>
 #include <QStringList>
+#include <QTime>
 
 #include <WestBot/FunnyAction.hpp>
 
@@ -19,7 +20,7 @@ FunnyAction::FunnyAction()
 
 void FunnyAction::execute()
 {
-    qDebug() << "Execute funny action";
+    qDebug() << QTime::currentTime().toString() << "Execute funny action";
 
     connect(
         _process,

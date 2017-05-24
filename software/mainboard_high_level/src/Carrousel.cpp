@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
+#include <QTime>
 #include <QTimer>
 
 #include <WestBot/Carrousel.hpp>
@@ -29,7 +30,9 @@ Carrousel::Carrousel( Hal& hal, QObject* parent )
         this,
         [ this ]()
         {
-            qDebug() << "Cannot reach position. Maybe it's blocked=====> drop!";
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Cannot reach position. Maybe it's blocked=====> drop!";
             _positionTimeout = true;
             setEnable( false );
         } );
@@ -101,7 +104,10 @@ bool Carrousel::init()
 
     _nbTickPerTour = _reference - firstRef;
 
-    qDebug() << "Carrousel module initialized. Nb tick:" << _nbTickPerTour;
+    qDebug()
+        << QTime::currentTime().toString()
+        << "Carrousel module initialized. Nb tick:"
+        << _nbTickPerTour;
 
     return true;
 }
