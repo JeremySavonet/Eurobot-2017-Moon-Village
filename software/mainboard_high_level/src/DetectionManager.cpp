@@ -51,7 +51,7 @@ bool DetectionManager::init( Hal& hal )
         QCoreApplication::processEvents();
     }
 
-    _eventTimer->start( 100 );
+    _eventTimer->start( 10 );
 
     check();
 
@@ -73,4 +73,6 @@ void DetectionManager::check()
         emit opponentDetected( false );
         _opponentDetected = false;
     }
+
+    qDebug() << ">>>>>>>>>>>>>>>VALUE" << distanceValue;
 }

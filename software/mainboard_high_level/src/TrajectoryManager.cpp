@@ -103,7 +103,7 @@ void TrajectoryManager::disable()
 
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
-       QThread::msleep( 10 );
+       QThread::msleep( 1 );
        QCoreApplication::processEvents();
        qDebug() << "wait disable ack";
     }
@@ -157,7 +157,7 @@ void TrajectoryManager::hardStop()
 
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
-       QThread::msleep( 10 );
+       QThread::msleep( 1 );
        QCoreApplication::processEvents();
        qDebug() << "wait hardstop ack";
     }

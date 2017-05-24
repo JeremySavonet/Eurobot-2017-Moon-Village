@@ -14,6 +14,8 @@ using namespace WestBot;
 
 namespace
 {
+    const int FUNNY_ACTION = 80 * 1000; // 90s
+
     const int GAME_DURATION = 90 * 1000; // 90s
 }
 
@@ -53,6 +55,12 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                         _turbine,
                         _colorSensor )
 {
+    connect(
+        & _funnyTimer,
+        & QTimer::timeout,
+        this,
+        & SystemManager::doFunnyAction );
+
     // Task to notify that the robot is alive
     connect(
         & _aliveTimer,
@@ -286,6 +294,7 @@ bool SystemManager::init()
     qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
     */
     _gameTimer.setSingleShot( true );
+    _funnyTimer.setSingleShot( true );
 
     createStateMachine();
 
@@ -342,7 +351,6 @@ void SystemManager::createStateMachine()
     QState* startGameState = createStartGameState( & _stateMachine );
 
     QState* runningStratState = createRunningStratState( & _stateMachine );
-    QState* funnyActionState = createFunnyActionState( & _stateMachine );
 
     QState* stopGameState = createStopGameState( & _stateMachine );
 
@@ -366,9 +374,7 @@ void SystemManager::createStateMachine()
     runningStratState->addTransition(
         & _gameTimer,
         & QTimer::timeout,
-        funnyActionState );
-
-    funnyActionState->addTransition( stopGameState );
+        stopGameState );
 
     // Rearm the system for an other game
     stopGameState->addTransition( initialState );
@@ -385,11 +391,6 @@ void SystemManager::createStateMachine()
         errorState );
 
     runningStratState->addTransition(
-        this,
-        & SystemManager::error,
-        errorState );
-
-    funnyActionState->addTransition(
         this,
         & SystemManager::error,
         errorState );
@@ -411,11 +412,6 @@ void SystemManager::createStateMachine()
         hardStopState );
 
     runningStratState->addTransition(
-        this,
-        & SystemManager::hardStop,
-        hardStopState );
-
-    funnyActionState->addTransition(
         this,
         & SystemManager::hardStop,
         hardStopState );
@@ -515,6 +511,8 @@ QState* SystemManager::createStartGameState( QState* parent )
 
             _gameTimer.start( GAME_DURATION );
             _aliveTimer.start( 250 ); // Start blinking led
+            _funnyTimer.start( FUNNY_ACTION );
+
             emit readyForWar();
         } );
 
@@ -548,32 +546,6 @@ QState* SystemManager::createRunningStratState( QState* parent )
     return state;
 }
 
-QState* SystemManager::createFunnyActionState( QState* parent )
-{
-    QState* state = new QState( parent );
-
-    connect(
-        state,
-        & QState::entered,
-        this,
-        [ this ]()
-        {
-            qDebug() << "Enter funny action state";
-            emit doFunnyAction();
-        } );
-
-    connect(
-        state,
-        & QState::exited,
-        this,
-        [ this ]()
-        {
-            emit stopped();
-        } );
-
-    return state;
-}
-
 // Final state
 QState* SystemManager::createStopGameState( QState* parent )
 {
@@ -586,6 +558,7 @@ QState* SystemManager::createStopGameState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter stop state";
+            emit stopped();
         } );
 
     return state;
