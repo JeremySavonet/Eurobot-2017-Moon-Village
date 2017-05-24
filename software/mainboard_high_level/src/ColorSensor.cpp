@@ -130,8 +130,8 @@ bool ColorSensor::isAttached() const
 int ColorSensor::sensorCheck()
 {
     uint8_t ret;
-    uint16_t vMin = 65535;
-    uint16_t vMax = 0;
+    uint16_t v_min = 65535;
+    uint16_t v_max = 0;
     uint16_t j;
     uint16_t value;
 
@@ -140,13 +140,14 @@ int ColorSensor::sensorCheck()
     for( j = 0; j < 1000; j++ )
     {
         value = _sensorClear->read< uint16_t >();
-        if( value < vMin )
+        if( value < v_min )
         {
-            vMin = value;
+            v_min = value;
         }
-        if( value > vMax )
+
+        if( value > v_max )
         {
-            vMax = value;
+            v_max = value;
         }
 
         QThread::msleep( 1 );
@@ -154,28 +155,25 @@ int ColorSensor::sensorCheck()
 
     _motorValue->write( 0 );
 
-    qDebug() << "lowest is " << vMin;
-    qDebug() << "higuest is " << vMax;
+    qDebug() << "lowest is " << v_min;
+    qDebug() << "higuest is " << v_max;
 
-    if( abs( vMin - vMax ) < vMax / 2 )
+    if( abs( v_min - v_max ) < v_max / 2 )
     {
         uint16_t blue = _sensorBlue->read< uint16_t >();
-        qDebug() << "Blue is " << blue;
+        qDebug() << "blue is " << blue;
 
-        qDebug() << _colorTarget << blue << vMin / 3;
-
-        if( ( _colorTarget == Color::Blue && blue >= vMin / 3 ) ||
-            ( _colorTarget == Color::Yellow && blue < vMin / 3 ) )
+        if( ( _colorTarget == Color::Blue && blue >= v_min / 3 ) ||
+            ( _colorTarget == Color::Yellow && blue < v_min / 3 ) )
         {
             ret = RET_OK;
-            qDebug() << "Single color: OK";
+            qDebug() << "Single color: OK!!";
         }
         else
         {
             ret = RET_ERROR_COLOR_SINGLE_OPPOSITE;
-            qDebug() << "Single color opposite: NOK";
+            qDebug() << "Single color opposite: NOK!!";
         }
-
 
         return ret;
     }
@@ -185,53 +183,56 @@ int ColorSensor::sensorCheck()
     for( uint16_t retry = 0; retry < 2 * 1000; retry++ )
     {
         _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
-
-        value = _sensorClear->read< uint16_t >();
-
-        if( abs( value - vMax ) <= vMax / 5 )
         {
-            qDebug() << "MAX FOUND" << value << vMax;
+            value = _sensorClear->read< uint16_t >();
 
-            _motorValue->write( -MOTOR_COLOR_1T_PER_SECOND );
-            QThread::msleep( 250 );
-            _motorValue->write( 0 );
-            QThread::msleep( 100 );
-
-            uint16_t blue_value = _sensorBlue->read< uint16_t >();
-            uint16_t clear_value = _sensorClear->read< uint16_t >();
-
-            qDebug() << "COLOR TO CHECK" << blue_value << clear_value << vMin << vMax;
-
-            if( ( _colorTarget == Color::Yellow ) &&
-                ( blue_value < clear_value / 3 ) &&
-                ( abs( clear_value - vMax ) > vMax / 5 ) )
+            if( abs( value - v_max ) <= v_max / 5 )
             {
-                qDebug() << "YELLOW found!";
-                return RET_OK;
-            }
-            else if( ( _colorTarget == Color::Blue ) &&
-                     ( blue_value >= clear_value / 3 ) &&
-                     ( abs( clear_value - vMax ) > vMax / 5 ) )
-            {
-                qDebug() << "BLUE found!";
-                return RET_OK;
+                qDebug() << "MAX FOUND" << value << v_max;
+
+                _motorValue->write( -MOTOR_COLOR_1T_PER_SECOND );
+                QThread::msleep( 250 );
+                _motorValue->write( 0 );
+                QThread::msleep( 100 );
+
+                uint16_t blue_value = _sensorBlue->read< uint16_t >();
+                uint16_t clear_value = _sensorClear->read< uint16_t >();
+
+                qDebug() << "COLOR TO CHECK" << blue_value << clear_value << v_min << v_max;
+
+                if( ( _colorTarget == Color::Yellow ) &&
+                    ( blue_value < clear_value / 3 ) &&
+                    ( abs( clear_value - v_max ) > v_max / 5 ) )
+                {
+                    qDebug() << "YELLOW found!";
+                    ret = RET_OK;
+                    return ret;
+                }
+                else if( ( _colorTarget == Color::Blue ) &&
+                         ( blue_value >= clear_value / 3 ) &&
+                         ( abs( clear_value - v_max ) > v_max / 5 ) )
+                {
+                    qDebug() << "BLUE found!";
+                    ret = RET_OK;
+                    return ret;
+                }
+                else
+                {
+                    qDebug() << "Not Found, Retry (or stop)" << value << v_min;
+                    _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
+                    QThread::msleep( 500 );
+                }
             }
             else
             {
-                qDebug() << "Not Found, Retry (or stop)" << value << vMin;
-                _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
-                QThread::msleep( 500 );
+                QThread::msleep( 1 );
             }
-        }
-        else
-        {
-            QThread::msleep( 1 );
         }
     }
 
+    ret = RET_ERROR_UNKNOWN;
     _motorValue->write( 0 );
-
-    return RET_ERROR_UNKNOWN;
+    return ret;
 }
 
 bool ColorSensor::checkIsEmpty()
