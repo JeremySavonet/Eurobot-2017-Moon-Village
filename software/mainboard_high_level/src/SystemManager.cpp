@@ -42,7 +42,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     , _unblock( "Unblock" )
     , _turbine( "Turbine" )
     , _carrousel( _hal )
-    , _trajectoryManager( _hal )
+    , _trajectoryManager( _hal, _recallage )
     , _systemMode( SystemManager::SystemMode::Full )
     , _lidar( "/dev/ttyUSB0" )
     , _detectionManager( "Opponent_detector" )
@@ -548,11 +548,11 @@ QState* SystemManager::createRunningStratState( QState* parent )
 
             if( _color == Color::Yellow )
             {
-                _recallage.errorInit( 35, 0, 0 ); // TODO: Change y pos
+                _recallage.errorInit( 36, 0, 0 ); // TODO: Change y pos
             }
             else
             {
-                _recallage.errorInit( 35, 0, 0 ); // TODO: Change y pos
+                _recallage.errorInit( 36, 0, 0 ); // TODO: Change y pos
             }
 
             emit doStrat( _color );

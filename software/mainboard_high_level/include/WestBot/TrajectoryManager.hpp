@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "Hal.hpp"
+#include "Recallage.hpp"
 
 #define CMD_TYPE_TRAJ 0x0
 #define CMD_TYPE_CFG_DISTANCE 0x1
@@ -91,7 +92,7 @@ public:
         RUNNING_CLITOID_CURVE,   // Running a clitoid in the curve part
     };
 
-    TrajectoryManager( Hal& hal );
+    TrajectoryManager( Hal& hal, Recallage& recallage );
     ~TrajectoryManager();
 
     void init();
@@ -118,6 +119,7 @@ public:
 
 private:
     Hal _hal;
+    Recallage& _recallage;
 };
 
     /*!

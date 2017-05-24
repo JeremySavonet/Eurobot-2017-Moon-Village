@@ -10,8 +10,9 @@
 
 using namespace WestBot;
 
-TrajectoryManager::TrajectoryManager( Hal& hal )
+TrajectoryManager::TrajectoryManager( Hal& hal, Recallage& recallage )
     : _hal( hal )
+    , _recallage( recallage )
 {
 }
 
@@ -287,6 +288,13 @@ void TrajectoryManager::turnARel( float theta, bool correction )
 
 void TrajectoryManager::turnAAbs( float theta, bool correction )
 {
+    RobotPos currentPos;
+    currentPos.theta = theta;
+    currentPos.x = 0;
+    currentPos.y = 0;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -294,7 +302,7 @@ void TrajectoryManager::turnAAbs( float theta, bool correction )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_A_ABS );
-    _hal._trajCmdADAngleDeg.write( theta );
+    _hal._trajCmdADAngleDeg.write( ( float ) pos.theta );
 
     correction ? _hal._trajCmdADCorrection.write( 1 ) : _hal._trajCmdADCorrection.write( 0 );
 
@@ -361,6 +369,13 @@ void TrajectoryManager::turnOnlyARel( float theta, bool correction )
 
 void TrajectoryManager::turnOnlyAAbs( float theta, bool correction )
 {
+    RobotPos currentPos;
+    currentPos.theta = theta;
+    currentPos.x = 0;
+    currentPos.y = 0;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -368,7 +383,7 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_ONLY_A_ABS );
-    _hal._trajCmdADAngleDeg.write( theta );
+    _hal._trajCmdADAngleDeg.write( ( float ) pos.theta );
 
     correction ? _hal._trajCmdADCorrection.write( 1 ) : _hal._trajCmdADCorrection.write( 0 );
 
@@ -398,6 +413,13 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction )
 
 void TrajectoryManager::turnToXY( float x, float y )
 {
+    RobotPos currentPos;
+    currentPos.theta = 0;
+    currentPos.x = x;
+    currentPos.y = y;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -405,8 +427,8 @@ void TrajectoryManager::turnToXY( float x, float y )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_TURNTO_XY );
-    _hal._trajCmdPosX.write( x );
-    _hal._trajCmdPosY.write( y );
+    _hal._trajCmdPosX.write( ( float ) pos.x );
+    _hal._trajCmdPosY.write( ( float ) pos.y );
 
     _hal._trajCmdValid.write( 0x1 ) ;
 
@@ -435,6 +457,13 @@ void TrajectoryManager::turnToXY( float x, float y )
 
 void TrajectoryManager::turnToXYBehind( float x, float y )
 {
+    RobotPos currentPos;
+    currentPos.theta = 0;
+    currentPos.x = x;
+    currentPos.y = y;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -442,8 +471,8 @@ void TrajectoryManager::turnToXYBehind( float x, float y )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_TURNTO_XY_BEHIND );
-    _hal._trajCmdPosX.write( x );
-    _hal._trajCmdPosY.write( y );
+    _hal._trajCmdPosX.write( ( float ) pos.x );
+    _hal._trajCmdPosY.write( ( float ) pos.y );
 
     _hal._trajCmdValid.write( 0x1 ) ;
 
@@ -472,6 +501,13 @@ void TrajectoryManager::turnToXYBehind( float x, float y )
 
 void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
 {
+    RobotPos currentPos;
+    currentPos.theta = theta;
+    currentPos.x = x;
+    currentPos.y = y;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -479,9 +515,9 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_GOTO_XY_ABS );
-    _hal._trajCmdPosTheta.write( theta );
-    _hal._trajCmdPosX.write( x );
-    _hal._trajCmdPosY.write( y );
+    _hal._trajCmdPosTheta.write( ( float ) pos.theta );
+    _hal._trajCmdPosX.write( ( float ) pos.x );
+    _hal._trajCmdPosY.write( ( float ) pos.y );
 
     _hal._trajCmdValid.write( 0x1 ) ;
 
@@ -511,6 +547,13 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
 
 void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
 {
+    RobotPos currentPos;
+    currentPos.theta = theta;
+    currentPos.x = x;
+    currentPos.y = y;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -518,9 +561,9 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_GOTO_FORWARD_XY_ABS );
-    _hal._trajCmdPosTheta.write( theta );
-    _hal._trajCmdPosX.write( x );
-    _hal._trajCmdPosY.write( y );
+    _hal._trajCmdPosTheta.write( ( float ) pos.theta );
+    _hal._trajCmdPosX.write( ( float ) pos.x );
+    _hal._trajCmdPosY.write( ( float ) pos.y );
 
     _hal._trajCmdValid.write( 0x1 ) ;
 
@@ -550,6 +593,13 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
 
 void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y )
 {
+    RobotPos currentPos;
+    currentPos.theta = theta;
+    currentPos.x = x;
+    currentPos.y = y;
+
+    RobotPos pos = _recallage.sendPos( currentPos );
+
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
 
@@ -557,9 +607,9 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y )
     _hal._trajCmdId.write( commandId++ );
     _hal._trajCmdType.write( CMD_TYPE_TRAJ );
     _hal._trajCmdOrderType.write( TRAJ_GOTO_BACKWARD_XY_ABS );
-    _hal._trajCmdPosTheta.write( theta );
-    _hal._trajCmdPosX.write( x );
-    _hal._trajCmdPosY.write( y );
+    _hal._trajCmdPosTheta.write( ( float ) pos.theta );
+    _hal._trajCmdPosX.write( ( float ) pos.x );
+    _hal._trajCmdPosY.write( ( float ) pos.y );
 
     _hal._trajCmdValid.write( 0x1 ) ;
 

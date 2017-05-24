@@ -114,11 +114,11 @@ private:
     Servo _unblock;
     Turbine _turbine;
     Carrousel _carrousel;
+    Recallage _recallage;
     TrajectoryManager _trajectoryManager;
     SystemMode _systemMode;
     RPLidar _lidar;
     DetectionManager _detectionManager;
-    Recallage _recallage;
     StrategyManager _strategyManager;
 };
 
