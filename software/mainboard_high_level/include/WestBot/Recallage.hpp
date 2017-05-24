@@ -27,7 +27,7 @@ public:
 
     void errorModify( double errX, double errY, double errTheta );
 
-    RobotPos calibrate(
+	bool calibrate(
         int len,
         const double* mesR,
         const double* mesTheta );

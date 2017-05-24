@@ -219,6 +219,8 @@ bool SystemManager::init()
         return false;
     }
 
+	_lidar.init( _hal );
+
     if( ! _lidar.connect() )
     {
         qWarning() << "Failed to connect to RPLidar";
@@ -253,7 +255,6 @@ bool SystemManager::init()
 
     displayColor( _colorButton->digitalRead() );
 
-    /*
     // Start lidar scan
     if( ! _lidar.startScan() )
     {
@@ -282,9 +283,9 @@ bool SystemManager::init()
         return false;
     }
 
-    RobotPos currentPos = _recallage.calibrate( len, distance, angle );
-    qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
-    */
+	//RobotPos currentPos = _recallage.calibrate( len, distance, angle );
+	//qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
+
     _gameTimer.setSingleShot( true );
 
     createStateMachine();

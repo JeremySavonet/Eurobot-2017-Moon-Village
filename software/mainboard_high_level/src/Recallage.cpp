@@ -68,9 +68,9 @@ bool Recallage::init( Hal& hal )
 RobotPos Recallage::getPos()
 {
     RobotPos pos;
-    const int16_t odoTheta = _odoThetaReg->read< int16_t >();
-    const int16_t odoX = _odoThetaReg->read< int16_t >();
-    const int16_t odoY = _odoThetaReg->read< int16_t >();
+	double odoTheta = _odoThetaReg->read< int16_t >();
+	double odoX = _odoThetaReg->read< int16_t >();
+	double odoY = _odoThetaReg->read< int16_t >();
 
     pos.x = odoX * cos( error.theta ) + odoY * sin( error.theta ) + error.x;
     pos.y = -odoX * sin( error.theta ) + odoY * cos( error.theta ) + error.y;
@@ -107,7 +107,7 @@ void Recallage::errorModify( double errX, double errY, double errTheta )
 	error.theta += errTheta;
 }
 
-RobotPos Recallage::calibrate(
+bool Recallage::calibrate(
     int len,					// nb de mesures télémètre
     const double* mesR,			// mesure télémètre
     const double* mesTheta )    // angle correspondant à la masure
@@ -269,9 +269,5 @@ RobotPos Recallage::calibrate(
         << errY << " "
         << errTheta << std::endl;
 
-	RobotPos robotPosNew;
-	robotPosNew.theta = robotPos.theta - errTheta;
-	robotPosNew.x = robotPos.x + errX;
-	robotPosNew.y = robotPos.y + errY;
-	return robotPosNew;
+	return true;
 }

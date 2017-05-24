@@ -3,6 +3,8 @@
 #ifndef WESTBOT_RPLIDAR_HPP_
 #define WESTBOT_RPLIDAR_HPP_
 
+#include "Hal.hpp"
+
 #define MAX_LEN_SCAN_DATA 10000
 
 class QSerialPort;
@@ -15,6 +17,8 @@ class RPLidar
 public:
     RPLidar( const QString& port );
 
+	void init( Hal& hal );
+
     bool connect(); // connect to tty
     void disconnect();
 
@@ -26,6 +30,7 @@ public:
 
 private:
     QSerialPort* _tty;
+	char checksum(char buf[], int bufSize );
 };
 
 }

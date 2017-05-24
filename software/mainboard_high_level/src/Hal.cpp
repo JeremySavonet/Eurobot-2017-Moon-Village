@@ -76,6 +76,10 @@ Hal::Hal()
     , _motor3Inverted( _layer1, 15 * 4 + 2, 8 )
     , _motor3Value( _layer1, 15 * 4, 16 )
 
+	// Motor color orientation
+	, _motor5Override( _layer1, 17 * 4 + 3, 8 )
+	, _motor5Value( _layer1, 17 * 4, 16 )
+
     // Layer 2
     , _odometryTheta( _layer2, 13 * 4 + 2, 16 )
     , _odometryX( _layer2, 14 * 4, 16 )
