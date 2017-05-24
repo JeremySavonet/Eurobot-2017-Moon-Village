@@ -1,6 +1,7 @@
 // Copyright (c) 2016-2017 All Rights Reserved WestBot
 
 #include <QDebug>
+#include <QTime>
 
 #include <WestBot/Turbine.hpp>
 
@@ -22,7 +23,8 @@ bool Turbine::attach( Hal& hal )
     _escOverride->write( 0x01 );
     _escEnable->write( 0x1 );
 
-    qDebug() << "Turbine is attached";
+    qDebug()
+        << QTime::currentTime().toString() << "Turbine is attached";
     return true;
 }
 

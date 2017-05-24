@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QThread>
+#include <QTime>
 
 #include <WestBot/MoveAction.hpp>
 #include <WestBot/MoveArmsAction.hpp>
@@ -47,7 +48,8 @@ StrategyManager::StrategyManager(
         this,
         [ this ]( const Color& color )
         {
-            qDebug() << "Ready to start strategy thread...";
+            qDebug()
+                << QTime::currentTime().toString() << "Ready to start strategy thread...";
             _color = color;
             _stratIsRunning = true;
             doStrat( color );
@@ -59,11 +61,8 @@ StrategyManager::StrategyManager(
         this,
         [ this ]()
         {
-            qDebug() << "Funny action time...";
-            _trajectoryManager.hardStop();
-            _trajectoryManager.disable();
-            _stratIsRunning = false;
-
+            qDebug()
+                << QTime::currentTime().toString() << "Funny action time...";
             doFunnyAction();
         } );
 
@@ -73,7 +72,8 @@ StrategyManager::StrategyManager(
         this,
         [ this ]()
         {
-            qDebug() << "Hard stop requested.";
+            qDebug()
+                << QTime::currentTime().toString() << "Hard stop requested.";
 
             // Stop traj
             _trajectoryManager.hardStop();
@@ -93,11 +93,23 @@ StrategyManager::StrategyManager(
 
     connect(
         & _systemManager,
+        & SystemManager::stopped,
+        this,
+        [ this ]()
+        {
+            // Stop traj
+            _trajectoryManager.hardStop();
+            _trajectoryManager.disable();
+            _stratIsRunning = false;
+        } );
+
+    connect(
+        & _systemManager,
         & SystemManager::reArming,
         this,
         [ this ]()
         {
-            qDebug() << "Rearming.";
+            qDebug() << QTime::currentTime().toString() << "Rearming.";
 
             // Enable traj
             _trajectoryManager.enable();
@@ -131,10 +143,18 @@ void StrategyManager::stopRobot()
         _trajectoryManager.hardStop();
         _trajectoryManager.disable();
 
+        disableServos();
+
+        // Stop carrousel
+        _carrousel.enable( false );
+
+        // Stop turbine
+        _turbine.enable( false );
+
         qDebug() << ">>>>>>>> LAST ACTION STOPPED:" << _currentAction.get();
         qDebug() << ">>>>>>>>>>>> REMAINING ACTIONS:" << _actions.size();
 
-        MoveAction::Ptr safety =
+       /* MoveAction::Ptr safety =
             std::make_shared< MoveAction >(
                 _trajectoryManager,
                 TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
@@ -156,6 +176,7 @@ void StrategyManager::stopRobot()
         qDebug() << ">>>>>>> AFTER INSERTING NEW ACTION" << _actions.size();
         _stratIsRunning = true;
         doStrat( _color );
+        */
     }
 }
 
@@ -213,159 +234,14 @@ bool StrategyManager::gotoAvoidPositionRetry(
 // Private methods
 void StrategyManager::buildStrat( const Color& color )
 {
-    MoveArmsAction::Ptr openFull =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::OPEN_180 );
-
-    MoveArmsAction::Ptr open90 =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::OPEN_90 );
-
-    MoveArmsAction::Ptr close =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::CLOSED );
-
-    TurnCarrouselAction::Ptr turnCW =
-        std::make_shared< TurnCarrouselAction >(
-            _carrousel,
-            TurnCarrouselAction::Sens::CW );
-
-    TurnCarrouselAction::Ptr turnCCW =
-        std::make_shared< TurnCarrouselAction >(
-            _carrousel,
-            TurnCarrouselAction::Sens::CCW );
-
     // Strat loop
-    while( _stratIsRunning )
+    if( color == Color::Yellow )
     {
-        if( color == Color::Yellow )
-        {
-            MoveAction::Ptr turn180 = std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_A_ABS,
-                180.0,
-                0.0,
-                0.0,
-                0.0,
-                false );
-
-            MoveAction::Ptr move1 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-              0.0,
-              0.0,
-              430.0,
-              -3.0,
-               false );
-
-            MoveAction::Ptr move2 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-              0.0,
-              0.0,
-              800.0,
-              0.0,
-               false );
-
-            MoveAction::Ptr move3 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-              0.0,
-              0.0,
-              430.0,
-              0.0,
-               false );
-
-            MoveAction::Ptr move4 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_BACKWARD_XY_ABS,
-              0.0,
-              0.0,
-              600.0,
-              0.0,
-               false );
-
-            _actions.push_back( openFull );
-            _actions.push_back( move1 );
-            _actions.push_back( close );
-            _actions.push_back( turnCW );
-            _actions.push_back( move2 );
-            _actions.push_back( turn180 );
-            _actions.push_back( turnCCW );
-            _actions.push_back( move3 );
-            _actions.push_back( open90 );
-            _actions.push_back( move4 );
-        }
-        else
-        {
-            MoveAction::Ptr turn180 = std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_A_ABS,
-                -180.0,
-                0.0,
-                0.0,
-                0.0,
-                false );
-
-            MoveAction::Ptr move1 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-              0.0,
-              0.0,
-              490.0,
-              40.0,
-               false );
-
-            MoveAction::Ptr move2 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-              0.0,
-              0.0,
-              840.0,
-              0.0,
-               false );
-
-            MoveAction::Ptr move3 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-              0.0,
-              0.0,
-              470.0,
-              0.0,
-               false );
-
-            MoveAction::Ptr move4 = std::make_shared< MoveAction >(
-              _trajectoryManager,
-              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_BACKWARD_XY_ABS,
-              0.0,
-              0.0,
-              640.0,
-              0.0,
-               false );
-
-            _actions.push_back( openFull );
-            _actions.push_back( move1 );
-            _actions.push_back( close );
-            _actions.push_back( turnCW );
-            _actions.push_back( move2 );
-            _actions.push_back( turn180 );
-            _actions.push_back( turnCCW );
-            _actions.push_back( move3 );
-            _actions.push_back( open90 );
-            _actions.push_back( move4 );
-        }
+        // TODO: XXX
+    }
+    else
+    {
+        // TODO: XXX
     }
 }
 
@@ -376,35 +252,6 @@ void StrategyManager::doStrat( const Color& color )
 
     qDebug() << "Do strat for color:" << color;
 
-    /* SEQUENCE CHECK COULEUR
-    MoveArmsAction::Ptr closeArms =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-           _unblock,
-            MoveArmsAction::Position::CLOSED );
-
-    closeArms->execute();
-
-    WaitAction::Ptr wait200 =
-            std::make_shared< WaitAction >( 300 );
-
-    wait200->execute();
-
-    _colorSensor.sensorCheck();
-
-    MoveArmsAction::Ptr open =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-           _unblock,
-            MoveArmsAction::Position::OPEN_90 );
-
-    open->execute();
-    */
-
     qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
 
     // Strat loop
@@ -413,17 +260,20 @@ void StrategyManager::doStrat( const Color& color )
         _currentAction = action;
         action->execute();
         _actions.removeOne( action );
+        qDebug() << QTime::currentTime().toString() << "Execute action";
         qDebug() << ">>>>>>>> CURRENT ACTION:" << _currentAction.get();
         qDebug() << ">>>>>>>> REMAINING ACTIONS:" << _actions.size();
 
         if( ! _stratIsRunning )
         {
-            qDebug() << "Finish current action and stop after";
+            qDebug() << QTime::currentTime().toString() << "Finish current action and stop after";
             break;
         }
     }
 
-    qDebug() << "Strat is over. Make sure we have clear the action list";
+    qDebug()
+        << QTime::currentTime().toString()
+        << "Strat is over. Make sure we have clear the action list";
 
     _stratIsRunning = false;
     _actions.clear();
@@ -442,7 +292,7 @@ void StrategyManager::doFunnyAction()
         this,
         [ this ]()
         {
-            qDebug() << "Action complete";
+            qDebug() << QTime::currentTime().toString() << "Action complete";
             _funnyAction.deleteLater();
         } );
 

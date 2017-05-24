@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QTime>
 #include <QTimer>
 #include <QThread>
 
@@ -51,7 +52,7 @@ bool DetectionManager::init( Hal& hal )
         QCoreApplication::processEvents();
     }
 
-    _eventTimer->start( 100 );
+    _eventTimer->start( 10 );
 
     check();
 
@@ -67,10 +68,12 @@ void DetectionManager::check()
     {
         emit opponentDetected( true );
         _opponentDetected = true;
+        qDebug() << QTime::currentTime().toString() << "Opponent detected";
     }
     else if( _opponentDetected && distanceValue == 255 )
     {
         emit opponentDetected( false );
         _opponentDetected = false;
+        qDebug() << QTime::currentTime().toString() << "Safe";
     }
 }

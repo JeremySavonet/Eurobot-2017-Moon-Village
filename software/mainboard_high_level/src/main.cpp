@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QHostAddress>
 #include <QThread>
+#include <QTime>
 
 #include <Defines.hpp>
 
@@ -37,7 +38,9 @@ int main( int argc, char *argv[] )
         & Configuration::configurationChanged,
         [ &configurationManager ]()
         {
-            qDebug() << "Update layers according to configuration changes";
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Update layers according to configuration changes";
             configurationManager.load();
         } );
 
@@ -49,6 +52,7 @@ int main( int argc, char *argv[] )
     if( ! configurationServer.listen( QHostAddress::Any, DEFAULT_PORT ) )
     {
         qWarning()
+            << QTime::currentTime().toString()
             << "Unable to start the server:"
             << configurationServer.errorString();
     }
@@ -64,7 +68,9 @@ int main( int argc, char *argv[] )
     // Init state machine and peripherals (sensors, position,...)
     if( ! system.init() )
     {
-        qWarning() << "Failed to init system manager";
+        qWarning()
+            << QTime::currentTime().toString()
+            << "Failed to init system manager";
         return EXIT_FAILURE;
     }
 
@@ -84,7 +90,9 @@ int main( int argc, char *argv[] )
     int16_t y = hal._odometryY.read< int16_t >();
     int16_t theta = hal._odometryTheta.read< int16_t >();
 
-    qDebug() << "X:" << x << " Y:" << y << " Theta:" << theta;
+    qDebug()
+        << QTime::currentTime().toString()
+        << "X:" << x << " Y:" << y << " Theta:" << theta;
 
     // TODO: REWORK THIS
     int16_t safe = x + y + theta;

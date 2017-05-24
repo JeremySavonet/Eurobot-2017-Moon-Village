@@ -3,6 +3,7 @@
 //#define DEBUG
 
 #include <QDebug>
+#include <QTime>
 
 #include <hps_arm.h> // For our base address
 
@@ -193,7 +194,7 @@ void Hal::init()
     }
 #endif
 
-    qInfo() << "Successfully initialized Hal module";
+    qInfo() << QTime::currentTime().toString() << "Successfully initialized Hal module";
 }
 
 void Hal::clearRegisters()

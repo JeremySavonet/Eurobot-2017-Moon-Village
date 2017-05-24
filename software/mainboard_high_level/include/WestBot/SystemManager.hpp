@@ -100,6 +100,7 @@ private:
     QStateMachine _stateMachine;
     QTimer _gameTimer;
     QTimer _aliveTimer;
+    QTimer _funnyTimer;
     Input::Ptr _startButton;
     Input::Ptr _colorButton;
     Input::Ptr _stopButton;
