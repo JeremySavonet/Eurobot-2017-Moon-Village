@@ -6,8 +6,6 @@
 #include <iostream>
 #include <math.h>
 
-#include <QDebug>
-
 #include <WestBot/Hal.hpp>
 #include <WestBot/Recallage.hpp>
 
@@ -265,7 +263,11 @@ RobotPos Recallage::calibrate(
 
 	errorModify(errX,errY,errTheta);
 
-	qDebug() << "calibrate error" << errX << errY << errTheta;
+    std::cout
+        << "Calibration done with error: "
+        << errX << " "
+        << errY << " "
+        << errTheta << std::endl;
 
 	RobotPos robotPosNew;
 	robotPosNew.theta = robotPos.theta - errTheta;

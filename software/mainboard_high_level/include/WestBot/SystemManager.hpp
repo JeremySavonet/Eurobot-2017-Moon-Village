@@ -15,13 +15,12 @@
 #include "Hal.hpp"
 #include "Input.hpp"
 #include "Output.hpp"
-#include "PositionManager.hpp"
+#include "Recallage.hpp"
+#include "RPLidar.hpp"
 #include "Servo.hpp"
 #include "StrategyManager.hpp"
 #include "TrajectoryManager.hpp"
 #include "Turbine.hpp"
-
-#include <WestBot/RPLidar/RPLidar.hpp>
 
 class QState;
 class QString;
@@ -116,9 +115,9 @@ private:
     Carrousel _carrousel;
     TrajectoryManager _trajectoryManager;
     SystemMode _systemMode;
-    RPLidar::RPLidar _lidar;
+    RPLidar _lidar;
     DetectionManager _detectionManager;
-    PositionManager _positionManager;
+    Recallage _recallage;
     StrategyManager _strategyManager;
 };
 

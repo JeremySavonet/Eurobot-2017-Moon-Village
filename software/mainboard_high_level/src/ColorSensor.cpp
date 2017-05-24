@@ -48,7 +48,6 @@ bool ColorSensor::attach( Hal& hal )
 
     QTimer timeout;
     timeout.setSingleShot( true );
-    timeout.start( 1000 );
     QObject::connect(
         & timeout,
         & QTimer::timeout,
@@ -56,6 +55,8 @@ bool ColorSensor::attach( Hal& hal )
         {
             isTimeout = true;
         } );
+
+    timeout.start( 1000 );
 
     if( ! _isAttached )
     {

@@ -1,4 +1,4 @@
-QT += core network
+QT += core network serialport
 QT -= gui
 
 CONFIG += c++11
@@ -10,10 +10,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 INCLUDEPATH += include \
-               ../rplidar/include \
-                3rdparty/Eigen
-
-LIBS += -L../rplidar/lib -lRPLidar
+               3rdparty/Eigen
 
 SOURCES += src/Carrousel.cpp \
            src/Configuration.cpp \
@@ -31,7 +28,6 @@ SOURCES += src/Carrousel.cpp \
            src/TrajectoryManager.cpp \
            src/ColorSensor.cpp \
            src/DetectionManager.cpp \
-           src/PositionManager.cpp \
            src/Turbine.cpp \
            src/Action.cpp \
            src/MoveAction.cpp \
@@ -40,7 +36,8 @@ SOURCES += src/Carrousel.cpp \
            src/MoveArmsAction.cpp \
            src/TurbineAction.cpp \
            src/FunnyAction.cpp \
-           src/Recallage.cpp
+           src/Recallage.cpp \
+           src/RPLidar.cpp
 
 HEADERS += \
     3rdparty/Eigen/src/* \
@@ -62,7 +59,6 @@ HEADERS += \
     include/WestBot/TrajectoryManager.hpp \
     include/WestBot/ColorSensor.hpp \
     include/WestBot/DetectionManager.hpp \
-    include/WestBot/PositionManager.hpp \
     include/WestBot/Turbine.hpp \
     include/WestBot/Action.hpp \
     include/WestBot/MoveAction.hpp \
@@ -71,7 +67,8 @@ HEADERS += \
     include/WestBot/MoveArmsAction.hpp \
     include/WestBot/TurbineAction.hpp \
     include/WestBot/FunnyAction.hpp \
-    include/WestBot/Recallage.hpp
+    include/WestBot/Recallage.hpp \
+    include/WestBot/RPLidar.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

@@ -2,10 +2,12 @@
 
 #include <memory>
 
+#include <QFile>
 #include <QState>
 #include <QString>
 #include <QThread>
 
+#include <Defines.hpp>
 #include <WestBot/SystemManager.hpp>
 
 using namespace WestBot;
@@ -41,7 +43,6 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     , _systemMode( SystemManager::SystemMode::Full )
     , _lidar( "/dev/ttyUSB0" )
     , _detectionManager( "Opponent_detector" )
-    , _positionManager( _lidar )
     , _strategyManager( *this,
                         _trajectoryManager,
                         _carrousel,
@@ -121,23 +122,10 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                 qDebug() << "We are safe";
             }
         } );
-
-    connect(
-        & _positionManager,
-        & PositionManager::positionUpdated,
-        this,
-        [ this ]( int theta, int x, int y )
-        {
-            qDebug()
-                << "New position is: Theta:" << theta << " X:" << x << " Y:" << y;
-        } );
 }
 
 SystemManager::~SystemManager()
 {
-    _lidar.stopMotor();
-    qDebug() << "Stop motor";
-
     _lidar.disconnect();
 
     stop();
@@ -225,9 +213,9 @@ bool SystemManager::init()
         return false;
     }
 
-    if( ! _positionManager.init() )
+    if( ! _recallage.init( _hal ) )
     {
-        qWarning() << "Failed to init position manager module";
+        qWarning() << "Failed to init recallage module";
         return false;
     }
 
@@ -264,6 +252,38 @@ bool SystemManager::init()
     _hal._outputOverride.write( 0x01010101 );
 
     displayColor( _colorButton->digitalRead() );
+
+    // Start lidar scan
+    if( ! _lidar.startScan() )
+    {
+        qWarning() << "Error: cannot start the scan operation.";
+        return false;
+    }
+
+    // TODO: flush and grab data
+    _lidar.flushScanData();
+
+    int len = 0;
+    double distance[ MAX_LEN_SCAN_DATA ];
+    double angle[ MAX_LEN_SCAN_DATA ];
+
+    if( ! _lidar.grabScanData( distance, angle, & len ) )
+    {
+        qDebug() << "Error: Unable to grab data";
+        return false;
+    }
+
+
+    QFile scanData( "scanData.raw" );
+
+    if( ! scanData.open( QIODevice::ReadWrite ) )
+    {
+        qDebug() << "Failed to open file for data storage";
+        return false;
+    }
+
+    RobotPos currentPos = _recallage.calibrate( len, distance, angle );
+    qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
 
     _gameTimer.setSingleShot( true );
 
@@ -493,8 +513,6 @@ QState* SystemManager::createStartGameState( QState* parent )
         {
             qDebug() << "Enter start game state";
 
-            _lidar.startMotor();
-
             _gameTimer.start( GAME_DURATION );
             _aliveTimer.start( 250 ); // Start blinking led
             emit readyForWar();
@@ -514,6 +532,16 @@ QState* SystemManager::createRunningStratState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter running strat state";
+
+            if( _color == Color::Yellow )
+            {
+                _recallage.errorInit( 35, 0, 0 ); // TODO: Change y pos
+            }
+            else
+            {
+                _recallage.errorInit( 35, 0, 0 ); // TODO: Change y pos
+            }
+
             emit doStrat( _color );
         } );
 
@@ -558,7 +586,6 @@ QState* SystemManager::createStopGameState( QState* parent )
         [ this ]()
         {
             qDebug() << "Enter stop state";
-            _lidar.stopMotor();
         } );
 
     return state;
@@ -595,8 +622,6 @@ QState* SystemManager::createHardStopState( QState* parent )
         {
             _gameTimer.stop();
             qDebug() << "Enter hard stop state";
-
-            _lidar.stopMotor();
         } );
 
     return state;
