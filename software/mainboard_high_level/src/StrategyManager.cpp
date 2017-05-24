@@ -213,6 +213,30 @@ bool StrategyManager::gotoAvoidPositionRetry(
 // Private methods
 void StrategyManager::buildStrat( const Color& color )
 {
+    MoveArmsAction::Ptr openFull =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            MoveArmsAction::Position::OPEN_180 );
+
+    MoveArmsAction::Ptr open90 =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            MoveArmsAction::Position::OPEN_90 );
+
+    MoveArmsAction::Ptr close =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            MoveArmsAction::Position::CLOSED );
+
     TurnCarrouselAction::Ptr turnCW =
         std::make_shared< TurnCarrouselAction >(
             _carrousel,
@@ -223,271 +247,125 @@ void StrategyManager::buildStrat( const Color& color )
             _carrousel,
             TurnCarrouselAction::Sens::CCW );
 
-    WaitAction::Ptr wait1s =
-        std::make_shared< WaitAction >( 1000 );
-
-    WaitAction::Ptr wait500Ms =
-        std::make_shared< WaitAction >( 500 );
-
-    WaitAction::Ptr wait200Ms =
-        std::make_shared< WaitAction >( 200 );
-
-    MoveArmsAction::Ptr disableArms =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::DISABLE );
-
-    MoveArmsAction::Ptr closeArms =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-           _unblock,
-            MoveArmsAction::Position::CLOSED );
-
-    MoveArmsAction::Ptr eject =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::EJECT );
-
-    MoveArmsAction::Ptr drop =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::DROP );
-
-    MoveArmsAction::Ptr openArmsFull =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::OPEN_180 );
-
-    if( color == Color::Yellow )
+    // Strat loop
+    while( _stratIsRunning )
     {
-        MoveAction::Ptr move1 =
-            std::make_shared< MoveAction >(
+        if( color == Color::Yellow )
+        {
+            MoveAction::Ptr turn180 = std::make_shared< MoveAction >(
                 _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                430.0,
-                -3.0,
-                false );
-
-        MoveAction::Ptr move2 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                400.0,
-                -565.0,
-                false );
-
-        MoveAction::Ptr move3 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                895.0,
-                -565.0,
-                false );
-
-        MoveAction::Ptr move4 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                910.0,
-                -565.0,
-                false );
-
-        MoveAction::Ptr move5 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                800.0,
-                -565.0,
-                false );
-
-        MoveAction::Ptr move6 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                935.0,
-                -565.0,
-                false );
-
-        MoveAction::Ptr move7 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                840.0,
-                -565.0,
-                false );
-
-        // HOMOLOGATION SEQUENCE
-        _actions.clear();
-        _actions.push_back( turnCCW );
-        _actions.push_back( move1 );
-        _actions.push_back( closeArms );
-        _actions.push_back( turnCW );
-        _actions.push_back( move2 );
-        _actions.push_back( move3 );
-        _actions.push_back( turnCCW );
-        _actions.push_back( wait1s );
-        _actions.push_back( eject );
-
-        /*_actions.push_back( wait1s );
-        _actions.push_back( move4 );
-        _actions.push_back( move5 );
-        _actions.push_back( drop );
-
-        _actions.push_back( wait500Ms );
-        _actions.push_back( disableArms );
-        */
-        /*
-        _actions.push_back( move6 );
-        _actions.push_back( move7 );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait500Ms );
-
-        // Eject cylindre 2
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        */
-        /*
-        // Eject cylinre 2 =============//
-
-        _armRight.write( SERVO_0_ARM_R_DROP );
-        _armLeft.write( SERVO_6_ARM_L_DROP );
-
-        strategyWaitMs( 200 );
-
-        _ejector.write( SERVO_7_EJECTOR_EJECT );
-
-        strategyWaitMs( 75 );
-
-        _armRight.write( SERVO_0_ARM_R_OPEN40 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
-        strategyWaitMs( 1000 );
-
-        _ejector.write( SERVO_7_EJECTOR_STANDBY );
-        strategyWaitMs( 500 );
-
-        disableServos();
-
-        // ======================= //
-
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 808.0, -565.0 );
-
-        _armRight.write( SERVO_0_ARM_R_OPEN40 );
-        _armLeft.write( SERVO_6_ARM_L_OPEN40 );
-        strategyWaitMs( 500 );
-        disableServos();
-
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 930.0, -565.0 );
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 800.0, -565.0 );
-
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 900.0, -565.0 );
-
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 1140.0, -565.0 );
-
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, -565.0 );
-        _trajectoryManager.moveForwardToXYAbs( 0.0, 600.0, 0.0 );
-        _trajectoryManager.moveBackwardToXYAbs( 0.0, 50.0, 0.0 );
-        */
-    }
-    else
-    {
-        MoveAction::Ptr move1 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                850.0,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_A_ABS,
                 180.0,
+                0.0,
+                0.0,
+                0.0,
                 false );
 
-        MoveAction::Ptr move2 =
-            std::make_shared< MoveAction >(
+            MoveAction::Ptr move1 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+              0.0,
+              0.0,
+              430.0,
+              -3.0,
+               false );
+
+            MoveAction::Ptr move2 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+              0.0,
+              0.0,
+              800.0,
+              0.0,
+               false );
+
+            MoveAction::Ptr move3 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+              0.0,
+              0.0,
+              430.0,
+              0.0,
+               false );
+
+            MoveAction::Ptr move4 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_BACKWARD_XY_ABS,
+              0.0,
+              0.0,
+              600.0,
+              0.0,
+               false );
+
+            _actions.push_back( openFull );
+            _actions.push_back( move1 );
+            _actions.push_back( close );
+            _actions.push_back( turnCW );
+            _actions.push_back( move2 );
+            _actions.push_back( turn180 );
+            _actions.push_back( turnCCW );
+            _actions.push_back( move3 );
+            _actions.push_back( open90 );
+            _actions.push_back( move4 );
+        }
+        else
+        {
+            MoveAction::Ptr turn180 = std::make_shared< MoveAction >(
                 _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_A_ABS,
+                -180.0,
                 0.0,
                 0.0,
-                1100.0,
-                -400.0,
+                0.0,
                 false );
 
-        MoveAction::Ptr move3 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                750.0,
-                -620.0,
-                false );
+            MoveAction::Ptr move1 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+              0.0,
+              0.0,
+              490.0,
+              40.0,
+               false );
 
-        MoveAction::Ptr move4 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_BACKWARD_XY_ABS,
-                0.0,
-                0.0,
-                1100.0,
-                -350.0,
-                false );
+            MoveAction::Ptr move2 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+              0.0,
+              0.0,
+              840.0,
+              0.0,
+               false );
 
-        MoveAction::Ptr move5 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1150.0,
-                -285.0,
-                false );
+            MoveAction::Ptr move3 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+              0.0,
+              0.0,
+              470.0,
+              0.0,
+               false );
 
-        // HOMOLOGATION SEQUENCE BLUE
-        _actions.clear();
-        _actions.push_back( turnCCW );
-        _actions.push_back( wait1s );
-        _actions.push_back( move1 );
-        _actions.push_back( closeArms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait1s );
-        _actions.push_back( openArmsFull );
-        _actions.push_back( move2 );
-        _actions.push_back( closeArms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait1s );
-        _actions.push_back( openArmsFull );
-        _actions.push_back( move3 );
-        _actions.push_back( closeArms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait1s );
-        _actions.push_back( move4 );
-        _actions.push_back( move5 );
+            MoveAction::Ptr move4 = std::make_shared< MoveAction >(
+              _trajectoryManager,
+              TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_BACKWARD_XY_ABS,
+              0.0,
+              0.0,
+              640.0,
+              0.0,
+               false );
+
+            _actions.push_back( openFull );
+            _actions.push_back( move1 );
+            _actions.push_back( close );
+            _actions.push_back( turnCW );
+            _actions.push_back( move2 );
+            _actions.push_back( turn180 );
+            _actions.push_back( turnCCW );
+            _actions.push_back( move3 );
+            _actions.push_back( open90 );
+            _actions.push_back( move4 );
+        }
     }
 }
 
@@ -497,7 +375,8 @@ void StrategyManager::doStrat( const Color& color )
     buildStrat( color );
 
     qDebug() << "Do strat for color:" << color;
-/*
+
+    /* SEQUENCE CHECK COULEUR
     MoveArmsAction::Ptr closeArms =
         std::make_shared< MoveArmsAction >(
             _armRight,
@@ -508,8 +387,23 @@ void StrategyManager::doStrat( const Color& color )
 
     closeArms->execute();
 
+    WaitAction::Ptr wait200 =
+            std::make_shared< WaitAction >( 300 );
+
+    wait200->execute();
+
     _colorSensor.sensorCheck();
-*/
+
+    MoveArmsAction::Ptr open =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+           _unblock,
+            MoveArmsAction::Position::OPEN_90 );
+
+    open->execute();
+    */
 
     qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
 
@@ -522,7 +416,6 @@ void StrategyManager::doStrat( const Color& color )
         qDebug() << ">>>>>>>> CURRENT ACTION:" << _currentAction.get();
         qDebug() << ">>>>>>>> REMAINING ACTIONS:" << _actions.size();
 
-
         if( ! _stratIsRunning )
         {
             qDebug() << "Finish current action and stop after";
@@ -531,6 +424,8 @@ void StrategyManager::doStrat( const Color& color )
     }
 
     qDebug() << "Strat is over. Make sure we have clear the action list";
+
+    _stratIsRunning = false;
     _actions.clear();
 }
 

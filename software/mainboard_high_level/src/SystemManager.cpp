@@ -253,6 +253,7 @@ bool SystemManager::init()
 
     displayColor( _colorButton->digitalRead() );
 
+    /*
     // Start lidar scan
     if( ! _lidar.startScan() )
     {
@@ -273,7 +274,6 @@ bool SystemManager::init()
         return false;
     }
 
-
     QFile scanData( "scanData.raw" );
 
     if( ! scanData.open( QIODevice::ReadWrite ) )
@@ -284,7 +284,7 @@ bool SystemManager::init()
 
     RobotPos currentPos = _recallage.calibrate( len, distance, angle );
     qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
-
+    */
     _gameTimer.setSingleShot( true );
 
     createStateMachine();
