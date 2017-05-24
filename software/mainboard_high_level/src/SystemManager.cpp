@@ -239,12 +239,12 @@ bool SystemManager::init()
 
 	_lidar.init( _hal );
 
-    if( ! _lidar.connect() )
+    /*if( ! _lidar.connect() )
     {
         qWarning()
             << QTime::currentTime().toString() << "Failed to connect to RPLidar";
         return false;
-    }
+    }*/
 
     if( ! _turbine.attach( _hal ) )
     {
@@ -276,6 +276,7 @@ bool SystemManager::init()
 
     displayColor( _colorButton->digitalRead() );
 
+    /*
     // Start lidar scan
     if( ! _lidar.startScan() )
     {
@@ -306,7 +307,7 @@ bool SystemManager::init()
 
 	//RobotPos currentPos = _recallage.calibrate( len, distance, angle );
 	//qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
-
+    */
     _gameTimer.setSingleShot( true );
     _funnyTimer.setSingleShot( true );
 
@@ -548,11 +549,11 @@ QState* SystemManager::createRunningStratState( QState* parent )
 
             if( _color == Color::Yellow )
             {
-                _recallage.errorInit( 36, 0, 0 ); // TODO: Change y pos
+                _recallage.errorInit( 36, 580, 0 ); // TODO: Change y pos
             }
             else
             {
-                _recallage.errorInit( 36, 0, 0 ); // TODO: Change y pos
+                _recallage.errorInit( 36, -570, 0 ); // TODO: Change y pos
             }
 
             emit doStrat( _color );

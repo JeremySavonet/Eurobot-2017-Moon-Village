@@ -18,10 +18,14 @@ public:
     enum class Sens
     {
         CW = 0,
-        CCW
+        CCW,
+        CW_MID,
+        CCW_MID
     };
 
-    TurnCarrouselAction( Carrousel& carrousel, Sens sens );
+    TurnCarrouselAction(
+        Carrousel& carrousel,
+        Sens sens );
 
     void execute() override;
 

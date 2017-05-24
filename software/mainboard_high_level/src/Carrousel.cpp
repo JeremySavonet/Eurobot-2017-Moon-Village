@@ -104,6 +104,12 @@ bool Carrousel::init()
 
     _nbTickPerTour = _reference - firstRef;
 
+    if( _nbTickPerTour > 10000 )
+    {
+        qDebug() << "Fuck OFF CARROUSEL DE MES COUILLES";
+        return false;
+    }
+
     qDebug()
         << QTime::currentTime().toString()
         << "Carrousel module initialized. Nb tick:"

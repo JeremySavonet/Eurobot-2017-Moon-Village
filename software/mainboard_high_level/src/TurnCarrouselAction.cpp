@@ -24,10 +24,24 @@ void TurnCarrouselAction::execute()
     }
         break;
 
+    case Sens::CW_MID:
+    {
+        float pos = _carrousel.position();
+        _carrousel.setPosition( pos - 0.5 );
+    }
+        break;
+
     case Sens::CCW:
     {
         float pos = _carrousel.position();
         _carrousel.setPosition( pos + 1.0 );
+    }
+        break;
+
+    case Sens::CCW_MID:
+    {
+        float pos = _carrousel.position();
+        _carrousel.setPosition( pos + 0.5 );
     }
         break;
     }
