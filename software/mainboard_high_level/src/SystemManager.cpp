@@ -588,6 +588,15 @@ QState* SystemManager::createStopGameState( QState* parent )
         {
             qDebug() << QTime::currentTime().toString() << "Enter stop state";
             emit stopped();
+
+            for( int i = 0; i < 60; i++ )
+            {
+                _turbine.setValue( i );
+                QThread::msleep( 30 );
+            }
+
+            QThread::msleep( 700 );
+            _turbine.setValue( 0 );
         } );
 
     return state;

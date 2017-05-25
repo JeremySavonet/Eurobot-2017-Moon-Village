@@ -177,6 +177,70 @@ void TrajectoryManager::hardStop()
     }
 }
 
+void TrajectoryManager::setDistanceConfig( float speed, float acc )
+{
+    uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
+
+    _hal._trajCmdValid.write( 0x0 );
+    _hal._trajCmdId.write( commandId++ );
+    _hal._trajCmdType.write( CMD_TYPE_CFG_DISTANCE );
+    _hal._trajCmdCfgSpeed.write( speed );
+    _hal._trajCmdCfgAcc.write( acc );
+    _hal._trajCmdValid.write( 0x1 );
+
+    while( _hal._trajOutAck.read< uint8_t >() != commandId )
+    {
+        QThread::msleep( 10 );
+        qDebug()
+            << QTime::currentTime().toString()
+            << "wait cmd ack " << _hal._trajOutAck.read< uint8_t >();
+        QCoreApplication::processEvents();
+    }
+}
+
+void TrajectoryManager::setAngleConfig( float speed, float acc )
+{
+    uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
+
+    _hal._trajCmdValid.write( 0x0 );
+    _hal._trajCmdId.write( commandId++ );
+    _hal._trajCmdType.write( CMD_TYPE_CFG_ANGLE );
+    _hal._trajCmdCfgSpeed.write( speed );
+    _hal._trajCmdCfgAcc.write( acc );
+    _hal._trajCmdValid.write( 0x1 );
+
+    while( _hal._trajOutAck.read< uint8_t >() != commandId )
+    {
+       QThread::msleep( 10 );
+       qDebug() << QTime::currentTime().toString() << "wait cmd ack";
+       QCoreApplication::processEvents();
+    }
+}
+
+void TrajectoryManager::setWindow( float distance, float angleDeg, float startAngleDeg )
+{
+    uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
+
+    _hal._trajCmdValid.write( 0x0 );
+    _hal._trajCmdId.write( commandId++ );
+    _hal._trajCmdType.write( CMD_TYPE_CFG_WND );
+    _hal._trajCmdWndDistance.write( distance );
+    _hal._trajCmdWndAngleDeg.write( angleDeg );
+    _hal._trajCmdWndAngleStartDeg.write( startAngleDeg );
+    _hal._trajCmdValid.write( 0x1 );
+
+    while( _hal._trajOutAck.read< uint8_t >() != commandId )
+    {
+        QThread::msleep( 10 );
+        qDebug()
+            << QTime::currentTime().toString()
+            << "wait cmd ack "
+            << _hal._trajOutAck.read< uint8_t >();
+        QCoreApplication::processEvents();
+    }
+}
+
+
 // Trajectories: all this method are blocking
 void TrajectoryManager::moveDRel( float distance, bool correction )
 {

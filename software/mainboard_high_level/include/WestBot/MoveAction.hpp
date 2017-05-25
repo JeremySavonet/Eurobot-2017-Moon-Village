@@ -24,40 +24,6 @@ public:
         float y,
         bool correction );
 
-    /*
-    static MoveAction moveThetaCorrection(
-        TrajectoryManager& trajectoryManager,
-        TrajectoryManager::TrajectoryType type,
-        float theta,
-        bool correction );
-
-    static MoveAction moveDistanceCorrection(
-        TrajectoryManager& trajectoryManager,
-        TrajectoryManager::TrajectoryType type,
-        float distance,
-        bool correction );
-
-    static MoveAction moveThetaDistanceCorrection(
-        TrajectoryManager& trajectoryManager,
-        TrajectoryManager::TrajectoryType type,
-        float theta,
-        float distance,
-        bool correction );
-
-    static MoveAction moveXY(
-        TrajectoryManager& trajectoryManager,
-        TrajectoryManager::TrajectoryType type,
-        float x,
-        float y );
-
-    static MoveAction moveThetaXY(
-        TrajectoryManager& trajectoryManager,
-        TrajectoryManager::TrajectoryType type,
-        float theta,
-        float x,
-        float y );
-    */
-
     void execute() override;
 
     TrajectoryManager& _trajectoryManager;

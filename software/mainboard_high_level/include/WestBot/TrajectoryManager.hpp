@@ -57,7 +57,11 @@ public:
         TYPE_TRAJ_GOTO_FORWARD_XY_ABS = 14,
         TYPE_TRAJ_GOTO_BACKWARD_XY_ABS = 15,
         TYPE_TRAJ_GOTO_D_A_REL = 16,
-        TYPE_TRAJ_GOTO_XY_REL = 17
+        TYPE_TRAJ_GOTO_XY_REL = 17,
+
+        DIST_CONFIG = 18,
+        ANGLE_CONFIG = 19,
+        WINDOW_CONFIG = 20
     };
 
     // State of the trajectory manager.
@@ -102,6 +106,11 @@ public:
 
     void stop();
     void hardStop();
+
+    void setDistanceConfig( float speed, float acc );
+    void setAngleConfig( float speed, float acc );
+
+    void setWindow( float distance, float angleDeg, float startAngleDeg );
 
     void moveDRel( float distance, bool correction );
     void moveOnlyDRel( float distance, bool correction );
