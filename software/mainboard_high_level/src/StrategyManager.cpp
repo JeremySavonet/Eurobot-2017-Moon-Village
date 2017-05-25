@@ -240,6 +240,7 @@ void StrategyManager::buildStrat( const Color& color )
 {
     float inv = 1.0;
     float shift = 0.0;
+    float offset = 0.0;
 
     if( color == Color::Yellow )
     {
@@ -250,6 +251,7 @@ void StrategyManager::buildStrat( const Color& color )
     {
         inv = -1.0;
         shift = -25.0;
+        offset = 90.0;
     }
 
     TurnCarrouselAction::Ptr turnCW =
@@ -276,7 +278,7 @@ void StrategyManager::buildStrat( const Color& color )
         std::make_shared< WaitAction >( 500 );
 
     WaitAction::Ptr wait200Ms =
-        std::make_shared< WaitAction >( 300 );
+        std::make_shared< WaitAction >( 200 );
 
     MoveArmsAction::Ptr closeArms =
         std::make_shared< MoveArmsAction >(
@@ -444,7 +446,7 @@ void StrategyManager::buildStrat( const Color& color )
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
-            45.0 * inv,
+            45.0 + offset,
             0.0,
             0.0,
             0.0,
@@ -458,7 +460,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( drop );
     _actions.push_back( wait200Ms );
     _actions.push_back( turnCW );
-    _actions.push_back( wait200Ms );
+    //_actions.push_back( wait200Ms );
     _actions.push_back( openArms90 );
     _actions.push_back( move2 );
     _actions.push_back( openArms0 );
@@ -466,7 +468,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( drop );
     _actions.push_back( wait200Ms );
     _actions.push_back( turnCW );
-    _actions.push_back( wait200Ms );
+    //_actions.push_back( wait200Ms );
     _actions.push_back( openArms90 );
     _actions.push_back( move3 );
     _actions.push_back( move4 );
@@ -566,7 +568,7 @@ void StrategyManager::doStrat( const Color& color )
 
     qDebug() << "Do strat for color:" << color;
 
-    qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
+    //qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
 
     // Strat loop
     for( const auto& action: _actions )
@@ -574,9 +576,9 @@ void StrategyManager::doStrat( const Color& color )
         _currentAction = action;
         action->execute();
         _actions.removeOne( action );
-        qDebug() << QTime::currentTime().toString() << "Execute action";
-        qDebug() << ">>>>>>>> CURRENT ACTION:" << _currentAction.get();
-        qDebug() << ">>>>>>>> REMAINING ACTIONS:" << _actions.size();
+        //qDebug() << QTime::currentTime().toString() << "Execute action";
+        //qDebug() << ">>>>>>>> CURRENT ACTION:" << _currentAction.get();
+        //qDebug() << ">>>>>>>> REMAINING ACTIONS:" << _actions.size();
 
         if( ! _stratIsRunning )
         {
@@ -595,10 +597,6 @@ void StrategyManager::doStrat( const Color& color )
 
 void StrategyManager::doFunnyAction()
 {
-    // Stop and disable robot
-    _trajectoryManager.hardStop();
-    _trajectoryManager.disable();
-
     // Execute funny action
     connect(
         & _funnyAction,
