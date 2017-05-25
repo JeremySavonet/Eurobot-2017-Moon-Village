@@ -250,7 +250,7 @@ void StrategyManager::buildStrat( const Color& color )
     else
     {
         inv = -1.0;
-        shift = -25.0;
+        shift = -18.0;
         offset = 90.0;
     }
 
@@ -460,7 +460,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( drop );
     _actions.push_back( wait200Ms );
     _actions.push_back( turnCW );
-    //_actions.push_back( wait200Ms );
+    _actions.push_back( wait200Ms );
     _actions.push_back( openArms90 );
     _actions.push_back( move2 );
     _actions.push_back( openArms0 );
@@ -468,7 +468,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( drop );
     _actions.push_back( wait200Ms );
     _actions.push_back( turnCW );
-    //_actions.push_back( wait200Ms );
+    _actions.push_back( wait200Ms );
     _actions.push_back( openArms90 );
     _actions.push_back( move3 );
     _actions.push_back( move4 );
@@ -554,8 +554,8 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( move8 );
     _actions.push_back( turnA45 ); // only A -45
 
-     _actions.push_back( openArmsFull );
-     _actions.push_back( wait200Ms );
+    _actions.push_back( openArmsFull );
+    _actions.push_back( wait200Ms );
     _actions.push_back( move9 );     // Deplacement 80
     _actions.push_back( turnCWMiddle );
     _actions.push_back( move10 ); // Deplacement 100 sans correction
@@ -576,7 +576,7 @@ void StrategyManager::doStrat( const Color& color )
         _currentAction = action;
         action->execute();
         _actions.removeOne( action );
-        //qDebug() << QTime::currentTime().toString() << "Execute action";
+        qDebug() << QTime::currentTime().toString() << "Execute action";
         //qDebug() << ">>>>>>>> CURRENT ACTION:" << _currentAction.get();
         //qDebug() << ">>>>>>>> REMAINING ACTIONS:" << _actions.size();
 
