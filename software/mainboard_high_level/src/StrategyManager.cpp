@@ -8,6 +8,7 @@
 #include <QTime>
 
 #include <WestBot/ColorCheckerAction.hpp>
+#include <WestBot/ConfigAction.hpp>
 #include <WestBot/MoveAction.hpp>
 #include <WestBot/MoveArmsAction.hpp>
 #include <WestBot/TurbineAction.hpp>
@@ -499,8 +500,70 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             true );
 
+    // CONFIG ACTION
+    ConfigAction::Ptr normalSpeedAngle =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::ANGLE_CONFIG,
+            0.0008,
+            0.0000002,
+            0.0,
+            0.0,
+            0.0 );
+
+    ConfigAction::Ptr normalSpeedDistance =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::DIST_CONFIG,
+            0.12,
+            0.00001,
+            0.0,
+            0.0,
+            0.0 );
+
+    ConfigAction::Ptr fastSpeedAngle =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::ANGLE_CONFIG,
+            0.0008,
+            0.0000002,
+            0.0,
+            0.0,
+            0.0 );
+
+    ConfigAction::Ptr fastSpeedDistance =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::DIST_CONFIG,
+            0.10,
+            0.00007,
+            0.0,
+            0.0,
+            0.0 );
+
+    ConfigAction::Ptr windowPrecise =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::WINDOW_CONFIG,
+            0.0,
+            0.0,
+            10.0,
+            2.0,
+            10.0 );
+
+    ConfigAction::Ptr windowCourbe =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::WINDOW_CONFIG,
+            0.0,
+            0.0,
+            50.0,
+            4.0,
+            45.0 );
+
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>><< OUR STRAT
-    //_actions.push_back( openArms90 );
+    _actions.push_back( fastSpeedDistance );
+    _actions.push_back( windowCourbe );
     _actions.push_back( move1 );
     _actions.push_back( openArms0 );
     _actions.push_back( wait200Ms );
@@ -517,6 +580,8 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( turnCW );
     _actions.push_back( wait200Ms );
     _actions.push_back( openArms90 );
+    _actions.push_back( normalSpeedDistance );
+    _actions.push_back( windowPrecise );
     _actions.push_back( move3 );
     _actions.push_back( move4 );
     _actions.push_back( turnA45 );
@@ -579,6 +644,8 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( avance95SansCorrection );
     _actions.push_back( recul180AvecCorrection ); // Deplacement -80
     _actions.push_back( pusherStandby );
+
+    // Dernier totem
 }
 
 void StrategyManager::doStrat( const Color& color )
