@@ -42,6 +42,7 @@ void RPLidar::init( Hal& hal )
 	hal._motor5Override.write( 1 );
 	hal._motor5Value.write( 25000 / 2);
 	QThread::msleep( 2000 );
+    QCoreApplication::processEvents();
 }
 
 void RPLidar::disconnect()

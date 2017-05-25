@@ -96,6 +96,7 @@ bool ColorSensor::attach( Hal& hal )
         value = _sensorClear->read< uint16_t >();
         _vcAvg += value;
         QThread::msleep( 10 );
+        QCoreApplication::processEvents();
     }
 
     _vcAvg = _vcAvg / VALUE_COUNT;
@@ -157,6 +158,7 @@ int ColorSensor::sensorCheck()
         }
 
         QThread::msleep( 1 );
+        QCoreApplication::processEvents();
     }
 
     _motorValue->write( 0 );
@@ -185,6 +187,7 @@ int ColorSensor::sensorCheck()
     }
 
     QThread::msleep( 50 );
+    QCoreApplication::processEvents();
 
     for( uint16_t retry = 0; retry < 2 * 1000; retry++ )
     {
@@ -198,8 +201,10 @@ int ColorSensor::sensorCheck()
 
                 _motorValue->write( -MOTOR_COLOR_1T_PER_SECOND );
                 QThread::msleep( 250 );
+                QCoreApplication::processEvents();
                 _motorValue->write( 0 );
                 QThread::msleep( 100 );
+                QCoreApplication::processEvents();
 
                 uint16_t blue_value = _sensorBlue->read< uint16_t >();
                 uint16_t clear_value = _sensorClear->read< uint16_t >();
@@ -233,11 +238,13 @@ int ColorSensor::sensorCheck()
                         << value << v_min;
                     _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
                     QThread::msleep( 500 );
+                    QCoreApplication::processEvents();
                 }
             }
             else
             {
                 QThread::msleep( 1 );
+                QCoreApplication::processEvents();
             }
         }
     }
@@ -256,6 +263,7 @@ bool ColorSensor::checkIsEmpty()
         value = _sensorClear->read< uint16_t >();
         avg += value;
         QThread::msleep( 10 );
+        QCoreApplication::processEvents();
     }
 
     avg = avg / AVG_CNT;

@@ -36,6 +36,7 @@ void TrajectoryManager::init()
     {
         QThread::msleep( 10 );
         qDebug() <<  QTime::currentTime().toString() << "wait cmd ack";
+        QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -53,6 +54,7 @@ void TrajectoryManager::init()
             << QTime::currentTime().toString()
             << "wait cmd ack "
             << _hal._trajOutAck.read< uint8_t >();
+        QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -68,6 +70,7 @@ void TrajectoryManager::init()
         qDebug()
             << QTime::currentTime().toString()
             << "wait cmd ack " << _hal._trajOutAck.read< uint8_t >();
+        QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -81,6 +84,7 @@ void TrajectoryManager::init()
     {
        QThread::msleep( 10 );
        qDebug() << QTime::currentTime().toString() << "wait cmd ack";
+       QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -93,6 +97,7 @@ void TrajectoryManager::init()
     {
        QThread::msleep( 10 );
        qDebug() << QTime::currentTime().toString() << "wait cmd ack";
+       QCoreApplication::processEvents();
     }
 
     qDebug()

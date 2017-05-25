@@ -1,5 +1,6 @@
 // Copyright (c) 2017 All Rights Reserved WestBot
 
+#include <QCoreApplication>
 #include <QThread>
 
 #include <WestBot/WaitAction.hpp>
@@ -15,6 +16,7 @@ WaitAction::WaitAction( int waitMs )
 void WaitAction::execute()
 {
     QThread::msleep( _waitMs );
+    QCoreApplication::processEvents();
 
     emit complete();
 }

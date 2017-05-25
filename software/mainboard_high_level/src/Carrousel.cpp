@@ -69,6 +69,7 @@ bool Carrousel::init()
     while( abs( currentPosition() - consign ) >= THRESHOLD )
     {
         QThread::msleep( 10 );
+        QCoreApplication::processEvents();
     }
 
     int32_t firstRef = 0;
@@ -90,12 +91,12 @@ bool Carrousel::init()
     while( abs( currentPosition() - consign ) >= THRESHOLD )
     {
         QThread::msleep( 10 );
+        QCoreApplication::processEvents();
     }
 
     if( lastReference() != firstRef )
     {
         _reference = lastReference();
-
     }
     else
     {

@@ -80,6 +80,10 @@ StrategyManager::StrategyManager(
             _trajectoryManager.hardStop();
             _trajectoryManager.disable();
 
+            _stratIsRunning = false;
+
+            _actions.clear();
+
             // Stop all servos
             disableServos();
 
@@ -88,8 +92,6 @@ StrategyManager::StrategyManager(
 
             // Stop turbine
             _turbine.enable( false );
-
-            _stratIsRunning = false;
         } );
 
     connect(
@@ -227,6 +229,7 @@ bool StrategyManager::gotoAvoidPositionRetry(
         {
             break;
         }
+        QCoreApplication::processEvents();
     }
 
     return finished;
@@ -235,6 +238,20 @@ bool StrategyManager::gotoAvoidPositionRetry(
 // Private methods
 void StrategyManager::buildStrat( const Color& color )
 {
+    float inv = 1.0;
+    float shift = 0.0;
+
+    if( color == Color::Yellow )
+    {
+        inv = 1.0;
+        shift = 20.0;
+    }
+    else
+    {
+        inv = -1.0;
+        shift = -25.0;
+    }
+
     TurnCarrouselAction::Ptr turnCW =
         std::make_shared< TurnCarrouselAction >(
             _carrousel,
@@ -255,22 +272,11 @@ void StrategyManager::buildStrat( const Color& color )
             _carrousel,
             TurnCarrouselAction::Sens::CCW_MID );
 
-    WaitAction::Ptr wait1s =
-        std::make_shared< WaitAction >( 1000 );
-
     WaitAction::Ptr wait500Ms =
         std::make_shared< WaitAction >( 500 );
 
     WaitAction::Ptr wait200Ms =
         std::make_shared< WaitAction >( 300 );
-
-    MoveArmsAction::Ptr disableArms =
-        std::make_shared< MoveArmsAction >(
-            _armRight,
-            _armLeft,
-            _ejector,
-            _unblock,
-            MoveArmsAction::Position::DISABLE );
 
     MoveArmsAction::Ptr closeArms =
         std::make_shared< MoveArmsAction >(
@@ -304,6 +310,14 @@ void StrategyManager::buildStrat( const Color& color )
             _unblock,
             MoveArmsAction::Position::OPEN_180 );
 
+    MoveArmsAction::Ptr openArms45 =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            MoveArmsAction::Position::OPEN_45 );
+
     MoveArmsAction::Ptr openArms90 =
         std::make_shared< MoveArmsAction >(
             _armRight,
@@ -325,483 +339,224 @@ void StrategyManager::buildStrat( const Color& color )
             _colorSensor,
             ColorCheckerAction::Type::EJECT_GOOD );
 
-    // Strat loop
-    if( color == Color::Yellow )
-    {
-        MoveAction::Ptr move1 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                600.0,
-                500.0,
-                false );
+    // >>>>>>>>>>>>> MOVE ACTIONS
+    MoveAction::Ptr move1 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+            0.0,
+            0.0,
+            600.0,
+            500.0 * inv,
+            false );
 
-        MoveAction::Ptr move2 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1100.0 - 162.0,
-                1000.0 - 162.0,
-                false );
+    MoveAction::Ptr move2 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+            0.0,
+            0.0,
+            ( 1100.0 - 162.0 ),
+            ( 1000.0 - 162.0 ) * inv,
+            false );
 
-        MoveAction::Ptr move3 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1120.0,
-                920.0,
-                false );
+    MoveAction::Ptr move3 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+            0.0,
+            0.0,
+            ( 1100.0 + shift ),
+            ( 900.0 + shift ) * inv,
+            false );
 
-        MoveAction::Ptr move4 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1420.0 - 175.0,
-                620.0 + 175.0,
-                false );
+    MoveAction::Ptr move4 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+            0.0,
+            0.0,
+            (1400.0+shift) - 175.0,
+            ( (600.0+shift) + 175.0 ) * inv,
+            false );
 
-        MoveAction::Ptr move5 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -80.0,
-                0.0,
-                0.0,
-                true );
+    MoveAction::Ptr move7 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -80.0,
+            0.0,
+            0.0,
+            true );
 
-        MoveAction::Ptr move6 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                92.0,
-                0.0,
-                0.0,
-                true );
+    MoveAction::Ptr move8 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            95.0,
+            0.0,
+            0.0,
+            true );
 
-        MoveAction::Ptr move7 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -80.0,
-                0.0,
-                0.0,
-                true );
+    MoveAction::Ptr move9 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            80.0,
+            0.0,
+            0.0,
+            true );
 
-        MoveAction::Ptr move8 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                95.0,
-                0.0,
-                0.0,
-                true );
+    MoveAction::Ptr move10 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            false );
 
-        MoveAction::Ptr move9 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                80.0,
-                0.0,
-                0.0,
-                true );
+    MoveAction::Ptr move11 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -180.0,
+            0.0,
+            0.0,
+            true );
 
-        MoveAction::Ptr move10 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                100.0,
-                0.0,
-                0.0,
-                false );
+    MoveAction::Ptr turnA45 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
+            -45.0 * inv,
+            0.0,
+            0.0,
+            0.0,
+            true );
 
-        MoveAction::Ptr move11 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -180.0,
-                0.0,
-                0.0,
-                true );
+    MoveAction::Ptr turn45 =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
+            45.0 * inv,
+            0.0,
+            0.0,
+            0.0,
+            true );
 
-        MoveAction::Ptr turnA45 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
-                -45.0,
-                0.0,
-                0.0,
-                0.0,
-                true );
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>><< OUR STRAT
+    _actions.push_back( openArms90 );
+    _actions.push_back( move1 );
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( openArms90 );
+    _actions.push_back( move2 );
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( openArms90 );
+    _actions.push_back( move3 );
+    _actions.push_back( move4 );
+    _actions.push_back( turnA45 );
+    _actions.push_back( openArms45 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( openArms90 );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( eject );
 
-        MoveAction::Ptr turn45 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
-                45.0,
-                0.0,
-                0.0,
-                0.0,
-                true );
+    _actions.push_back( move7 ); // Deplacement -80
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turn45 ); //only A 45
+    // Deplacement only d 95
+    _actions.push_back( move8 );
+    _actions.push_back( turnA45 ); // only A -45
 
-        _actions.push_back( openArms90 );
-        _actions.push_back( move1 );
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( openArms90 );
-        _actions.push_back( move2 );
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( openArms90 );
-        _actions.push_back( move3 );
-        _actions.push_back( move4 );
-        _actions.push_back( turnA45 );
-        _actions.push_back( closeArms );
-        _actions.push_back( wait500Ms );
-        _actions.push_back( sensorAction );
-        _actions.push_back( openArms90 );
-        _actions.push_back( wait500Ms );
-        _actions.push_back( eject );
+     _actions.push_back( openArmsFull );
+     _actions.push_back( wait200Ms );
+    _actions.push_back( move9 );     // Deplacement 80
+    _actions.push_back( turnCWMiddle );
+    _actions.push_back( move10 ); // Deplacement 100 sans correction
 
-        _actions.push_back( move7 ); // Deplacement -80
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turn45 ); //only A 45
-        // Deplacement only d 95
-        _actions.push_back( move8 );
-        _actions.push_back( turnA45 ); // only A -45
+    // On reprend la sequence
+    // Recul 180
+    _actions.push_back( move11 );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCWMiddle );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
 
-         _actions.push_back( openArmsFull );
-         _actions.push_back( wait200Ms );
-        _actions.push_back( move9 );     // Deplacement 80
-        _actions.push_back( turnCWMiddle );
-        _actions.push_back( move10 ); // Deplacement 100 sans correction
+    _actions.push_back( move3 );
+    _actions.push_back( move4 );
+    _actions.push_back( turnA45 );
+    // SET COLOR
+    _actions.push_back( closeArms );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
 
-        // On reprend la sequence
-        // Recul 180
-        _actions.push_back( move11 );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCWMiddle );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCW );
+    _actions.push_back( move7 ); // Deplacement -80
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turn45 ); //only A 45
+    // Deplacement only d 95
+    _actions.push_back( move8 );
+    _actions.push_back( turnA45 ); // only A -45
 
-        _actions.push_back( move3 );
-        _actions.push_back( move4 );
-        _actions.push_back( turnA45 );
-        // SET COLOR
-        _actions.push_back( closeArms );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( sensorAction );
-        _actions.push_back( eject );
+     _actions.push_back( openArmsFull );
+     _actions.push_back( wait200Ms );
+    _actions.push_back( move9 );     // Deplacement 80
+    _actions.push_back( turnCWMiddle );
+    _actions.push_back( move10 ); // Deplacement 100 sans correction
 
-        _actions.push_back( move7 ); // Deplacement -80
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turn45 ); //only A 45
-        // Deplacement only d 95
-        _actions.push_back( move8 );
-        _actions.push_back( turnA45 ); // only A -45
+    // On reprend la sequence
+    // Recul 180
+    _actions.push_back( move11 );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCWMiddle );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
 
-         _actions.push_back( openArmsFull );
-         _actions.push_back( wait200Ms );
-        _actions.push_back( move9 );     // Deplacement 80
-        _actions.push_back( turnCWMiddle );
-        _actions.push_back( move10 ); // Deplacement 100 sans correction
+    _actions.push_back( move3 );
+    _actions.push_back( move4 );
+    _actions.push_back( turnA45 );
 
-        // On reprend la sequence
-        // Recul 180
-        _actions.push_back( move11 );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCWMiddle );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCW );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
 
-        _actions.push_back( move3 );
-        _actions.push_back( move4 );
-        _actions.push_back( turnA45 );
+    _actions.push_back( move7 ); // Deplacement -80
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turn45 ); //only A 45
+    // Deplacement only d 95
+    _actions.push_back( move8 );
+    _actions.push_back( turnA45 ); // only A -45
 
-        _actions.push_back( closeArms );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( sensorAction );
-        _actions.push_back( eject );
-
-        _actions.push_back( move7 ); // Deplacement -80
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turn45 ); //only A 45
-        // Deplacement only d 95
-        _actions.push_back( move8 );
-        _actions.push_back( turnA45 ); // only A -45
-
-         _actions.push_back( openArmsFull );
-         _actions.push_back( wait200Ms );
-        _actions.push_back( move9 );     // Deplacement 80
-        _actions.push_back( turnCWMiddle );
-        _actions.push_back( move10 ); // Deplacement 100 sans correction
-    }
-    else
-    {
-        MoveAction::Ptr move1 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                600.0,
-                500.0,
-                false );
-
-        MoveAction::Ptr move2 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1100.0 - 162.0,
-                1000.0 - 162.0,
-                false );
-
-        MoveAction::Ptr move3 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1120.0,
-                920.0,
-                false );
-
-        MoveAction::Ptr move4 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                1420.0 - 175.0,
-                620.0 + 175.0,
-                false );
-
-        MoveAction::Ptr move5 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -80.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr move6 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                92.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr move7 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -80.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr move8 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                95.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr move9 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                80.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr move10 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                100.0,
-                0.0,
-                0.0,
-                false );
-
-        MoveAction::Ptr move11 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -180.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr turnA45 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
-                -45.0,
-                0.0,
-                0.0,
-                0.0,
-                true );
-
-        MoveAction::Ptr turn45 =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
-                45.0,
-                0.0,
-                0.0,
-                0.0,
-                true );
-
-        _actions.push_back( openArms90 );
-        _actions.push_back( move1 );
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( openArms90 );
-        _actions.push_back( move2 );
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCW );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( openArms90 );
-        _actions.push_back( move3 );
-        _actions.push_back( move4 );
-        _actions.push_back( turnA45 );
-        _actions.push_back( closeArms );
-        _actions.push_back( wait500Ms );
-        _actions.push_back( sensorAction );
-        _actions.push_back( openArms90 );
-        _actions.push_back( wait500Ms );
-        _actions.push_back( eject );
-
-        _actions.push_back( move7 ); // Deplacement -80
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turn45 ); //only A 45
-        // Deplacement only d 95
-        _actions.push_back( move8 );
-        _actions.push_back( turnA45 ); // only A -45
-
-         _actions.push_back( openArmsFull );
-         _actions.push_back( wait200Ms );
-        _actions.push_back( move9 );     // Deplacement 80
-        _actions.push_back( turnCWMiddle );
-        _actions.push_back( move10 ); // Deplacement 100 sans correction
-
-        // On reprend la sequence
-        // Recul 180
-        _actions.push_back( move11 );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCWMiddle );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCW );
-
-        _actions.push_back( move3 );
-        _actions.push_back( move4 );
-        _actions.push_back( turnA45 );
-        // SET COLOR
-        _actions.push_back( closeArms );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( sensorAction );
-        _actions.push_back( eject );
-
-        _actions.push_back( move7 ); // Deplacement -80
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turn45 ); //only A 45
-        // Deplacement only d 95
-        _actions.push_back( move8 );
-        _actions.push_back( turnA45 ); // only A -45
-
-         _actions.push_back( openArmsFull );
-         _actions.push_back( wait200Ms );
-        _actions.push_back( move9 );     // Deplacement 80
-        _actions.push_back( turnCWMiddle );
-        _actions.push_back( move10 ); // Deplacement 100 sans correction
-
-        // On reprend la sequence
-        // Recul 180
-        _actions.push_back( move11 );
-        _actions.push_back( drop );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCWMiddle );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turnCCW );
-
-        _actions.push_back( move3 );
-        _actions.push_back( move4 );
-        _actions.push_back( turnA45 );
-
-        _actions.push_back( closeArms );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( sensorAction );
-        _actions.push_back( eject );
-
-        _actions.push_back( move7 ); // Deplacement -80
-        _actions.push_back( openArms0 );
-        _actions.push_back( wait200Ms );
-        _actions.push_back( turn45 ); //only A 45
-        // Deplacement only d 95
-        _actions.push_back( move8 );
-        _actions.push_back( turnA45 ); // only A -45
-
-         _actions.push_back( openArmsFull );
-         _actions.push_back( wait200Ms );
-        _actions.push_back( move9 );     // Deplacement 80
-        _actions.push_back( turnCWMiddle );
-        _actions.push_back( move10 ); // Deplacement 100 sans correction
-
-        _actions.clear();
-    }
+     _actions.push_back( openArmsFull );
+     _actions.push_back( wait200Ms );
+    _actions.push_back( move9 );     // Deplacement 80
+    _actions.push_back( turnCWMiddle );
+    _actions.push_back( move10 ); // Deplacement 100 sans correction
 }
 
 void StrategyManager::doStrat( const Color& color )
