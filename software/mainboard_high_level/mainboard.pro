@@ -10,7 +10,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 INCLUDEPATH += include \
-               3rdparty/Eigen
+               #3rdparty/Eigen
 
 SOURCES += src/Carrousel.cpp \
            src/Configuration.cpp \

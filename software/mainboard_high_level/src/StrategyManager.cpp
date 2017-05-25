@@ -26,6 +26,7 @@ StrategyManager::StrategyManager(
     Servo& armLeft,
     Servo& ejector,
     Servo& unblock,
+    Servo& pusher,
     Turbine& turbine,
     ColorSensor& colorSensor,
     QObject* parent )
@@ -37,6 +38,7 @@ StrategyManager::StrategyManager(
     , _armLeft( armLeft )
     , _ejector( ejector )
     , _unblock( unblock )
+    , _pusher( pusher )
     , _turbine( turbine )
     , _colorSensor( colorSensor )
     , _currentAction( nullptr )
@@ -286,6 +288,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
            _unblock,
+            _pusher,
             MoveArmsAction::Position::CLOSED );
 
     MoveArmsAction::Ptr eject =
@@ -294,6 +297,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
             _unblock,
+             _pusher,
             MoveArmsAction::Position::EJECT );
 
     MoveArmsAction::Ptr drop =
@@ -302,6 +306,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
             _unblock,
+            _pusher,
             MoveArmsAction::Position::DROP );
 
     MoveArmsAction::Ptr openArmsFull =
@@ -310,6 +315,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
             _unblock,
+            _pusher,
             MoveArmsAction::Position::OPEN_180 );
 
     MoveArmsAction::Ptr openArms45 =
@@ -318,6 +324,7 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
             _unblock,
+            _pusher,
             MoveArmsAction::Position::OPEN_45 );
 
     MoveArmsAction::Ptr openArms90 =
@@ -325,7 +332,8 @@ void StrategyManager::buildStrat( const Color& color )
             _armRight,
             _armLeft,
             _ejector,
-            _unblock,
+            _unblock,       
+            _pusher,
             MoveArmsAction::Position::OPEN_90 );
 
     MoveArmsAction::Ptr openArms0 =
@@ -334,7 +342,26 @@ void StrategyManager::buildStrat( const Color& color )
             _armLeft,
             _ejector,
             _unblock,
+            _pusher,
             MoveArmsAction::Position::ZERO_POS );
+
+    MoveArmsAction::Ptr pusherDeploy =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            _pusher,
+            MoveArmsAction::Position::PUSHER_DEPLOY );
+
+    MoveArmsAction::Ptr pusherStandby =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            _pusher,
+            MoveArmsAction::Position::PUSHER_STANDBY );
 
     ColorCheckerAction::Ptr sensorAction =
         std::make_shared< ColorCheckerAction >(
@@ -402,6 +429,26 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             true );
 
+    MoveAction::Ptr avance95SansCorrection =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            175.0,
+            0.0,
+            0.0,
+            false );
+
+    MoveAction::Ptr recul180AvecCorrection =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -180.0,
+            0.0,
+            0.0,
+            true );
+
     MoveAction::Ptr move9 =
         std::make_shared< MoveAction >(
             _trajectoryManager,
@@ -453,7 +500,7 @@ void StrategyManager::buildStrat( const Color& color )
             true );
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>><< OUR STRAT
-    _actions.push_back( openArms90 );
+    //_actions.push_back( openArms90 );
     _actions.push_back( move1 );
     _actions.push_back( openArms0 );
     _actions.push_back( wait200Ms );
@@ -478,24 +525,63 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( closeArms );
     _actions.push_back( wait500Ms );
     _actions.push_back( sensorAction );
-    _actions.push_back( openArms90 );
-    _actions.push_back( wait500Ms );
     _actions.push_back( eject );
 
-    _actions.push_back( move7 ); // Deplacement -80
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
     _actions.push_back( openArms0 );
     _actions.push_back( wait200Ms );
-    _actions.push_back( turn45 ); //only A 45
-    // Deplacement only d 95
-    _actions.push_back( move8 );
-    _actions.push_back( turnA45 ); // only A -45
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( move4 ); // Recallage sur position connue
 
-     _actions.push_back( openArmsFull );
-     _actions.push_back( wait200Ms );
-    _actions.push_back( move9 );     // Deplacement 80
-    _actions.push_back( turnCWMiddle );
-    _actions.push_back( move10 ); // Deplacement 100 sans correction
+    // On fait le deuxieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
 
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( move4 ); // Recallage sur position connue
+
+    // On fait le troisieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
+
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+
+    /*
+    // DEUXIEME TOTEM
     // On reprend la sequence
     // Recul 180
     _actions.push_back( move11 );
@@ -528,6 +614,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( turnCWMiddle );
     _actions.push_back( move10 ); // Deplacement 100 sans correction
 
+    // TROISIEME TOTEM
     // On reprend la sequence
     // Recul 180
     _actions.push_back( move11 );
@@ -559,6 +646,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( move9 );     // Deplacement 80
     _actions.push_back( turnCWMiddle );
     _actions.push_back( move10 ); // Deplacement 100 sans correction
+    */
 }
 
 void StrategyManager::doStrat( const Color& color )
@@ -568,7 +656,7 @@ void StrategyManager::doStrat( const Color& color )
 
     qDebug() << "Do strat for color:" << color;
 
-    //qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
+    qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size();
 
     // Strat loop
     for( const auto& action: _actions )
@@ -618,12 +706,15 @@ void StrategyManager::disableServos()
     _armRight.write( SERV0_DISABLE_CONSIGN );
     _ejector.write( SERV0_DISABLE_CONSIGN );
     _unblock.write( SERV0_DISABLE_CONSIGN );
+    _pusher.write( SERV0_DISABLE_CONSIGN );
 }
 
 void StrategyManager::enableServos()
 {
     _unblock.write( SERVO_1_UNBLOCK_STANDBY );
     _ejector.write( SERVO_7_EJECTOR_STANDBY );
+    _pusher.write( SERVO_5_PUSHER_STANDBY );
+
     QThread::msleep( 200 );
     _armLeft.write( SERVO_6_ARM_L_OPEN90 );
     _armRight.write( SERVO_0_ARM_R_OPEN90 );

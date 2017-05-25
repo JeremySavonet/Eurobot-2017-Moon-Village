@@ -100,7 +100,7 @@ bool ColorSensor::attach( Hal& hal )
 
     qDebug() << "AVG Clear is " << _vcAvg;
 
-    if( _vcAvg > 400 || _vcAvg == 0 )
+    if( _vcAvg == 0 )//if( _vcAvg > 400 || _vcAvg == 0 )
     {
         qDebug()
             << QTime::currentTime().toString()

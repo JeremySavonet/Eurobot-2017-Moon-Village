@@ -12,12 +12,14 @@ MoveArmsAction::MoveArmsAction(
      Servo& armLeft,
      Servo& ejector,
      Servo& unblock,
+     Servo& pusher,
      Position position )
     : Action()
     , _armRight( armRight )
     , _armLeft( armLeft )
     , _ejector( ejector )
     , _unblock( unblock )
+    , _pusher( pusher )
     , _position( position )
 {
 }
@@ -136,6 +138,18 @@ void MoveArmsAction::execute()
     case Position::STANDBY_UNBLOCK:
     {
         _unblock.write( SERVO_1_UNBLOCK_STANDBY );
+    }
+        break;
+
+    case Position::PUSHER_DEPLOY:
+    {
+        _pusher.write( SERVO_5_PUSHER_DEPLOY );
+    }
+        break;
+
+    case Position::PUSHER_STANDBY:
+    {
+        _pusher.write( SERVO_5_PUSHER_STANDBY );
     }
         break;
 

@@ -35,6 +35,7 @@ public:
         Servo& armLeft,
         Servo& ejector,
         Servo& unblock,
+        Servo& pusher,
         Turbine& turbine,
         ColorSensor& _colorSensor,
         QObject* parent = nullptr );
@@ -68,6 +69,7 @@ private:
     Servo& _armLeft;
     Servo& _ejector;
     Servo& _unblock;
+    Servo& _pusher;
     Turbine& _turbine;
     ColorSensor& _colorSensor;
 

@@ -112,6 +112,7 @@ private:
     Servo _armLeft;
     Servo _ejector;
     Servo _unblock;
+    Servo _pusher;
     Turbine _turbine;
     Carrousel _carrousel;
     Recallage _recallage;

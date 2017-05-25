@@ -16,7 +16,6 @@
 #define SERVO_0_ARM_R_OPEN90 (22400) // ouvert à 90°
 #define SERVO_0_ARM_R_OPEN180 (18000) // /!ATTENTION!\ Il faut désactiver le servo ensuite car il ne va pas à 180°
 
-
 #define SERVO_6_ARM_L_CLOSED (12800) // forcage du cylindre pour la detection couleur
 #define SERVO_6_ARM_L_0 (13800) // angle à 0
 #define SERVO_6_ARM_L_DROP (15000) // position d'ejection (entre 0 & 45 °)
@@ -29,6 +28,10 @@
 
 #define SERVO_1_UNBLOCK_STANDBY (26100)
 #define SERVO_1_UNBLOCK_ACTION (18300)
+
+#define SERVO_5_PUSHER_STANDBY (8000)
+//#define SERVO_5_PUSHER_DEPLOY (30500)
+#define SERVO_5_PUSHER_DEPLOY (29500)
 
 namespace WestBot {
 

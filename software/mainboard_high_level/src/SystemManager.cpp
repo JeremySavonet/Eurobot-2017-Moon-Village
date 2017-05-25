@@ -40,6 +40,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
     , _armLeft( "Arm_left" )
     , _ejector( "Ejector" )
     , _unblock( "Unblock" )
+    , _pusher( "Pusher" )
     , _turbine( "Turbine" )
     , _carrousel( _hal )
     , _trajectoryManager( _hal, _recallage )
@@ -53,6 +54,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                         _armLeft,
                         _ejector,
                         _unblock,
+                        _pusher,
                         _turbine,
                         _colorSensor )
 {
@@ -196,6 +198,15 @@ bool SystemManager::init()
         return false;
     }
 
+    _pusher.attach( _hal, 5, SERVO_5_PUSHER_STANDBY, SERVO_5_PUSHER_DEPLOY );
+
+    if( ! _pusher.isAttached() )
+    {
+        qWarning()
+            << QTime::currentTime().toString() << "Failed to attach pusher servo...";
+        return false;
+    }
+
     _armLeft.attach( _hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
 
     if( ! _armLeft.isAttached() )
@@ -253,12 +264,14 @@ bool SystemManager::init()
         return false;
     }
 
+    /*
     if( ! _colorSensor.checkIsEmpty() )
     {
         qDebug()
             << QTime::currentTime().toString() << "Failed to finish init: Carrousel is not empty.";
         return false;
     }
+    */
 
     if( ! _carrousel.init() )
     {
@@ -553,7 +566,7 @@ QState* SystemManager::createRunningStratState( QState* parent )
             }
             else
             {
-                _recallage.errorInit( 36, -570, 0 ); // TODO: Change y pos
+                _recallage.errorInit( 36, -610, 0 ); // TODO: Change y pos
             }
 
             emit doStrat( _color );

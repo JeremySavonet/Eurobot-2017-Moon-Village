@@ -27,7 +27,9 @@ public:
         DISABLE,
         EJECT,
         UNBLOCK,
-        STANDBY_UNBLOCK
+        STANDBY_UNBLOCK,
+        PUSHER_DEPLOY,
+        PUSHER_STANDBY
     };
 
     MoveArmsAction(
@@ -35,6 +37,7 @@ public:
         Servo& armLeft,
         Servo& ejector,
         Servo& unblock,
+        Servo& pusher,
         Position position );
 
     void execute() override;
@@ -44,6 +47,7 @@ private:
     Servo& _armLeft;
     Servo& _ejector;
     Servo& _unblock;
+    Servo& _pusher;
     Position _position;
 };
 

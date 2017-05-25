@@ -10,9 +10,9 @@
 #include <WestBot/Recallage.hpp>
 
 // 3rd party
-#include  <3rdparty/Eigen/Dense>
+//#include  <3rdparty/Eigen/Dense>
 
-using namespace Eigen;
+//using namespace Eigen;
 using namespace WestBot;
 
 namespace
@@ -96,7 +96,7 @@ bool Recallage::calibrate(
     const double* mesR,			// mesure télémètre
     const double* mesTheta )    // angle correspondant à la masure
 {
-    double errX;
+   /* double errX;
     double errY;
     double errTheta;
 
@@ -252,6 +252,6 @@ bool Recallage::calibrate(
         << errX << " "
         << errY << " "
         << errTheta << std::endl;
-
+    */
 	return true;
 }
