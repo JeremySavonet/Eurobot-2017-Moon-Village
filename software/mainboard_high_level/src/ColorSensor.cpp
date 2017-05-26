@@ -231,6 +231,7 @@ int ColorSensor::sensorCheck()
                         << value << v_min;
                     _motorValue->write( MOTOR_COLOR_1T_PER_SECOND );
                     QThread::msleep( 500 );
+                    retry += 250;
                 }
             }
             else
