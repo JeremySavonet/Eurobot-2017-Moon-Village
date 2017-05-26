@@ -49,7 +49,7 @@ bool DetectionManager::init( Hal& hal )
         }
 
         QThread::msleep( 10 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
     _eventTimer->start( 10 );

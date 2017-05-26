@@ -39,7 +39,8 @@ SOURCES += src/Carrousel.cpp \
            src/Recallage.cpp \
            src/RPLidar.cpp \
            src/ColorCheckerAction.cpp \
-           src/ConfigAction.cpp
+           src/ConfigAction.cpp \
+           src/ExecuteMatch.cpp
 
 HEADERS += \
     3rdparty/Eigen/src/* \
@@ -72,7 +73,8 @@ HEADERS += \
     include/WestBot/Recallage.hpp \
     include/WestBot/RPLidar.hpp \
     include/WestBot/ColorCheckerAction.hpp \
-    include/WestBot/ConfigAction.hpp
+    include/WestBot/ConfigAction.hpp \
+    include/WestBot/ExecuteMatch.hpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

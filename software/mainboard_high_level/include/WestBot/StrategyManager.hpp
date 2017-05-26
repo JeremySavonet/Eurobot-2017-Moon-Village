@@ -56,9 +56,9 @@ public:
         int trajEndFlags,
         int numRetries );
 
-private:
-    void buildStrat( const Color& color );
-    void doStrat( const Color& color );
+	void doStrat( const Color& color );
+
+	void buildStrat( const Color& color );
     void doFunnyAction();
     void disableServos();
     void enableServos();

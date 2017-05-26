@@ -16,7 +16,7 @@ WaitAction::WaitAction( int waitMs )
 void WaitAction::execute()
 {
     QThread::msleep( _waitMs );
-    QCoreApplication::processEvents();
+	//QCoreApplication::processEvents();
 
     emit complete();
 }

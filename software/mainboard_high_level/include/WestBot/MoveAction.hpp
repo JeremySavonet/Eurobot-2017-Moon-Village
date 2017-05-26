@@ -27,6 +27,7 @@ public:
 
     void execute() override;
 
+private:
     TrajectoryManager& _trajectoryManager;
     TrajectoryManager::TrajectoryType _type;
     float _theta;

@@ -36,7 +36,7 @@ void TrajectoryManager::init()
     {
         QThread::msleep( 10 );
         qDebug() <<  QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -54,7 +54,7 @@ void TrajectoryManager::init()
             << QTime::currentTime().toString()
             << "wait cmd ack "
             << _hal._trajOutAck.read< uint8_t >();
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -70,7 +70,7 @@ void TrajectoryManager::init()
         qDebug()
             << QTime::currentTime().toString()
             << "wait cmd ack " << _hal._trajOutAck.read< uint8_t >();
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -84,7 +84,7 @@ void TrajectoryManager::init()
     {
        QThread::msleep( 10 );
        qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
     }
 
     _hal._trajCmdValid.write( 0x0 );
@@ -97,7 +97,7 @@ void TrajectoryManager::init()
     {
        QThread::msleep( 10 );
        qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
     }
 
     qDebug()
@@ -123,7 +123,7 @@ void TrajectoryManager::waitTrajReady()
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
 
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY );
 }
 
@@ -140,7 +140,7 @@ void TrajectoryManager::disable()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 1 );
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
        qDebug() << QTime::currentTime().toString() << "wait disable ack";
     }
 }
@@ -158,7 +158,7 @@ void TrajectoryManager::enable()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 1 );
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
        qDebug() << QTime::currentTime().toString() << "wait enable ack";
     }
 }
@@ -176,7 +176,7 @@ void TrajectoryManager::stop()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 1 );
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
        qDebug() << QTime::currentTime().toString() << "wait stop ack";
     }
 }
@@ -194,7 +194,7 @@ void TrajectoryManager::hardStop()
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
        QThread::msleep( 1 );
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
        qDebug() << QTime::currentTime().toString() << "wait hardstop ack";
     }
 }
@@ -216,7 +216,7 @@ void TrajectoryManager::setDistanceConfig( float speed, float acc )
         qDebug()
             << QTime::currentTime().toString()
             << "wait cmd ack " << _hal._trajOutAck.read< uint8_t >();
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 }
 
@@ -235,7 +235,7 @@ void TrajectoryManager::setAngleConfig( float speed, float acc )
     {
        QThread::msleep( 10 );
        qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-       QCoreApplication::processEvents();
+	   //QCoreApplication::processEvents();
     }
 }
 
@@ -258,7 +258,7 @@ void TrajectoryManager::setWindow( float distance, float angleDeg, float startAn
             << QTime::currentTime().toString()
             << "wait cmd ack "
             << _hal._trajOutAck.read< uint8_t >();
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 }
 
@@ -284,11 +284,11 @@ void TrajectoryManager::moveDRel( float distance, bool correction, bool doNotBlo
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
         QThread::msleep( 1 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
@@ -308,8 +308,8 @@ void TrajectoryManager::moveDRel( float distance, bool correction, bool doNotBlo
                 << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
                 << _hal._odometryY.read<int16_t>();
         }
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNotBlock )
@@ -332,15 +332,16 @@ void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNo
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
         QThread::msleep( 1 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
+	int i = 0;
     do
     {
         QThread::msleep( 10 );
@@ -348,7 +349,6 @@ void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNo
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -358,8 +358,8 @@ void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNo
                 << _hal._odometryY.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock )
@@ -384,10 +384,10 @@ void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock 
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
@@ -407,8 +407,8 @@ void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock 
                 << "theta:" << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock )
@@ -439,14 +439,15 @@ void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock 
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
+	int i = 0;
     do
     {
         QThread::msleep( 10 );
@@ -454,7 +455,6 @@ void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock 
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -463,8 +463,8 @@ void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock 
                 << "theta:" << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBlock )
@@ -488,22 +488,22 @@ void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBl
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -512,8 +512,8 @@ void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBl
                 << "theta:" << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBlock )
@@ -544,22 +544,22 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBl
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -568,8 +568,8 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBl
                 << "theta:" << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
@@ -599,22 +599,22 @@ void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -624,8 +624,8 @@ void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
                 << _hal._odometryY.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
@@ -655,22 +655,22 @@ void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -680,8 +680,8 @@ void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
                 << _hal._odometryY.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBlock )
@@ -712,22 +712,22 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBl
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -738,8 +738,8 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBl
                 << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool doNotBlock )
@@ -773,22 +773,22 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool 
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -799,8 +799,8 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool 
                 << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool doNotBlock )
@@ -831,22 +831,22 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -857,8 +857,8 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool
                 << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::moveToDARel( float theta, float distance, bool correction, bool doNotBlock )
@@ -883,22 +883,22 @@ void TrajectoryManager::moveToDARel( float theta, float distance, bool correctio
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -909,8 +909,8 @@ void TrajectoryManager::moveToDARel( float theta, float distance, bool correctio
                 << _hal._odometryTheta.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }
 
 void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
@@ -933,22 +933,22 @@ void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
-    if( ! doNotBlock )
+	if( doNotBlock )
     {
         return;
     }
 
-    do
+	int i = 0;
+	do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
 
-        int i = 0;
         if( ( i++ % 100 ) == 0 )
         {
             qDebug()
@@ -958,6 +958,6 @@ void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
                 << _hal._odometryY.read<int16_t>();
         }
 
-        QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY && ! doNotBlock );
+		//QCoreApplication::processEvents();
+	} while( state != TrajectoryState::READY );
 }

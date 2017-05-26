@@ -58,6 +58,7 @@ theta = ones(32,1)*thetaS(1:end-1) + (1:32)'/32*thetaSD - thetaD(:,1:end-1);
 r = reshape(r(:,1:end-1),1,[]);
 theta = reshape(theta,1,[]) /180*pi;
 
+% thetaInterp = ones(32,1)*thetaS(2:end) + (1:32)'/32*thetaSD;
 thetaInterp = ones(32,1)*thetaS(1:end-1) + (1:32)'/32*thetaSD;
 thetaInterp = reshape(thetaInterp,1,[]) /180*pi;
 

@@ -32,7 +32,7 @@ void MoveArmsAction::execute()
     {
         _ejector.write( SERVO_7_EJECTOR_STANDBY );
         QThread::msleep( 250 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
         _armRight.write( SERVO_0_ARM_R_CLOSED );
         _armLeft.write( SERVO_6_ARM_L_CLOSED );
     }
@@ -42,7 +42,7 @@ void MoveArmsAction::execute()
     {
         _ejector.write( SERVO_7_EJECTOR_STANDBY );
         QThread::msleep( 250 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
         _armRight.write( SERVO_0_ARM_R_0 );
         _armLeft.write( SERVO_6_ARM_L_0 );
     }
@@ -80,14 +80,14 @@ void MoveArmsAction::execute()
     {
         _ejector.write( SERVO_7_EJECTOR_STANDBY );
         QThread::msleep( 250 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
 
         // Open arms full
         _armRight.write( SERVO_0_ARM_R_OPEN180 );
         _armLeft.write( SERVO_6_ARM_L_OPEN180 );
 
         QThread::msleep( 250 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
 
         // Disable arms
         _armLeft.write( SERV0_DISABLE_CONSIGN );
@@ -109,19 +109,19 @@ void MoveArmsAction::execute()
         _armLeft.write( SERVO_6_ARM_L_DROP );
 
         QThread::msleep( 200 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
 
         _ejector.write( SERVO_7_EJECTOR_EJECT );
 
         QThread::msleep( 250 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
 
         _armRight.write( SERVO_0_ARM_R_OPEN45 );
         _armLeft.write( SERVO_6_ARM_L_OPEN45 );
 
         _ejector.write( SERVO_7_EJECTOR_STANDBY );
         QThread::msleep( 250 );
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
 
         _armLeft.write( SERV0_DISABLE_CONSIGN );
         _armRight.write( SERV0_DISABLE_CONSIGN );

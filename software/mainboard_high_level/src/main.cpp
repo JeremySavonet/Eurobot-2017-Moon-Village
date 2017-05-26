@@ -1,106 +1,60 @@
-// Copyright (c) 2016-2017 All Rights Reserved WestBot
 
-//#define SIMU
-
-#include <QCoreApplication>
-#include <QDebug>
-#include <QHostAddress>
+#include <QObject>
+#include <QTimer>
 #include <QThread>
-#include <QTime>
+#include <QDebug>
+#include <QCoreApplication>
 
-#include <Defines.hpp>
-
-#include <WestBot/Configuration.hpp>
-#include <WestBot/ConfigurationTcpServer.hpp>
-#include <WestBot/Hal.hpp>
-#include <WestBot/SystemManager.hpp>
-
-#include <hps_arm.h> // For our base address
-
-namespace
-{
-    WESTBOT_STR( CONFIGURATION_PATH, "config.ini" );
-
-    const int DEFAULT_PORT = 57497;
-}
+#include <WestBot/ExecuteMatch.hpp>
 
 using namespace WestBot;
 
+
 int main( int argc, char *argv[] )
 {
-    QCoreApplication app(argc, argv);
+	QCoreApplication app( argc, argv );
+	ExecuteMatch match;
 
-    // Load the configuration manager
-    Configuration configurationManager( CONFIGURATION_PATH );
+	qDebug() << "Thread run";
+	match.start();
 
-    QObject::connect(
-        & configurationManager,
-        & Configuration::configurationChanged,
-        [ &configurationManager ]()
-        {
-            qDebug()
-                << QTime::currentTime().toString()
-                << "Update layers according to configuration changes";
-            configurationManager.load();
-        } );
+	while( !match.started ){
+		QThread::msleep(100);
+		match.displayLed();
+	}
 
-    configurationManager.load();
+	QTimer t;
+	t.setSingleShot(true);
+	t.start( 90*1000 );
 
-    // Start the tcp configuration server
-    ConfigurationTcpServer configurationServer( configurationManager );
+	while( 1 ){
+		QThread::msleep(20);
 
-    if( ! configurationServer.listen( QHostAddress::Any, DEFAULT_PORT ) )
-    {
-        qWarning()
-            << QTime::currentTime().toString()
-            << "Unable to start the server:"
-            << configurationServer.errorString();
-    }
+		if( t.remainingTime()<=0 ) {
+			qDebug() << "END OF MATCH";
+			break;
+		}
 
-    configurationServer.showConnectionInformation();
+		if(match.isArretUrgence()) {
+			qDebug() << "HARD STOP";
+			break;
+		}
+	}
 
-    // Init the Hardware Abstraction Layer
-    Hal hal;
+	match.terminate();
+	match.hardStop();
 
-    // Init the System manager
-    SystemManager system( hal );
+	if(!match.isArretUrgence()) {
+		match.funnyAction();
+	}
 
-    // Init state machine and peripherals (sensors, position,...)
-    if( ! system.init() )
-    {
-        qWarning()
-            << QTime::currentTime().toString()
-            << "Failed to init system manager";
-        return EXIT_FAILURE;
-    }
 
-#ifdef SIMU
-    hal._modeSimu.write( 1 );
-#endif
+	while(1)
+		;
 
-    // ========= Start the system =========
-
-    // Here we are BITCHESSSSSS !!!
-    system.start(); // Start the state machine
-
-    qDebug() << "==== System ready ! ==== ";
-
-    // ODOMETRY check
-    int16_t x = hal._odometryX.read< int16_t >();
-    int16_t y = hal._odometryY.read< int16_t >();
-    int16_t theta = hal._odometryTheta.read< int16_t >();
-
-    qDebug()
-        << QTime::currentTime().toString()
-        << "X:" << x << " Y:" << y << " Theta:" << theta;
-
-    // TODO: REWORK THIS
-    int16_t safe = x + y + theta;
-
-    if( safe > 0 )
-    {
-        while( 1 );
-    }
-
-    return app.exec();
+	return 0;
 }
+
+
+
+

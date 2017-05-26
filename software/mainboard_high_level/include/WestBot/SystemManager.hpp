@@ -56,23 +56,28 @@ public:
 
     const Color& color() const;
 
-signals:
-    void started();
-    void stopped();
-    void error( const QString& error );
-    void doFunnyAction();
-    void systemInitialized();
+	void hardStop();
+	void funnyAction();
+	void initRecallage();
+	void blinkColorLed();
 
-    void readyForWar();
+//signals:
+//    void started();
+//    void stopped();
+//    void error( const QString& error );
+//    void doFunnyAction();
+//    void systemInitialized();
 
-    void hardStop();
-    void reArming();
+//    void readyForWar();
 
-    void doStrat( const Color& color );
-    void opponentDetected();
+//    void hardStop();
+//    void reArming();
+
+//    void doStrat( const Color& color );
+//    void opponentDetected();
 
 private:
-    void createStateMachine();
+	/*void createStateMachine();
 
     // States before the game start (init, check color, tirette)
     QState* createInitialState( QState* parent );
@@ -90,10 +95,12 @@ private:
 
     // Hard stop state when AU button is pushed
     QState* createHardStopState( QState* parent );
-
+*/
     void robotAlive();
 
-private:
+
+
+public:
     void displayColor( const DigitalValue& value );
 
     Hal _hal;

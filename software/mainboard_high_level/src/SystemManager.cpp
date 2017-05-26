@@ -59,7 +59,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                         _colorSensor )
 {
 
-    connect(
+ /*   connect(
         & _gameTimer,
         & QTimer::timeout,
         this,
@@ -145,7 +145,7 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
             {
                 qDebug() << QTime::currentTime().toString() << "We are safe";
             }
-        } );
+		} );*/
 }
 
 SystemManager::~SystemManager()
@@ -156,6 +156,56 @@ SystemManager::~SystemManager()
 }
 
 // Public methods
+void SystemManager::hardStop()
+{
+	qDebug()
+		<< QTime::currentTime().toString() << "Hard stop requested.";
+
+	// Stop traj
+	_trajectoryManager.hardStop();
+	_trajectoryManager.disable();
+
+	// Stop all servos
+	_strategyManager.disableServos();
+
+	// Stop carrousel
+	_carrousel.enable( false );
+
+	// Stop turbine
+	_turbine.enable( false );
+}
+
+void SystemManager::funnyAction()
+{
+	for( int i = 0; i < 50; i++ )
+	{
+		_turbine.setValue( i );
+		QThread::msleep( 50 );
+	}
+
+	QThread::msleep( 700 );
+	_turbine.setValue( 0 );
+}
+
+void SystemManager::blinkColorLed()
+{
+	_aliveTimer.start( 250 );
+}
+
+void SystemManager::initRecallage()
+{
+	if( _color == Color::Yellow )
+	{
+		_recallage.errorInit( 36, 580, 0 ); // TODO: Change y pos
+	}
+	else
+	{
+		_recallage.errorInit( 36, -610, 0 ); // TODO: Change y pos
+	}
+
+	qDebug() << "Init odo for color" << _color;
+}
+
 bool SystemManager::init()
 {
     // Always reset the system at startup
@@ -191,7 +241,7 @@ bool SystemManager::init()
     _hal._pidAngleTarget.write( _hal._pidAnglePosition.read< float >() );
     _hal._pidAngleEnable.write( 1 );
 
-    _armRight.attach( _hal, 0, SERVO_0_ARM_R_OPEN90, SERVO_0_ARM_R_CLOSED );
+	_armRight.attach( _hal, 0, SERVO_0_ARM_R_CLOSED, SERVO_0_ARM_R_CLOSED );
 
     if( ! _armRight.isAttached() )
     {
@@ -216,9 +266,11 @@ bool SystemManager::init()
         qWarning()
             << QTime::currentTime().toString() << "Failed to attach pusher servo...";
         return false;
-    }
+	}
 
-    _armLeft.attach( _hal, 6, SERVO_6_ARM_L_OPEN90, SERVO_6_ARM_L_CLOSED );
+	QThread::msleep(200);
+
+	_armLeft.attach( _hal, 6, SERVO_6_ARM_L_CLOSED, SERVO_6_ARM_L_CLOSED );
 
     if( ! _armLeft.isAttached() )
     {
@@ -332,17 +384,24 @@ bool SystemManager::init()
 	//RobotPos currentPos = _recallage.calibrate( len, distance, angle );
 	//qDebug() << ">>>>>>>> Current pos" << currentPos.theta << currentPos.x << currentPos.y;
     */
-    _gameTimer.setSingleShot( true );
-    _funnyTimer.setSingleShot( true );
+	_gameTimer.setSingleShot( true );
+	_funnyTimer.setSingleShot( true );
 
-    createStateMachine();
+	//createStateMachine();
 
     return true;
 }
 
 void SystemManager::start()
 {
-    _stateMachine.start();
+	//_stateMachine.start();
+
+	initRecallage();
+	//blinkColorLed();
+	displayColor( _colorButton->digitalRead() );
+
+	qDebug() << "Started with color " << _color;
+	_strategyManager.doStrat( _color );
 }
 
 void SystemManager::stop()
@@ -383,7 +442,7 @@ const Color& SystemManager::color() const
 }
 
 // Private methods
-void SystemManager::createStateMachine()
+/*void SystemManager::createStateMachine()
 {
     QState* initialState = createInitialState( & _stateMachine );
     QState* checkGameColorState = createCheckGameColorState( & _stateMachine );
@@ -648,7 +707,7 @@ QState* SystemManager::createHardStopState( QState* parent )
 
     return state;
 }
-
+*/
 void SystemManager::displayColor( const DigitalValue& value )
 {
     if( value == DigitalValue::OFF )

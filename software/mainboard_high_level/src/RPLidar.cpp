@@ -42,7 +42,7 @@ void RPLidar::init( Hal& hal )
 	hal._motor5Override.write( 1 );
 	hal._motor5Value.write( 25000 / 2);
 	QThread::msleep( 2000 );
-    QCoreApplication::processEvents();
+	//QCoreApplication::processEvents();
 }
 
 void RPLidar::disconnect()
@@ -73,13 +73,13 @@ bool RPLidar::startScan( int timeoutMs )
 	int status = 0;
 	while( timeout.remainingTime()>0 )
 	{
-		QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
 
 		switch(status) {
 			case 0: {
 				const char buf[] = {0xA5,0x25};
 				_tty->write(buf,sizeof(buf));
-				QCoreApplication::processEvents();
+				//QCoreApplication::processEvents();
 				QThread::msleep( 1000 );
 				status++;
 				qDebug() << "telem stop done";
@@ -90,9 +90,9 @@ bool RPLidar::startScan( int timeoutMs )
 				buf[sizeof(buf)-1] = checksum(buf,sizeof(buf));
 				_tty->readAll();
 				_tty->write(buf,sizeof(buf));
-				QCoreApplication::processEvents();
+				//QCoreApplication::processEvents();
 				QThread::msleep( 100 );
-				QCoreApplication::processEvents();
+				//QCoreApplication::processEvents();
 				unsigned int len = _tty->bytesAvailable();
 				if(len==0)
 					break;
@@ -114,9 +114,9 @@ bool RPLidar::startScan( int timeoutMs )
 				buf[sizeof(buf)-1] = checksum(buf,sizeof(buf));
 				_tty->readAll();
 				_tty->write(buf,sizeof(buf));
-				QCoreApplication::processEvents();
+				//QCoreApplication::processEvents();
 				QThread::msleep( 50 );
-				QCoreApplication::processEvents();
+				//QCoreApplication::processEvents();
 				unsigned int len = _tty->bytesAvailable();
 				if(len==0)
 					break;
@@ -135,7 +135,7 @@ bool RPLidar::startScan( int timeoutMs )
 			}
 			case 3: {
 				QThread::msleep( 1000 );
-				QCoreApplication::processEvents();
+				//QCoreApplication::processEvents();
 				int len = _tty->bytesAvailable();
 				qDebug() << "len" << len;
 				timeout.stop();

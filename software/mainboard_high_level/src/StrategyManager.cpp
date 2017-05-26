@@ -46,7 +46,7 @@ StrategyManager::StrategyManager(
     , _stratIsRunning( false )
     , _color( Color::Unknown )
 {
-    connect(
+ /*   connect(
         & _systemManager,
         & SystemManager::doStrat,
         this,
@@ -125,7 +125,7 @@ StrategyManager::StrategyManager(
         [ this ]()
         {
             stopRobot();
-        } );
+		} );*/
 }
 
 void StrategyManager::stop()
@@ -209,7 +209,7 @@ bool StrategyManager::gotoAvoidPositionRetry(
         {
             break;
         }
-        QCoreApplication::processEvents();
+		//QCoreApplication::processEvents();
     }
 
     return finished;
@@ -377,7 +377,7 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             600.0,
             500.0 * inv,
-            false );
+			false );
 
     MoveAction::Ptr moveTotem2 =
         std::make_shared< MoveAction >(
@@ -388,7 +388,7 @@ void StrategyManager::buildStrat( const Color& color )
             ( 1100.0 - 162.0 ),
             ( 1000.0 - 162.0 ) * inv,
             false,
-            true );
+			false );
 
     MoveAction::Ptr moveAlignementDepose =
         std::make_shared< MoveAction >(
@@ -602,24 +602,24 @@ void StrategyManager::buildStrat( const Color& color )
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>><< OUR STRAT
     _actions.push_back( fastSpeedDistance );
     _actions.push_back( windowCourbe );
-    //_actions.push_back( moveTotem1 );
-    //_actions.push_back( avance95SansCorrection );
+	_actions.push_back( moveTotem1 );
+
+
+	_actions.push_back( openArms0 );
+	_actions.push_back( wait100Ms );
+	_actions.push_back( drop );
+	_actions.push_back( wait100Ms );
+	_actions.push_back( turnCW );
+	_actions.push_back( wait200Ms );
+	_actions.push_back( openArms90 );
 
     _actions.push_back( moveTotem2 ); // not blocking
 
-    _actions.push_back( openArms0 );
 
-    /*_actions.push_back( wait100Ms );
-    _actions.push_back( drop );
-    _actions.push_back( wait100Ms );
-    _actions.push_back( turnCW );
-    _actions.push_back( wait200Ms );
-    _actions.push_back( openArms90 );
+	//_actions.push_back( waitTrajReady );
 
-    _actions.push_back( waitTrajReady );
+	//_actions.push_back( openArmsFull );
 
-    _actions.push_back( openArmsFull );
-    */
 
 
 //    _actions.push_back( openArms0 );
@@ -756,42 +756,42 @@ void StrategyManager::buildStrat( const Color& color )
 
 void StrategyManager::doStrat( const Color& color )
 {
-    // Build the strat for selected color
-    buildStrat( color );
+	// Build the strat for selected color
+	buildStrat( color );
 
-    qDebug() << "Do strat for color:" << color;
+	qDebug() << "Do strat for color:" << color;
 
-    const QDateTime now;
+	const QDateTime now;
 
-    qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size() << now.currentMSecsSinceEpoch();
+	qDebug() << ">>>>>>>> ACTIONS SIZE" << _actions.size() << now.currentMSecsSinceEpoch();
 
-    // Strat loop
-    int i = 0;
-    for( const auto& action: _actions )
-    {
-        _currentAction = action;
-        action->execute();
+	// Strat loop
+	int i = 0;
+	for( const auto& action: _actions )
+	{
+		_currentAction = action;
+		action->execute();
 
-        _actions.removeOne( action );
-        qDebug() << now.currentDateTime().toMSecsSinceEpoch() << "Execute action number" << i;
-        i++;
+		_actions.removeOne( action );
+		qDebug() << now.currentDateTime().toMSecsSinceEpoch() << "Execute action number" << i;
+		i++;
 
-        if( ! _stratIsRunning )
-        {
-            qDebug() << QTime::currentTime().toString() << "Finish current action and stop after";
-            break;
-        }
+		/*if( ! _stratIsRunning )
+		{
+			qDebug() << QTime::currentTime().toString() << "Finish current action and stop after";
+			break;
+		}*/
 
-        // Le big fail de jeremy !!!!
-        QCoreApplication::processEvents();
-    }
+		// Le big fail de jeremy !!!!
+		//QCoreApplication::processEvents();
+	}
 
-    qDebug()
-        << QTime::currentTime().toString()
-        << "Strat is over. Make sure we have clear the action list";
+	qDebug()
+		<< QTime::currentTime().toString()
+		<< "Strat is over. Make sure we have clear the action list";
 
-    _stratIsRunning = false;
-    _actions.clear();
+	_stratIsRunning = false;
+	_actions.clear();
 }
 
 void StrategyManager::doFunnyAction()
