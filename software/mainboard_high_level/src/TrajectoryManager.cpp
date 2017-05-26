@@ -242,7 +242,7 @@ void TrajectoryManager::setWindow( float distance, float angleDeg, float startAn
 
 
 // Trajectories: all this method are blocking
-void TrajectoryManager::moveDRel( float distance, bool correction )
+void TrajectoryManager::moveDRel( float distance, bool correction, bool doNotBlock )
 {
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
@@ -280,7 +280,7 @@ void TrajectoryManager::moveDRel( float distance, bool correction )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::moveOnlyDRel( float distance, bool correction )
+void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNotBlock )
 {
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
@@ -318,7 +318,7 @@ void TrajectoryManager::moveOnlyDRel( float distance, bool correction )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::turnARel( float theta, bool correction )
+void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock )
 {
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
@@ -355,7 +355,7 @@ void TrajectoryManager::turnARel( float theta, bool correction )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::turnAAbs( float theta, bool correction )
+void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = theta;
@@ -399,7 +399,7 @@ void TrajectoryManager::turnAAbs( float theta, bool correction )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::turnOnlyARel( float theta, bool correction )
+void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBlock )
 {
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
@@ -436,7 +436,7 @@ void TrajectoryManager::turnOnlyARel( float theta, bool correction )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::turnOnlyAAbs( float theta, bool correction )
+void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = theta;
@@ -480,7 +480,7 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::turnToXY( float x, float y )
+void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = 0;
@@ -524,7 +524,7 @@ void TrajectoryManager::turnToXY( float x, float y )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::turnToXYBehind( float x, float y )
+void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = 0;
@@ -568,7 +568,7 @@ void TrajectoryManager::turnToXYBehind( float x, float y )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
+void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = theta;
@@ -614,7 +614,7 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
+void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = theta;
@@ -660,7 +660,7 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y )
+void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool doNotBlock )
 {
     RobotPos currentPos;
     currentPos.theta = theta;
@@ -706,7 +706,7 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y )
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::moveToDARel( float theta, float distance, bool correction )
+void TrajectoryManager::moveToDARel( float theta, float distance, bool correction, bool doNotBlock )
 {
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();
@@ -746,7 +746,7 @@ void TrajectoryManager::moveToDARel( float theta, float distance, bool correctio
     } while( state != TrajectoryState::READY );
 }
 
-void TrajectoryManager::moveToXYRel( float x, float y )
+void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
 {
     uint8_t inWindow;
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();

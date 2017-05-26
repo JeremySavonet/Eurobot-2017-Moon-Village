@@ -286,6 +286,9 @@ void StrategyManager::buildStrat( const Color& color )
     WaitAction::Ptr wait200Ms =
         std::make_shared< WaitAction >( 200 );
 
+    WaitAction::Ptr wait100Ms =
+        std::make_shared< WaitAction >( 100 );
+
     MoveArmsAction::Ptr closeArms =
         std::make_shared< MoveArmsAction >(
             _armRight,
@@ -578,6 +581,46 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             ( 1100.0 + shift ),
             ( 900.0 + shift ) * inv,
+            false );
+
+    MoveAction::Ptr moveDepose =
+            std::make_shared< MoveAction >(
+                _trajectoryManager,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+                0.0,
+                0.0,
+                (1400.0+shift) - 175.0,
+                ( (600.0+shift) + 175.0 ) * inv,
+                false );
+
+    MoveAction::Ptr turnToTotemBottom =
+            std::make_shared< MoveAction >(
+                _trajectoryManager,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_TURNTO_XY,
+                0.0,
+                0.0,
+                ( 790.0 ),
+                ( 1500.0 - 365.0 ) * inv,
+                false );
+
+    MoveAction::Ptr moveToTotemBottom =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+            0.0,
+            0.0,
+            ( 790.0 ),
+            ( 1500.0 - 365.0 ) * inv,
+            false );
+
+    MoveAction::Ptr safeBackTotemBottom =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -400.0,
+            0.0,
+            0.0,
             false );
 
     // CONFIG ACTION

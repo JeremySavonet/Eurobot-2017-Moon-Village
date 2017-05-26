@@ -112,19 +112,19 @@ public:
 
     void setWindow( float distance, float angleDeg, float startAngleDeg );
 
-    void moveDRel( float distance, bool correction );
-    void moveOnlyDRel( float distance, bool correction );
-    void turnARel( float theta, bool correction );
-    void turnAAbs( float theta, bool correction );
-    void turnOnlyARel( float theta, bool correction );
-    void turnOnlyAAbs( float theta, bool correction );
-    void turnToXY( float x, float y );
-    void turnToXYBehind( float x, float y );
-    void moveToXYAbs( float theta, float x, float y );
-    void moveForwardToXYAbs( float theta, float x, float y );
-    void moveBackwardToXYAbs( float theta, float x, float y );
-    void moveToDARel( float theta, float distance, bool correction );
-    void moveToXYRel( float x, float y );
+    void moveDRel( float distance, bool correction, bool doNotBlock = false );
+    void moveOnlyDRel( float distance, bool correction, bool doNotBlock = false );
+    void turnARel( float theta, bool correction, bool doNotBlock = false );
+    void turnAAbs( float theta, bool correction, bool doNotBlock = false );
+    void turnOnlyARel( float theta, bool correction, bool doNotBlock = false );
+    void turnOnlyAAbs( float theta, bool correction, bool doNotBlock = false );
+    void turnToXY( float x, float y, bool doNotBlock = false );
+    void turnToXYBehind( float x, float y, bool doNotBlock = false );
+    void moveToXYAbs( float theta, float x, float y, bool doNotBlock = false );
+    void moveForwardToXYAbs( float theta, float x, float y, bool doNotBlock = false );
+    void moveBackwardToXYAbs( float theta, float x, float y, bool doNotBlock = false );
+    void moveToDARel( float theta, float distance, bool correction, bool doNotBlock = false );
+    void moveToXYRel( float x, float y, bool doNotBlock = false );
 
 private:
     Hal _hal;
