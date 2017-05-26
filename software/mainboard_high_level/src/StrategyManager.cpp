@@ -103,6 +103,9 @@ StrategyManager::StrategyManager(
         this,
         [ this ]()
         {
+            qDebug() << ">>>>>>>>>>>>>>>>>>>> FIN DU MATCH <<<<<<<<<<<<";
+            _actions.clear();
+
             // Stop traj
             _trajectoryManager.hardStop();
             _trajectoryManager.disable();
@@ -346,6 +349,15 @@ void StrategyManager::buildStrat( const Color& color )
             _pusher,
             MoveArmsAction::Position::ZERO_POS );
 
+    MoveArmsAction::Ptr openArmsFusee =
+        std::make_shared< MoveArmsAction >(
+            _armRight,
+            _armLeft,
+            _ejector,
+            _unblock,
+            _pusher,
+            MoveArmsAction::Position::OPEN_FUSEE );
+
     MoveArmsAction::Ptr pusherDeploy =
         std::make_shared< MoveArmsAction >(
             _armRight,
@@ -409,6 +421,24 @@ void StrategyManager::buildStrat( const Color& color )
             (1400.0+shift) - 175.0,
             ( (600.0+shift) + 175.0 ) * inv,
             false );
+    MoveAction::Ptr moveDeposePlus =
+         std::make_shared< MoveAction >(
+                _trajectoryManager,
+                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+                0.0,
+                35.0,
+                0.0,
+                0.0,
+                false );
+        /*std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
+            0.0,
+            0.0,
+            (1400.0+shift) - 175.0 +30.0,
+            ( (600.0+shift) + 175.0 -30.0) * inv,
+            false );*/
+
 
     MoveAction::Ptr move7 =
         std::make_shared< MoveAction >(
@@ -440,12 +470,42 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             false );
 
+    MoveAction::Ptr avance95SansCorrectionPlus =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            175.0+40,
+            0.0,
+            0.0,
+            false );
+
     MoveAction::Ptr recul180AvecCorrection =
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
             0.0,
             -180.0,
+            0.0,
+            0.0,
+            true );
+
+    MoveAction::Ptr recul50AvecCorrection =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -50.0,
+            0.0,
+            0.0,
+            true );
+
+    MoveAction::Ptr reculDechargeTotem =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -50.0,
             0.0,
             0.0,
             true );
@@ -551,6 +611,16 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             0.0 );
 
+    ConfigAction::Ptr mediumSpeedDistance =
+        std::make_shared< ConfigAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::DIST_CONFIG,
+            0.12,
+            0.00001,
+            0.0,
+            0.0,
+            0.0 );
+
     ConfigAction::Ptr fastSpeedDistance =
         std::make_shared< ConfigAction >(
             _trajectoryManager,
@@ -617,11 +687,11 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( wait200Ms );
     _actions.push_back( pusherDeploy );
     _actions.push_back( wait200Ms );
-    _actions.push_back( avance95SansCorrection );
-    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    _actions.push_back( recul50AvecCorrection ); // Recallage sur position connue
     _actions.push_back( pusherStandby );
-    _actions.push_back( wait200Ms );
-    _actions.push_back( move4 ); // Recallage sur position connue
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    //_actions.push_back( wait200Ms );
 
     // On fait le deuxieme totem
     _actions.push_back( turnA45 );
@@ -639,11 +709,11 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( wait200Ms );
     _actions.push_back( pusherDeploy );
     _actions.push_back( wait200Ms );
-    _actions.push_back( avance95SansCorrection );
-    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    _actions.push_back( recul50AvecCorrection ); // Recallage sur position connue
     _actions.push_back( pusherStandby );
-    _actions.push_back( wait200Ms );
-    _actions.push_back( move4 ); // Recallage sur position connue
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    //_actions.push_back( wait200Ms );
 
     // On fait le troisieme totem
     _actions.push_back( turnA45 );
@@ -679,14 +749,49 @@ void StrategyManager::buildStrat( const Color& color )
     // On fait le deuxieme totem
     _actions.push_back( turnA45 );
     _actions.push_back( eject );
-    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+/*    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
     _actions.push_back( openArms0 );
     _actions.push_back( wait200Ms );
     _actions.push_back( pusherDeploy );
     _actions.push_back( wait200Ms );
     _actions.push_back( avance95SansCorrection );
     _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );*/
+
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    //_actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( openArmsFusee );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( avance95SansCorrectionPlus );
+//    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
     _actions.push_back( pusherStandby );
+
+    // Totem bottom
+    _actions.push_back( fastSpeedDistance );
+    _actions.push_back( turnToTotemBottom );
+    _actions.push_back( openArms90 );
+    _actions.push_back( moveToTotemBottom );
+    _actions.push_back( openArms45 );
+    _actions.push_back( closeArms );
+    _actions.push_back( windowCourbe );
+    _actions.push_back( safeBackTotemBottom );
+    _actions.push_back( mediumSpeedDistance );
+    //_actions.push_back( moveAlignementDepose );
+    _actions.push_back( windowPrecise );
+    _actions.push_back( moveDepose );
+    _actions.push_back( moveDeposePlus );
+
+    _actions.push_back( turnA45 );
+    _actions.push_back( eject );
+/*    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+  _actions.push_back( openArms0 );
+    //_actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( avance95SansCorrection );*/
 }
 
 void StrategyManager::doStrat( const Color& color )

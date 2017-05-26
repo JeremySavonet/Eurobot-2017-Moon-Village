@@ -204,7 +204,7 @@ int ColorSensor::sensorCheck()
 
                 qDebug()
                     << QTime::currentTime().toString()
-                    << "COLOR TO CHECK"
+                    << "COLOR TO CHECK " << retry
                     << blue_value << clear_value << v_min << v_max;
 
                 if( ( _colorTarget == Color::Yellow ) &&
