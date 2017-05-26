@@ -22,7 +22,8 @@ public:
         float distance,
         float x,
         float y,
-        bool correction );
+        bool correction,
+        bool doNotBlock = false );
 
     void execute() override;
 
@@ -33,6 +34,7 @@ public:
     float _x;
     float _y;
     bool _correction;
+    bool _doNotBlock;
 };
 
 }

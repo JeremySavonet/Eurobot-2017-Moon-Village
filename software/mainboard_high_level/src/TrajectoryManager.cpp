@@ -277,7 +277,7 @@ void TrajectoryManager::moveDRel( float distance, bool correction, bool doNotBlo
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNotBlock )
@@ -315,7 +315,7 @@ void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNo
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock )
@@ -352,7 +352,7 @@ void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock 
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock )
@@ -396,7 +396,7 @@ void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock 
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBlock )
@@ -433,7 +433,7 @@ void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBl
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBlock )
@@ -477,7 +477,7 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBl
             << "Wait traj ready: State:" << state << "in windows:" << inWindow
             << "theta:" << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
@@ -521,7 +521,7 @@ void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
@@ -565,7 +565,7 @@ void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBlock )
@@ -611,7 +611,7 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBl
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool doNotBlock )
@@ -657,7 +657,7 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool 
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool doNotBlock )
@@ -703,7 +703,7 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveToDARel( float theta, float distance, bool correction, bool doNotBlock )
@@ -743,7 +743,7 @@ void TrajectoryManager::moveToDARel( float theta, float distance, bool correctio
             << _hal._odometryY.read<int16_t>() << "/"
             << _hal._odometryTheta.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
@@ -780,5 +780,5 @@ void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
             << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
             << _hal._odometryY.read<int16_t>();
         QCoreApplication::processEvents();
-    } while( state != TrajectoryState::READY );
+    } while( state != TrajectoryState::READY && ! doNotBlock );
 }
