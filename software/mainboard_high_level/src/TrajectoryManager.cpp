@@ -105,6 +105,28 @@ void TrajectoryManager::init()
         << "Trajectory manager successfully initialized";
 }
 
+void TrajectoryManager::waitTrajReady()
+{
+    uint8_t inWindow;
+    TrajectoryManager::TrajectoryState state;
+
+    do
+    {
+        QThread::msleep( 10 );
+        state = static_cast< TrajectoryManager::TrajectoryState >(
+            _hal._trajOutState.read< uint8_t >() );
+        inWindow = _hal._trajOutInWindow.read< uint8_t >();
+        qDebug()
+            << QTime::currentTime().toString()
+            << "Wait traj ready: State:" << state << "in windows:" << inWindow
+            << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
+            << _hal._odometryY.read<int16_t>() << "/"
+            << _hal._odometryTheta.read<int16_t>();
+
+        QCoreApplication::processEvents();
+    } while( state != TrajectoryState::READY );
+}
+
 void TrajectoryManager::disable()
 {
     uint8_t commandId = _hal._trajOutAck.read< uint8_t >();

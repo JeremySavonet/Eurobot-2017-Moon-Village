@@ -61,7 +61,9 @@ public:
 
         DIST_CONFIG = 18,
         ANGLE_CONFIG = 19,
-        WINDOW_CONFIG = 20
+        WINDOW_CONFIG = 20,
+
+        WAIT_TRAJ_READY = 21
     };
 
     // State of the trajectory manager.
@@ -100,6 +102,8 @@ public:
     ~TrajectoryManager();
 
     void init();
+
+    void waitTrajReady();
 
     void disable();
     void enable();

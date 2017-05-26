@@ -101,6 +101,10 @@ void MoveAction::execute()
         _trajectoryManager.moveToXYRel( _x, _y, _doNotBlock );
         break;
 
+    case TrajectoryManager::TrajectoryType::WAIT_TRAJ_READY:
+        _trajectoryManager.waitTrajReady();
+        break;
+
     }
 
     emit complete();
