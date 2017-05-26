@@ -159,33 +159,6 @@ void StrategyManager::stopRobot()
 
         // Stop turbine
         _turbine.enable( false );
-
-        qDebug() << ">>>>>>>> LAST ACTION STOPPED:" << _currentAction.get();
-        qDebug() << ">>>>>>>>>>>> REMAINING ACTIONS:" << _actions.size();
-
-       /* MoveAction::Ptr safety =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-                0.0,
-                -300.0,
-                0.0,
-                0.0,
-                false );
-
-        _trajectoryManager.enable();
-
-        qDebug() << ">>>>>>> BEFORE INSERTING NEW ACTION";
-
-        // This will insert the safety action to be executed first
-        // and then back to the last action
-        _actions.push_front( safety );
-        _actions.push_front( _currentAction );
-
-        qDebug() << ">>>>>>> AFTER INSERTING NEW ACTION" << _actions.size();
-        _stratIsRunning = true;
-        doStrat( _color );
-        */
     }
 }
 
@@ -424,6 +397,7 @@ void StrategyManager::buildStrat( const Color& color )
             (1400.0+shift) - 175.0,
             ( (600.0+shift) + 175.0 ) * inv,
             false );
+
     MoveAction::Ptr moveDeposePlus =
          std::make_shared< MoveAction >(
                 _trajectoryManager,
@@ -441,27 +415,6 @@ void StrategyManager::buildStrat( const Color& color )
             (1400.0+shift) - 175.0 +30.0,
             ( (600.0+shift) + 175.0 -30.0) * inv,
             false );*/
-
-
-    MoveAction::Ptr move7 =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-            0.0,
-            -80.0,
-            0.0,
-            0.0,
-            true );
-
-    MoveAction::Ptr move8 =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-            0.0,
-            95.0,
-            0.0,
-            0.0,
-            true );
 
     MoveAction::Ptr avance95SansCorrection =
         std::make_shared< MoveAction >(
@@ -503,61 +456,11 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             true );
 
-    MoveAction::Ptr reculDechargeTotem =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-            0.0,
-            -50.0,
-            0.0,
-            0.0,
-            true );
-
-    MoveAction::Ptr move9 =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-            0.0,
-            80.0,
-            0.0,
-            0.0,
-            true );
-
-    MoveAction::Ptr move10 =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-            0.0,
-            100.0,
-            0.0,
-            0.0,
-            false );
-
-    MoveAction::Ptr move11 =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
-            0.0,
-            -180.0,
-            0.0,
-            0.0,
-            true );
-
     MoveAction::Ptr turnA45 =
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
             -45.0 * inv,
-            0.0,
-            0.0,
-            0.0,
-            true );
-
-    MoveAction::Ptr turn45 =
-        std::make_shared< MoveAction >(
-            _trajectoryManager,
-            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_A_ABS,
-            45.0 + offset,
             0.0,
             0.0,
             0.0,
