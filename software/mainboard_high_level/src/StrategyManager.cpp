@@ -358,7 +358,7 @@ void StrategyManager::buildStrat( const Color& color )
             ColorCheckerAction::Type::EJECT_GOOD );
 
     // >>>>>>>>>>>>> MOVE ACTIONS
-    MoveAction::Ptr move1 =
+    MoveAction::Ptr moveTotem1 =
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
@@ -368,7 +368,7 @@ void StrategyManager::buildStrat( const Color& color )
             500.0 * inv,
             false );
 
-    MoveAction::Ptr move2 =
+    MoveAction::Ptr moveTotem2 =
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
@@ -378,7 +378,7 @@ void StrategyManager::buildStrat( const Color& color )
             ( 1000.0 - 162.0 ) * inv,
             false );
 
-    MoveAction::Ptr move3 =
+    MoveAction::Ptr moveAlignementDepose =
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
@@ -388,7 +388,7 @@ void StrategyManager::buildStrat( const Color& color )
             ( 900.0 + shift ) * inv,
             false );
 
-    MoveAction::Ptr move4 =
+    MoveAction::Ptr moveDepose =
         std::make_shared< MoveAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
@@ -486,25 +486,15 @@ void StrategyManager::buildStrat( const Color& color )
             ( 900.0 + shift ) * inv,
             false );
 
-    MoveAction::Ptr moveDepose =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
-                0.0,
-                0.0,
-                (1400.0+shift) - 175.0,
-                ( (600.0+shift) + 175.0 ) * inv,
-                false );
-
     MoveAction::Ptr turnToTotemBottom =
-            std::make_shared< MoveAction >(
-                _trajectoryManager,
-                TrajectoryManager::TrajectoryType::TYPE_TRAJ_TURNTO_XY,
-                0.0,
-                0.0,
-                ( 790.0 ),
-                ( 1500.0 - 365.0 ) * inv,
-                false );
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_TURNTO_XY,
+            0.0,
+            0.0,
+            ( 790.0 ),
+            ( 1500.0 - 365.0 ) * inv,
+            false );
 
     MoveAction::Ptr moveToTotemBottom =
         std::make_shared< MoveAction >(
@@ -600,33 +590,34 @@ void StrategyManager::buildStrat( const Color& color )
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>><< OUR STRAT
     _actions.push_back( fastSpeedDistance );
     _actions.push_back( windowCourbe );
-    _actions.push_back( move1 );
+    _actions.push_back( moveTotem1 );
     _actions.push_back( openArms0 );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( drop );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( turnCW );
     _actions.push_back( wait200Ms );
+    _actions.push_back( openArms90 );
+    _actions.push_back( moveTotem2 );
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait100Ms );
     _actions.push_back( drop );
     _actions.push_back( wait200Ms );
     _actions.push_back( turnCW );
     _actions.push_back( wait200Ms );
     _actions.push_back( openArms90 );
-    _actions.push_back( move2 );
-    _actions.push_back( openArms0 );
-    _actions.push_back( wait200Ms );
-    _actions.push_back( drop );
-    _actions.push_back( wait200Ms );
-    _actions.push_back( turnCW );
-    _actions.push_back( wait200Ms );
-    _actions.push_back( openArms90 );
-    _actions.push_back( normalSpeedDistance );
+    _actions.push_back( mediumSpeedDistance );
     _actions.push_back( windowPrecise );
-    _actions.push_back( move3 );
-    _actions.push_back( move4 );
+    _actions.push_back( moveAlignementDepose );
+    _actions.push_back( moveDepose );
     _actions.push_back( turnA45 );
     _actions.push_back( openArms45 );
-    _actions.push_back( wait200Ms );
+    _actions.push_back( wait100Ms );
     _actions.push_back( closeArms );
     _actions.push_back( wait500Ms );
     _actions.push_back( sensorAction );
     _actions.push_back( eject );
+
 
     _actions.push_back( recul180AvecCorrection ); // Deplacement -180
     _actions.push_back( openArms0 );
@@ -690,7 +681,7 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( moveBackBeforeEject);
     _actions.push_back( normalSpeedDistance );
     _actions.push_back( windowPrecise );
-    _actions.push_back( move4 ); // Recallage sur position connue
+    _actions.push_back( moveDepose ); // Recallage sur position connue
 
     // On fait le deuxieme totem
     _actions.push_back( turnA45 );
