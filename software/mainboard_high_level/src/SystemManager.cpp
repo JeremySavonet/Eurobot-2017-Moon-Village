@@ -58,6 +58,17 @@ SystemManager::SystemManager( Hal& hal, QObject* parent )
                         _turbine,
                         _colorSensor )
 {
+
+    connect(
+        & _gameTimer,
+        & QTimer::timeout,
+        this,
+        [ this ]()
+    {
+        qDebug() << "TIMEOUT <<<<<<<<<<<<<<<<<<<<<<<<< FUCK YOU BITCHES";
+        _strategyManager.stop();
+    } );
+
     connect(
         & _funnyTimer,
         & QTimer::timeout,

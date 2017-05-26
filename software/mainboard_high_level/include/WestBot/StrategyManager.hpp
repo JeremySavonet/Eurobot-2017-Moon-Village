@@ -41,6 +41,8 @@ public:
         QObject* parent = nullptr );
     ~StrategyManager() override = default;
 
+    void stop();
+
     // A set of actions
     void ejectCylinder();
 

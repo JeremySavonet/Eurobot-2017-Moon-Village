@@ -104,7 +104,6 @@ void MoveAction::execute()
     case TrajectoryManager::TrajectoryType::WAIT_TRAJ_READY:
         _trajectoryManager.waitTrajReady();
         break;
-
     }
 
     emit complete();

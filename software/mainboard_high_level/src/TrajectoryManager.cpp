@@ -287,17 +287,27 @@ void TrajectoryManager::moveDRel( float distance, bool correction, bool doNotBlo
         QCoreApplication::processEvents();
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
+    int i = 0;
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>();
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>();
+        }
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -325,17 +335,29 @@ void TrajectoryManager::moveOnlyDRel( float distance, bool correction, bool doNo
         QCoreApplication::processEvents();
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -357,22 +379,34 @@ void TrajectoryManager::turnARel( float theta, bool correction, bool doNotBlock 
 
     TrajectoryManager::TrajectoryState state;
 
+    int i = 0;
     while( _hal._trajOutAck.read< uint8_t >() != commandId )
     {
         QThread::msleep( 1 );
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "theta:" << _hal._odometryTheta.read<int16_t>();
+
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "theta:" << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -407,16 +441,28 @@ void TrajectoryManager::turnAAbs( float theta, bool correction, bool doNotBlock 
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "theta:" << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "theta:" << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -444,16 +490,28 @@ void TrajectoryManager::turnOnlyARel( float theta, bool correction, bool doNotBl
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "theta:" << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "theta:" << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -488,16 +546,28 @@ void TrajectoryManager::turnOnlyAAbs( float theta, bool correction, bool doNotBl
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "theta:" << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "theta:" << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -531,17 +601,29 @@ void TrajectoryManager::turnToXY( float x, float y, bool doNotBlock )
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -575,17 +657,29 @@ void TrajectoryManager::turnToXYBehind( float x, float y, bool doNotBlock )
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -620,24 +714,39 @@ void TrajectoryManager::moveToXYAbs( float theta, float x, float y, bool doNotBl
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>() << "/"
-            << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>() << "/"
+                << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
 
 void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool doNotBlock )
 {
+    QDateTime now;
+    qDebug() << now.currentMSecsSinceEpoch();
+
     RobotPos currentPos;
     currentPos.theta = theta;
     currentPos.x = x;
@@ -666,18 +775,30 @@ void TrajectoryManager::moveForwardToXYAbs( float theta, float x, float y, bool 
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>() << "/"
-            << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>() << "/"
+                << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -712,18 +833,30 @@ void TrajectoryManager::moveBackwardToXYAbs( float theta, float x, float y, bool
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>() << "/"
-            << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>() << "/"
+                << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -752,18 +885,30 @@ void TrajectoryManager::moveToDARel( float theta, float distance, bool correctio
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>() << "/"
-            << _hal._odometryTheta.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y/theta:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>() << "/"
+                << _hal._odometryTheta.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
@@ -790,17 +935,29 @@ void TrajectoryManager::moveToXYRel( float x, float y, bool doNotBlock )
         qDebug() << QTime::currentTime().toString() << "wait cmd ack";
         QCoreApplication::processEvents();
     }
+
+    if( ! doNotBlock )
+    {
+        return;
+    }
+
     do
     {
         QThread::msleep( 10 );
         state = static_cast< TrajectoryManager::TrajectoryState >(
             _hal._trajOutState.read< uint8_t >() );
         inWindow = _hal._trajOutInWindow.read< uint8_t >();
-        qDebug()
-            << QTime::currentTime().toString()
-            << "Wait traj ready: State:" << state << "in windows:" << inWindow
-            << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
-            << _hal._odometryY.read<int16_t>();
+
+        int i = 0;
+        if( ( i++ % 100 ) == 0 )
+        {
+            qDebug()
+                << QTime::currentTime().toString()
+                << "Wait traj ready: State:" << state << "in windows:" << inWindow
+                << "x/y:" << _hal._odometryX.read<int16_t>() << "/"
+                << _hal._odometryY.read<int16_t>();
+        }
+
         QCoreApplication::processEvents();
     } while( state != TrajectoryState::READY && ! doNotBlock );
 }
