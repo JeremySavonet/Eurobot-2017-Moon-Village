@@ -818,6 +818,9 @@ void StrategyManager::doStrat( const Color& color )
             qDebug() << QTime::currentTime().toString() << "Finish current action and stop after";
             break;
         }
+
+        // Le big fail de jeremy !!!!
+        QCoreApplication::processEvents();
     }
 
     qDebug()
