@@ -172,7 +172,7 @@ void SystemManager::hardStop()
 	_carrousel.enable( false );
 
 	// Stop turbine
-	_turbine.enable( false );
+    //_turbine.enable( false );
 }
 
 void SystemManager::funnyAction()

@@ -1,5 +1,7 @@
-#ifndef EXECUTEMATCH_H
-#define EXECUTEMATCH_H
+// Copyright (c) 2017 All Rights Reserved WestBot
+
+#ifndef WESTBOT_EXECUTEMATCH_HPP
+#define WESTBOT_EXECUTEMATCH_HPP
 
 #include <QThread>
 #include <QObject>
@@ -27,12 +29,8 @@ public:
 private:
 	Hal _hal;
 	SystemManager _system;
-
-//signals:
-//	void started();
-
 };
 
 }
 
-#endif // EXECUTEMATCH_H
+#endif // WESTBOT_EXECUTEMATCH_HPP

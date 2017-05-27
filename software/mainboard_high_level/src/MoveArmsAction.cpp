@@ -108,20 +108,17 @@ void MoveArmsAction::execute()
         _armRight.write( SERVO_0_ARM_R_DROP );
         _armLeft.write( SERVO_6_ARM_L_DROP );
 
-        QThread::msleep( 200 );
-		//QCoreApplication::processEvents();
+        QThread::msleep( 250 );
 
         _ejector.write( SERVO_7_EJECTOR_EJECT );
 
-        QThread::msleep( 250 );
-		//QCoreApplication::processEvents();
+        QThread::msleep( 350 );
 
         _armRight.write( SERVO_0_ARM_R_OPEN45 );
         _armLeft.write( SERVO_6_ARM_L_OPEN45 );
 
         _ejector.write( SERVO_7_EJECTOR_STANDBY );
-        QThread::msleep( 250 );
-		//QCoreApplication::processEvents();
+        QThread::msleep( 350 );
 
         _armLeft.write( SERV0_DISABLE_CONSIGN );
         _armRight.write( SERV0_DISABLE_CONSIGN );

@@ -406,8 +406,8 @@ void StrategyManager::buildStrat( const Color& color )
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_GOTO_FORWARD_XY_ABS,
             0.0,
             0.0,
-            (1400.0+shift) - 175.0,
-            ( (600.0+shift) + 175.0 ) * inv,
+            (1400.0+shift) - 170.0,
+            ( (600.0+shift) + 170.0 ) * inv,
             false );
 
     MoveAction::Ptr moveDeposePlus =
@@ -443,7 +443,7 @@ void StrategyManager::buildStrat( const Color& color )
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
             0.0,
-            175.0+40,
+            175.0 + 40.0,
             0.0,
             0.0,
             false );
@@ -454,6 +454,16 @@ void StrategyManager::buildStrat( const Color& color )
             TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
             0.0,
             -180.0,
+            0.0,
+            0.0,
+            true );
+
+    MoveAction::Ptr recul180AvecCorrectionPlus =
+        std::make_shared< MoveAction >(
+            _trajectoryManager,
+            TrajectoryManager::TrajectoryType::TYPE_TRAJ_ONLY_D_REL,
+            0.0,
+            -180.0 - 40.0,
             0.0,
             0.0,
             true );
@@ -529,7 +539,7 @@ void StrategyManager::buildStrat( const Color& color )
             false );
 
     // CONFIG ACTION
-    ConfigAction::Ptr normalSpeedAngle =
+   /* ConfigAction::Ptr normalSpeedAngle =
         std::make_shared< ConfigAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::ANGLE_CONFIG,
@@ -563,8 +573,8 @@ void StrategyManager::buildStrat( const Color& color )
         std::make_shared< ConfigAction >(
             _trajectoryManager,
             TrajectoryManager::TrajectoryType::DIST_CONFIG,
-            0.12,
-            0.00001,
+            0.10,
+            0.00005,
             0.0,
             0.0,
             0.0 );
@@ -597,161 +607,311 @@ void StrategyManager::buildStrat( const Color& color )
             0.0,
             50.0,
             4.0,
-            45.0 );
+            45.0 );*/
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>><< OUR STRAT
+    //_actions.push_back( mediumSpeedDistance );
+    //_actions.push_back( windowCourbe );
+    _actions.push_back( openArms90 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( moveTotem1 );
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( openArms90 );
+    _actions.push_back( moveTotem2 );
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( drop );
+    //actions.push_back( wait200Ms );
+    _actions.push_back( turnCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( openArms90 );
+    //_actions.push_back( normalSpeedDistance );
+    //_actions.push_back( windowPrecise );
+    _actions.push_back( moveAlignementDepose );
+    _actions.push_back( moveDepose );
+    _actions.push_back( turnA45 );
+    _actions.push_back( wait500Ms );
+
+    _actions.push_back( openArms45 );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+// we redo the action to be safe
+    _actions.push_back( openArms45 );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
+    _actions.push_back( wait200Ms );
+
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+
+    // On fait le deuxieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( wait500Ms );
+
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
+    _actions.push_back( wait200Ms );
+
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+
+    // On fait le troisieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( wait500Ms );
+
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
+    _actions.push_back( wait200Ms );
+
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+    _actions.push_back( wait200Ms );
+
+    // Totem upper
+    _actions.push_back( openArms90 );
+    //_actions.push_back( fastSpeedDistance );
+    _actions.push_back( moveTotemUpper );
+    _actions.push_back( closeArms );
+    //_actions.push_back( windowCourbe );
+    _actions.push_back( moveBackBeforeEject);
+    //_actions.push_back( normalSpeedDistance );
+    //_actions.push_back( windowPrecise );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    _actions.push_back( turnA45 );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( eject );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( avance95SansCorrectionPlus );
+    _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+
+    // Totem bottom
+    //_actions.push_back( fastSpeedDistance );
+    _actions.push_back( turnToTotemBottom );
+    _actions.push_back( openArms90 );
+    _actions.push_back( moveToTotemBottom );
+    _actions.push_back( openArms45 );
+    _actions.push_back( closeArms );
+    //_actions.push_back( windowCourbe );
+    _actions.push_back( safeBackTotemBottom );
+    //_actions.push_back( mediumSpeedDistance );
+    //_actions.push_back( windowPrecise );
+    _actions.push_back( moveDepose );
+    //_actions.push_back( moveDeposePlus );
+    _actions.push_back( turnA45 );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( eject );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( avance95SansCorrectionPlus );
+    _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+
+    /*
+    _actions.push_back( eject );
+    _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( openArmsFusee );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( avance95SansCorrectionPlus );
+    _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -80
+    _actions.push_back( pusherStandby );
+*/
+    for( int i = 0; i < 100; i++ )
+    {
+        _actions.push_back( wait500Ms );
+    }
+
+    /*
+    _actions.push_back( openArms90 );
     _actions.push_back( fastSpeedDistance );
     _actions.push_back( windowCourbe );
 	_actions.push_back( moveTotem1 );
-
-
 	_actions.push_back( openArms0 );
-	_actions.push_back( wait100Ms );
+    _actions.push_back( wait200Ms );
 	_actions.push_back( drop );
 	_actions.push_back( wait100Ms );
 	_actions.push_back( turnCW );
 	_actions.push_back( wait200Ms );
 	_actions.push_back( openArms90 );
-
     _actions.push_back( moveTotem2 ); // not blocking
+    _actions.push_back( wait200Ms );
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( openArms90 );
+    _actions.push_back( mediumSpeedDistance );
+    _actions.push_back( windowPrecise );
+    _actions.push_back( moveAlignementDepose );
+    _actions.push_back( moveDepose );
+    _actions.push_back( turnA45 );
+    _actions.push_back( openArms45 );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
 
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    _actions.push_back( recul50AvecCorrection ); // Recallage sur position connue
+    _actions.push_back( pusherStandby );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    //_actions.push_back( wait200Ms );
 
-	//_actions.push_back( waitTrajReady );
+    // On fait le deuxieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
 
-	//_actions.push_back( openArmsFull );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    _actions.push_back( recul50AvecCorrection ); // Recallage sur position connue
+    _actions.push_back( pusherStandby );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
+    //_actions.push_back( wait200Ms );
 
+    // On fait le troisieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( drop );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( turnCCW );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( closeArms );
+    _actions.push_back( wait500Ms );
+    _actions.push_back( sensorAction );
+    _actions.push_back( eject );
 
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( wait200Ms );
+    _actions.push_back( avance95SansCorrection );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
 
-//    _actions.push_back( openArms0 );
-//    _actions.push_back( wait100Ms );
-//    _actions.push_back( drop );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( turnCW );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( openArms90 );
-//    _actions.push_back( mediumSpeedDistance );
-//    _actions.push_back( windowPrecise );
-//    _actions.push_back( moveAlignementDepose );
-//    _actions.push_back( moveDepose );
-//    _actions.push_back( turnA45 );
-//    _actions.push_back( openArms45 );
-//    _actions.push_back( wait100Ms );
-//    _actions.push_back( closeArms );
-//    _actions.push_back( wait500Ms );
-//    _actions.push_back( sensorAction );
-//    _actions.push_back( eject );
+    // Dernier totem
+    _actions.push_back( openArms90 );
+    _actions.push_back( fastSpeedDistance );
+    _actions.push_back( moveTotemUpper );
+    _actions.push_back( closeArms );
+    _actions.push_back( windowCourbe );
+    _actions.push_back( moveBackBeforeEject);
+    _actions.push_back( normalSpeedDistance );
+    _actions.push_back( windowPrecise );
+    _actions.push_back( moveDepose ); // Recallage sur position connue
 
+    // On fait le deuxieme totem
+    _actions.push_back( turnA45 );
+    _actions.push_back( eject );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( openArmsFusee );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( avance95SansCorrectionPlus );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
 
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
-//    _actions.push_back( openArms0 );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( pusherDeploy );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( moveDepose ); // Recallage sur position connue
-//    _actions.push_back( recul50AvecCorrection ); // Recallage sur position connue
-//    _actions.push_back( pusherStandby );
-//    _actions.push_back( moveDepose ); // Recallage sur position connue
-//    //_actions.push_back( wait200Ms );
+    // Totem bottom
+    _actions.push_back( fastSpeedDistance );
+    _actions.push_back( turnToTotemBottom );
+    _actions.push_back( openArms90 );
+    _actions.push_back( moveToTotemBottom );
+    _actions.push_back( openArms45 );
+    _actions.push_back( closeArms );
+    _actions.push_back( windowCourbe );
+    _actions.push_back( safeBackTotemBottom );
+    _actions.push_back( mediumSpeedDistance );
+    _actions.push_back( windowPrecise );
+    _actions.push_back( moveDepose );
+    _actions.push_back( moveDeposePlus );
+    _actions.push_back( turnA45 );
+    _actions.push_back( eject );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
+    _actions.push_back( openArms0 );
+    _actions.push_back( pusherDeploy );
+    _actions.push_back( openArmsFusee );
+    _actions.push_back( wait100Ms );
+    _actions.push_back( avance95SansCorrectionPlus );
+    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
+    _actions.push_back( pusherStandby );
 
-//    // On fait le deuxieme totem
-//    _actions.push_back( turnA45 );
-//    _actions.push_back( drop );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( turnCCW );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( closeArms );
-//    _actions.push_back( wait500Ms );
-//    _actions.push_back( sensorAction );
-//    _actions.push_back( eject );
-
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
-//    _actions.push_back( openArms0 );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( pusherDeploy );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( moveDepose ); // Recallage sur position connue
-//    _actions.push_back( recul50AvecCorrection ); // Recallage sur position connue
-//    _actions.push_back( pusherStandby );
-//    _actions.push_back( moveDepose ); // Recallage sur position connue
-//    //_actions.push_back( wait200Ms );
-
-//    // On fait le troisieme totem
-//    _actions.push_back( turnA45 );
-//    _actions.push_back( drop );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( turnCCW );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( closeArms );
-//    _actions.push_back( wait500Ms );
-//    _actions.push_back( sensorAction );
-//    _actions.push_back( eject );
-
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
-//    _actions.push_back( openArms0 );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( pusherDeploy );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( avance95SansCorrection );
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
-//    _actions.push_back( pusherStandby );
-
-//    // Dernier totem
-//    _actions.push_back( openArms90 );
-//    _actions.push_back( fastSpeedDistance );
-//    _actions.push_back( moveTotemUpper );
-//    _actions.push_back( closeArms );
-//    _actions.push_back( windowCourbe );
-//    _actions.push_back( moveBackBeforeEject);
-//    _actions.push_back( normalSpeedDistance );
-//    _actions.push_back( windowPrecise );
-//    _actions.push_back( moveDepose ); // Recallage sur position connue
-
-//    // On fait le deuxieme totem
-//    _actions.push_back( turnA45 );
-//    _actions.push_back( eject );
-///*    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
-//    _actions.push_back( openArms0 );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( pusherDeploy );
-//    _actions.push_back( wait200Ms );
-//    _actions.push_back( avance95SansCorrection );
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
-//    _actions.push_back( pusherStandby );*/
-
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
-//    _actions.push_back( openArms0 );
-//    //_actions.push_back( wait200Ms );
-//    _actions.push_back( pusherDeploy );
-//    _actions.push_back( openArmsFusee );
-//    _actions.push_back( wait100Ms );
-//    _actions.push_back( avance95SansCorrectionPlus );
-////    _actions.push_back( avance95SansCorrection );
-//    _actions.push_back( recul180AvecCorrection ); // Deplacement -80
-//    _actions.push_back( pusherStandby );
-
-//    // Totem bottom
-//    _actions.push_back( fastSpeedDistance );
-//    _actions.push_back( turnToTotemBottom );
-//    _actions.push_back( openArms90 );
-//    _actions.push_back( moveToTotemBottom );
-//    _actions.push_back( openArms45 );
-//    _actions.push_back( closeArms );
-//    _actions.push_back( windowCourbe );
-//    _actions.push_back( safeBackTotemBottom );
-//    _actions.push_back( mediumSpeedDistance );
-//    //_actions.push_back( moveAlignementDepose );
-//    _actions.push_back( windowPrecise );
-//    _actions.push_back( moveDepose );
-//    _actions.push_back( moveDeposePlus );
-
-//    _actions.push_back( turnA45 );
-//    _actions.push_back( eject );
-///*    _actions.push_back( recul180AvecCorrection ); // Deplacement -180
-//  _actions.push_back( openArms0 );
-//    //_actions.push_back( wait200Ms );
-//    _actions.push_back( pusherDeploy );
-//    _actions.push_back( wait100Ms );
-//    _actions.push_back( avance95SansCorrection );*/
+    */
 }
 
 void StrategyManager::doStrat( const Color& color )
