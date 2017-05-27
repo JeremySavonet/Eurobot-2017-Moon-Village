@@ -723,6 +723,11 @@ void StrategyManager::buildStrat( const Color& color )
     _actions.push_back( moveDepose ); // Recallage sur position connue
     _actions.push_back( turnA45 );
     _actions.push_back( wait500Ms );
+    // we redo the action to be safe
+        _actions.push_back( openArms45 );
+        _actions.push_back( wait500Ms );
+        _actions.push_back( closeArms );
+        _actions.push_back( wait500Ms );
     _actions.push_back( eject );
     _actions.push_back( wait200Ms );
     _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -180
@@ -749,6 +754,11 @@ void StrategyManager::buildStrat( const Color& color )
     //_actions.push_back( moveDeposePlus );
     _actions.push_back( turnA45 );
     _actions.push_back( wait500Ms );
+    // we redo the action to be safe
+        _actions.push_back( openArms45 );
+        _actions.push_back( wait500Ms );
+        _actions.push_back( closeArms );
+        _actions.push_back( wait500Ms );
     _actions.push_back( eject );
     _actions.push_back( wait200Ms );
     _actions.push_back( recul180AvecCorrectionPlus ); // Deplacement -180
