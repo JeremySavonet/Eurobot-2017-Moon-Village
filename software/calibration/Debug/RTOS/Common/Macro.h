@@ -1,0 +1,1001 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/// \file		Macro.h
+/// \brief		Gestion d'un nombre d'argument variable
+///
+/// \author		Laurent DENIAU <laurent.deniau@cern.ch>
+/// \author		Paul http://stackoverflow.com/users/375343/paul
+///	\author		http://stackoverflow.com/questions/3781520/how-to-test-if-preprocessor-symbol-is-defined-but-has-no-value
+/// \author		Brice VINCENT
+/// \author		Etienne BOILLEY
+/// \date		04/12/2008
+///	\copyright	
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#define MACRO_MAX(A,B) A>B? A:B
+
+#define MACRO_MACRO_EMPTY_NO_OTHER_MACRO_STARTS_WITH_THIS_NAME_
+#define MACRO_EMPTY(name) 			defined(MACRO_MACRO_EMPTY_NO_OTHER_MACRO_STARTS_WITH_THIS_NAME_ ## name)
+#define MACRO_IS_EMPTY(name) 		MACRO_EMPTY(name)
+
+#define MACRO_IS_NUMERIC(VAL)		((1-VAL-1) == -VAL)
+#define MACRO_IS_NOT_NUMERIC(VAL)	(MACRO_IS_NUMERIC(VAL)==0)
+
+
+
+#define MACRO_NARG(...) \
+         MACRO_NARG_( __VA_ARGS__, MACRO_RSEQ_N() )
+#define MACRO_NARG_(...) \
+         MACRO_ARG_N( __VA_ARGS__)
+#define MACRO_ARG_N( \
+		_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, \
+		_11, _12, _13, _14, _15, _16, _17, _18, _19, _20, \
+		_21, _22, _23, _24, _25, _26, _27, _28, _29, _30, \
+		_31, _32, _33, _34, _35, _36, _37, _38, _39, _40, \
+		_41, _42, _43, _44, _45, _46, _47, _48, _49, _50, \
+		_51, _52, _53, _54, _55, _56, _57, _58, _59, _60, \
+		_61, _62, _63, _64, _65, _66, _67, _68, _69, _70, \
+		_71, _72, _73, _74, _75, _76, _77, _78, _79, _80, \
+		_81, _82, _83, _84, _85, _86, _87, _88, _89, _90, \
+		_91, _92, _93, _94, _95, _96, _97, _98, _99, _100, \
+		_101, _102, _103, _104, _105, _106, _107, _108, _109, _110, \
+		_111, _112, _113, _114, _115, _116, _117, _118, _119, _120, \
+		_121, _122, _123, _124, _125, _126, _127, _128, _129, _130, \
+		_131, _132, _133, _134, _135, _136, _137, _138, _139, _140, \
+		_141, _142, _143, _144, _145, _146, _147, _148, _149, _150, \
+		_151, _152, _153, _154, _155, _156, _157, _158, _159, _160, \
+		_161, _162, _163, _164, _165, _166, _167, _168, _169, _170, \
+		_171, _172, _173, _174, _175, _176, _177, _178, _179, _180, \
+		_181, _182, _183, _184, _185, _186, _187, _188, _189, _190, \
+		_191, _192, _193, _194, _195, _196, _197, _198, _199, _200, \
+		_201, _202, _203, _204, _205, _206, _207, _208, _209, _210, \
+		_211, _212, _213, _214, _215, _216, _217, _218, _219, _220, \
+		_221, _222, _223, _224, _225, _226, _227, _228, _229, _230, \
+		_231, _232, _233, _234, _235, _236, _237, _238, _239, _240, \
+		_241, _242, _243, _244, _245, _246, _247, _248, _249, _250, \
+		_251, _252, _253, _254, _255, _256, _257, _258, _259, _260, \
+		_261, _262, _263, _264, _265, _266, _267, _268, _269, _270, \
+		_271, _272, _273, _274, _275, _276, _277, _278, _279, _280, \
+		_281, _282, _283, _284, _285, _286, _287, _288, _289, _290, \
+		_291, _292, _293, _294, _295, _296, _297, _298, _299, _300, \
+		_301, _302, _303, _304, _305, _306, _307, _308, _309, _310, \
+		_311, _312, _313, _314, _315, _316, _317, _318, _319, _320, \
+		_321, _322, _323, _324, _325, _326, _327, _328, _329, _330, \
+		_331, _332, _333, _334, _335, _336, _337, _338, _339, _340, \
+		_341, _342, _343, _344, _345, _346, _347, _348, _349, _350, \
+		_351, _352, _353, _354, _355, _356, _357, _358, _359, _360, \
+		_361, _362, _363, _364, _365, _366, _367, _368, _369, _370, \
+		_371, _372, _373, _374, _375, _376, _377, _378, _379, _380, \
+		_381, _382, _383, _384, _385, _386, _387, _388, _389, _390, \
+		_391, _392, _393, _394, _395, _396, _397, _398, _399, _400, \
+		_401, _402, _403, _404, _405, _406, _407, _408, _409, _410, \
+		_411, _412, _413, _414, _415, _416, _417, _418, _419, _420, \
+		_421, _422, _423, _424, _425, _426, _427, _428, _429, _430, \
+		_431, _432, _433, _434, _435, _436, _437, _438, _439, _440, \
+		_441, _442, _443, _444, _445, _446, _447, _448, _449, _450, \
+		_451, _452, _453, _454, _455, _456, _457, _458, _459, _460, \
+		_461, _462, _463, _464, _465, _466, _467, _468, _469, _470, \
+		_471, _472, _473, _474, _475, _476, _477, _478, _479, _480, \
+		_481, _482, _483, _484, _485, _486, _487, _488, _489, _490, \
+		_491, _492, _493, _494, _495, _496, _497, _498, _499, _500, \
+		_501, _502, _503, _504, _505, _506, _507, _508, _509, _510, \
+		_511, _512, _513, _514, _515, _516, _517, _518, _519, _520, \
+		_521, _522, _523, _524, _525, _526, _527, _528, _529, _530, \
+		_531, _532, _533, _534, _535, _536, _537, _538, _539, _540, \
+		_541, _542, _543, _544, _545, _546, _547, _548, _549, _550, \
+		_551, _552, _553, _554, _555, _556, _557, _558, _559, _560, \
+		_561, _562, _563, _564, _565, _566, _567, _568, _569, _570, \
+		_571, _572, _573, _574, _575, _576, _577, _578, _579, _580, \
+		_581, _582, _583, _584, _585, _586, _587, _588, _589, _590, \
+		_591, _592, _593, _594, _595, _596, _597, _598, _599, _600, \
+		_601, _602, _603, _604, _605, _606, _607, _608, _609, _610, \
+		_611, _612, _613, _614, _615, _616, _617, _618, _619, _620, \
+		_621, _622, _623, _624, _625, _626, _627, _628, _629, _630, \
+		_631, _632, _633, _634, _635, _636, _637, _638, _639, _640, \
+		_641, _642, _643, _644, _645, _646, _647, _648, _649, _650, \
+		_651, _652, _653, _654, _655, _656, _657, _658, _659, _660, \
+		_661, _662, _663, _664, _665, _666, _667, _668, _669, _670, \
+		_671, _672, _673, _674, _675, _676, _677, _678, _679, _680, \
+		_681, _682, _683, _684, _685, _686, _687, _688, _689, _690, \
+		_691, _692, _693, _694, _695, _696, _697, _698, _699, _700, \
+		_701, _702, _703, _704, _705, _706, _707, _708, _709, _710, \
+		_711, _712, _713, _714, _715, _716, _717, _718, _719, _720, \
+		_721, _722, _723, _724, _725, _726, _727, _728, _729, _730, \
+		_731, _732, _733, _734, _735, _736, _737, _738, _739, _740, \
+		_741, _742, _743, _744, _745, _746, _747, _748, _749, _750, \
+		N,...) N
+#define MACRO_RSEQ_N() \
+		750, \
+		749, 748, 747, 746, 745, 744, 743, 742, 741, 740, \
+		739, 738, 737, 736, 735, 734, 733, 732, 731, 730, \
+		729, 728, 727, 726, 725, 724, 723, 722, 721, 720, \
+		719, 718, 717, 716, 715, 714, 713, 712, 711, 710, \
+		709, 708, 707, 706, 705, 704, 703, 702, 701, 700, \
+		699, 698, 697, 696, 695, 694, 693, 692, 691, 690, \
+		689, 688, 687, 686, 685, 684, 683, 682, 681, 680, \
+		679, 678, 677, 676, 675, 674, 673, 672, 671, 670, \
+		669, 668, 667, 666, 665, 664, 663, 662, 661, 660, \
+		659, 658, 657, 656, 655, 654, 653, 652, 651, 650, \
+		649, 648, 647, 646, 645, 644, 643, 642, 641, 640, \
+		639, 638, 637, 636, 635, 634, 633, 632, 631, 630, \
+		629, 628, 627, 626, 625, 624, 623, 622, 621, 620, \
+		619, 618, 617, 616, 615, 614, 613, 612, 611, 610, \
+		609, 608, 607, 606, 605, 604, 603, 602, 601, 600, \
+		599, 598, 597, 596, 595, 594, 593, 592, 591, 590, \
+		589, 588, 587, 586, 585, 584, 583, 582, 581, 580, \
+		579, 578, 577, 576, 575, 574, 573, 572, 571, 570, \
+		569, 568, 567, 566, 565, 564, 563, 562, 561, 560, \
+		559, 558, 557, 556, 555, 554, 553, 552, 551, 550, \
+		549, 548, 547, 546, 545, 544, 543, 542, 541, 540, \
+		539, 538, 537, 536, 535, 534, 533, 532, 531, 530, \
+		529, 528, 527, 526, 525, 524, 523, 522, 521, 520, \
+		519, 518, 517, 516, 515, 514, 513, 512, 511, 510, \
+		509, 508, 507, 506, 505, 504, 503, 502, 501, 500, \
+		499, 498, 497, 496, 495, 494, 493, 492, 491, 490, \
+		489, 488, 487, 486, 485, 484, 483, 482, 481, 480, \
+		479, 478, 477, 476, 475, 474, 473, 472, 471, 470, \
+		469, 468, 467, 466, 465, 464, 463, 462, 461, 460, \
+		459, 458, 457, 456, 455, 454, 453, 452, 451, 450, \
+		449, 448, 447, 446, 445, 444, 443, 442, 441, 440, \
+		439, 438, 437, 436, 435, 434, 433, 432, 431, 430, \
+		429, 428, 427, 426, 425, 424, 423, 422, 421, 420, \
+		419, 418, 417, 416, 415, 414, 413, 412, 411, 410, \
+		409, 408, 407, 406, 405, 404, 403, 402, 401, 400, \
+		399, 398, 397, 396, 395, 394, 393, 392, 391, 390, \
+		389, 388, 387, 386, 385, 384, 383, 382, 381, 380, \
+		379, 378, 377, 376, 375, 374, 373, 372, 371, 370, \
+		369, 368, 367, 366, 365, 364, 363, 362, 361, 360, \
+		359, 358, 357, 356, 355, 354, 353, 352, 351, 350, \
+		349, 348, 347, 346, 345, 344, 343, 342, 341, 340, \
+		339, 338, 337, 336, 335, 334, 333, 332, 331, 330, \
+		329, 328, 327, 326, 325, 324, 323, 322, 321, 320, \
+		319, 318, 317, 316, 315, 314, 313, 312, 311, 310, \
+		309, 308, 307, 306, 305, 304, 303, 302, 301, 300, \
+		299, 298, 297, 296, 295, 294, 293, 292, 291, 290, \
+		289, 288, 287, 286, 285, 284, 283, 282, 281, 280, \
+		279, 278, 277, 276, 275, 274, 273, 272, 271, 270, \
+		269, 268, 267, 266, 265, 264, 263, 262, 261, 260, \
+		259, 258, 257, 256, 255, 254, 253, 252, 251, 250, \
+		249, 248, 247, 246, 245, 244, 243, 242, 241, 240, \
+		239, 238, 237, 236, 235, 234, 233, 232, 231, 230, \
+		229, 228, 227, 226, 225, 224, 223, 222, 221, 220, \
+		219, 218, 217, 216, 215, 214, 213, 212, 211, 210, \
+		209, 208, 207, 206, 205, 204, 203, 202, 201, 200, \
+		199, 198, 197, 196, 195, 194, 193, 192, 191, 190, \
+		189, 188, 187, 186, 185, 184, 183, 182, 181, 180, \
+		179, 178, 177, 176, 175, 174, 173, 172, 171, 170, \
+		169, 168, 167, 166, 165, 164, 163, 162, 161, 160, \
+		159, 158, 157, 156, 155, 154, 153, 152, 151, 150, \
+		149, 148, 147, 146, 145, 144, 143, 142, 141, 140, \
+		139, 138, 137, 136, 135, 134, 133, 132, 131, 130, \
+		129, 128, 127, 126, 125, 124, 123, 122, 121, 120, \
+		119, 118, 117, 116, 115, 114, 113, 112, 111, 110, \
+		109, 108, 107, 106, 105, 104, 103, 102, 101, 100, \
+		99, 98, 97, 96, 95, 94, 93, 92, 91, 90, \
+		89, 88, 87, 86, 85, 84, 83, 82, 81, 80, \
+		79, 78, 77, 76, 75, 74, 73, 72, 71, 70, \
+		69, 68, 67, 66, 65, 64, 63, 62, 61, 60, \
+		59, 58, 57, 56, 55, 54, 53, 52, 51, 50, \
+		49, 48, 47, 46, 45, 44, 43, 42, 41, 40, \
+		39, 38, 37, 36, 35, 34, 33, 32, 31, 30, \
+		29, 28, 27, 26, 25, 24, 23, 22, 21, 20, \
+		19, 18, 17, 16, 15, 14, 13, 12, 11, 10, \
+		9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+
+
+
+#define MACRO_CAT(a, ...) a ## __VA_ARGS__
+
+#define MACRO_EXE(macro,...) macro(__VA_ARGS__)
+
+#define MACRO_DUMMY(...)
+#define MACRO_DEFER(...)	__VA_ARGS__ MACRO_DUMMY()
+#define MACRO_OBSTRUCT(...) __VA_ARGS__ MACRO_DEFER(MACRO_DUMMY)()
+#define MACRO_EXPAND(...)	__VA_ARGS__
+
+#define MACRO_EVAL(...)  MACRO_EVAL1(MACRO_EVAL1(MACRO_EVAL1(__VA_ARGS__)))
+#define MACRO_EVAL1(...) MACRO_EVAL2(MACRO_EVAL2(MACRO_EVAL2(__VA_ARGS__)))
+#define MACRO_EVAL2(...) MACRO_EVAL3(MACRO_EVAL3(MACRO_EVAL3(__VA_ARGS__)))
+#define MACRO_EVAL3(...) MACRO_EVAL4(MACRO_EVAL4(MACRO_EVAL4(__VA_ARGS__)))
+#define MACRO_EVAL4(...) MACRO_EVAL5(MACRO_EVAL5(MACRO_EVAL5(__VA_ARGS__)))
+//#define MACRO_EVAL5(...) MACRO_EVAL6(MACRO_EVAL6(MACRO_EVAL6(__VA_ARGS__)))
+//#define MACRO_EVAL6(...) MACRO_EVAL7(MACRO_EVAL7(MACRO_EVAL7(__VA_ARGS__)))
+//#define MACRO_EVAL7(...) MACRO_EVAL8(MACRO_EVAL8(MACRO_EVAL8(__VA_ARGS__)))
+//#define MACRO_EVAL8(...) MACRO_EVAL9(MACRO_EVAL9(MACRO_EVAL9(__VA_ARGS__)))
+//#define MACRO_EVAL9(...) __VA_ARGS__
+#define MACRO_EVAL5(...) __VA_ARGS__
+
+#define MACRO_BOOL(x) MACRO_EXE( MACRO_BOOL_CHECK, MACRO_CAT(MACRO_BOOL_, x),1 )
+#define MACRO_BOOL_0 ~, 0
+#define MACRO_BOOL_CHECK(a,x,...) x
+
+#define MACRO_IF(c) MACRO_IF_BOOL(MACRO_BOOL(c))
+#define MACRO_IF_BOOL(c) MACRO_CAT(MACRO_IF_BOOL_, c)
+#define MACRO_IF_BOOL_0(...)
+#define MACRO_IF_BOOL_1(macro) macro
+
+
+
+#define MACRO_FOREACH_2ARG( macro, ...) \
+	MACRO_EVAL \
+	( \
+		MACRO_FOREACH_2ARG_REPEAT(macro,__VA_ARGS__, 'dummy1','dummy2') \
+	)
+#define MACRO_FOREACH_2ARG_REPEAT( macro, arg1, arg2, ...) \
+	macro( arg1, arg2 ) \
+    MACRO_IF(MACRO_DEC(MACRO_DEC(MACRO_NARG(__VA_ARGS__)))) \
+	( \
+		MACRO_OBSTRUCT(MACRO_FOREACH_2ARG_INDIRECT) () ( macro, __VA_ARGS__ ) \
+	)
+#define MACRO_FOREACH_2ARG_INDIRECT() MACRO_FOREACH_2ARG_REPEAT
+
+
+#define MACRO_FOREACH_3ARG( macro, ...) \
+	MACRO_EVAL \
+	( \
+		MACRO_FOREACH_3ARG_REPEAT(macro,__VA_ARGS__, 'dummy1','dummy2','dummy3') \
+	)
+#define MACRO_FOREACH_3ARG_REPEAT( macro, arg1, arg2, arg3, ...) \
+	macro( arg1, arg2, arg3 ) \
+    MACRO_IF(MACRO_DEC(MACRO_DEC(MACRO_DEC(MACRO_NARG(__VA_ARGS__))))) \
+	( \
+		MACRO_OBSTRUCT(MACRO_FOREACH_3ARG_INDIRECT) () ( macro, __VA_ARGS__ ) \
+	)
+#define MACRO_FOREACH_3ARG_INDIRECT() MACRO_FOREACH_3ARG_REPEAT
+
+
+
+#define MACRO_DEC(x) MACRO_CAT(MACRO_DEC_, x)
+#define MACRO_DEC_0 0
+#define MACRO_DEC_1 0
+#define MACRO_DEC_2 1
+#define MACRO_DEC_3 2
+#define MACRO_DEC_4 3
+#define MACRO_DEC_5 4
+#define MACRO_DEC_6 5
+#define MACRO_DEC_7 6
+#define MACRO_DEC_8 7
+#define MACRO_DEC_9 8
+#define MACRO_DEC_10 9
+#define MACRO_DEC_11 10
+#define MACRO_DEC_12 11
+#define MACRO_DEC_13 12
+#define MACRO_DEC_14 13
+#define MACRO_DEC_15 14
+#define MACRO_DEC_16 15
+#define MACRO_DEC_17 16
+#define MACRO_DEC_18 17
+#define MACRO_DEC_19 18
+#define MACRO_DEC_20 19
+#define MACRO_DEC_21 20
+#define MACRO_DEC_22 21
+#define MACRO_DEC_23 22
+#define MACRO_DEC_24 23
+#define MACRO_DEC_25 24
+#define MACRO_DEC_26 25
+#define MACRO_DEC_27 26
+#define MACRO_DEC_28 27
+#define MACRO_DEC_29 28
+#define MACRO_DEC_30 29
+#define MACRO_DEC_31 30
+#define MACRO_DEC_32 31
+#define MACRO_DEC_33 32
+#define MACRO_DEC_34 33
+#define MACRO_DEC_35 34
+#define MACRO_DEC_36 35
+#define MACRO_DEC_37 36
+#define MACRO_DEC_38 37
+#define MACRO_DEC_39 38
+#define MACRO_DEC_40 39
+#define MACRO_DEC_41 40
+#define MACRO_DEC_42 41
+#define MACRO_DEC_43 42
+#define MACRO_DEC_44 43
+#define MACRO_DEC_45 44
+#define MACRO_DEC_46 45
+#define MACRO_DEC_47 46
+#define MACRO_DEC_48 47
+#define MACRO_DEC_49 48
+#define MACRO_DEC_50 49
+#define MACRO_DEC_51 50
+#define MACRO_DEC_52 51
+#define MACRO_DEC_53 52
+#define MACRO_DEC_54 53
+#define MACRO_DEC_55 54
+#define MACRO_DEC_56 55
+#define MACRO_DEC_57 56
+#define MACRO_DEC_58 57
+#define MACRO_DEC_59 58
+#define MACRO_DEC_60 59
+#define MACRO_DEC_61 60
+#define MACRO_DEC_62 61
+#define MACRO_DEC_63 62
+#define MACRO_DEC_64 63
+#define MACRO_DEC_65 64
+#define MACRO_DEC_66 65
+#define MACRO_DEC_67 66
+#define MACRO_DEC_68 67
+#define MACRO_DEC_69 68
+#define MACRO_DEC_70 69
+#define MACRO_DEC_71 70
+#define MACRO_DEC_72 71
+#define MACRO_DEC_73 72
+#define MACRO_DEC_74 73
+#define MACRO_DEC_75 74
+#define MACRO_DEC_76 75
+#define MACRO_DEC_77 76
+#define MACRO_DEC_78 77
+#define MACRO_DEC_79 78
+#define MACRO_DEC_80 79
+#define MACRO_DEC_81 80
+#define MACRO_DEC_82 81
+#define MACRO_DEC_83 82
+#define MACRO_DEC_84 83
+#define MACRO_DEC_85 84
+#define MACRO_DEC_86 85
+#define MACRO_DEC_87 86
+#define MACRO_DEC_88 87
+#define MACRO_DEC_89 88
+#define MACRO_DEC_90 89
+#define MACRO_DEC_91 90
+#define MACRO_DEC_92 91
+#define MACRO_DEC_93 92
+#define MACRO_DEC_94 93
+#define MACRO_DEC_95 94
+#define MACRO_DEC_96 95
+#define MACRO_DEC_97 96
+#define MACRO_DEC_98 97
+#define MACRO_DEC_99 98
+#define MACRO_DEC_100 99
+#define MACRO_DEC_101 100
+#define MACRO_DEC_102 101
+#define MACRO_DEC_103 102
+#define MACRO_DEC_104 103
+#define MACRO_DEC_105 104
+#define MACRO_DEC_106 105
+#define MACRO_DEC_107 106
+#define MACRO_DEC_108 107
+#define MACRO_DEC_109 108
+#define MACRO_DEC_110 109
+#define MACRO_DEC_111 110
+#define MACRO_DEC_112 111
+#define MACRO_DEC_113 112
+#define MACRO_DEC_114 113
+#define MACRO_DEC_115 114
+#define MACRO_DEC_116 115
+#define MACRO_DEC_117 116
+#define MACRO_DEC_118 117
+#define MACRO_DEC_119 118
+#define MACRO_DEC_120 119
+#define MACRO_DEC_121 120
+#define MACRO_DEC_122 121
+#define MACRO_DEC_123 122
+#define MACRO_DEC_124 123
+#define MACRO_DEC_125 124
+#define MACRO_DEC_126 125
+#define MACRO_DEC_127 126
+#define MACRO_DEC_128 127
+#define MACRO_DEC_129 128
+#define MACRO_DEC_130 129
+#define MACRO_DEC_131 130
+#define MACRO_DEC_132 131
+#define MACRO_DEC_133 132
+#define MACRO_DEC_134 133
+#define MACRO_DEC_135 134
+#define MACRO_DEC_136 135
+#define MACRO_DEC_137 136
+#define MACRO_DEC_138 137
+#define MACRO_DEC_139 138
+#define MACRO_DEC_140 139
+#define MACRO_DEC_141 140
+#define MACRO_DEC_142 141
+#define MACRO_DEC_143 142
+#define MACRO_DEC_144 143
+#define MACRO_DEC_145 144
+#define MACRO_DEC_146 145
+#define MACRO_DEC_147 146
+#define MACRO_DEC_148 147
+#define MACRO_DEC_149 148
+#define MACRO_DEC_150 149
+#define MACRO_DEC_151 150
+#define MACRO_DEC_152 151
+#define MACRO_DEC_153 152
+#define MACRO_DEC_154 153
+#define MACRO_DEC_155 154
+#define MACRO_DEC_156 155
+#define MACRO_DEC_157 156
+#define MACRO_DEC_158 157
+#define MACRO_DEC_159 158
+#define MACRO_DEC_160 159
+#define MACRO_DEC_161 160
+#define MACRO_DEC_162 161
+#define MACRO_DEC_163 162
+#define MACRO_DEC_164 163
+#define MACRO_DEC_165 164
+#define MACRO_DEC_166 165
+#define MACRO_DEC_167 166
+#define MACRO_DEC_168 167
+#define MACRO_DEC_169 168
+#define MACRO_DEC_170 169
+#define MACRO_DEC_171 170
+#define MACRO_DEC_172 171
+#define MACRO_DEC_173 172
+#define MACRO_DEC_174 173
+#define MACRO_DEC_175 174
+#define MACRO_DEC_176 175
+#define MACRO_DEC_177 176
+#define MACRO_DEC_178 177
+#define MACRO_DEC_179 178
+#define MACRO_DEC_180 179
+#define MACRO_DEC_181 180
+#define MACRO_DEC_182 181
+#define MACRO_DEC_183 182
+#define MACRO_DEC_184 183
+#define MACRO_DEC_185 184
+#define MACRO_DEC_186 185
+#define MACRO_DEC_187 186
+#define MACRO_DEC_188 187
+#define MACRO_DEC_189 188
+#define MACRO_DEC_190 189
+#define MACRO_DEC_191 190
+#define MACRO_DEC_192 191
+#define MACRO_DEC_193 192
+#define MACRO_DEC_194 193
+#define MACRO_DEC_195 194
+#define MACRO_DEC_196 195
+#define MACRO_DEC_197 196
+#define MACRO_DEC_198 197
+#define MACRO_DEC_199 198
+#define MACRO_DEC_200 199
+#define MACRO_DEC_201 200
+#define MACRO_DEC_202 201
+#define MACRO_DEC_203 202
+#define MACRO_DEC_204 203
+#define MACRO_DEC_205 204
+#define MACRO_DEC_206 205
+#define MACRO_DEC_207 206
+#define MACRO_DEC_208 207
+#define MACRO_DEC_209 208
+#define MACRO_DEC_210 209
+#define MACRO_DEC_211 210
+#define MACRO_DEC_212 211
+#define MACRO_DEC_213 212
+#define MACRO_DEC_214 213
+#define MACRO_DEC_215 214
+#define MACRO_DEC_216 215
+#define MACRO_DEC_217 216
+#define MACRO_DEC_218 217
+#define MACRO_DEC_219 218
+#define MACRO_DEC_220 219
+#define MACRO_DEC_221 220
+#define MACRO_DEC_222 221
+#define MACRO_DEC_223 222
+#define MACRO_DEC_224 223
+#define MACRO_DEC_225 224
+#define MACRO_DEC_226 225
+#define MACRO_DEC_227 226
+#define MACRO_DEC_228 227
+#define MACRO_DEC_229 228
+#define MACRO_DEC_230 229
+#define MACRO_DEC_231 230
+#define MACRO_DEC_232 231
+#define MACRO_DEC_233 232
+#define MACRO_DEC_234 233
+#define MACRO_DEC_235 234
+#define MACRO_DEC_236 235
+#define MACRO_DEC_237 236
+#define MACRO_DEC_238 237
+#define MACRO_DEC_239 238
+#define MACRO_DEC_240 239
+#define MACRO_DEC_241 240
+#define MACRO_DEC_242 241
+#define MACRO_DEC_243 242
+#define MACRO_DEC_244 243
+#define MACRO_DEC_245 244
+#define MACRO_DEC_246 245
+#define MACRO_DEC_247 246
+#define MACRO_DEC_248 247
+#define MACRO_DEC_249 248
+#define MACRO_DEC_250 249
+#define MACRO_DEC_251 250
+#define MACRO_DEC_252 251
+#define MACRO_DEC_253 252
+#define MACRO_DEC_254 253
+#define MACRO_DEC_255 254
+#define MACRO_DEC_256 255
+#define MACRO_DEC_257 256
+#define MACRO_DEC_258 257
+#define MACRO_DEC_259 258
+#define MACRO_DEC_260 259
+#define MACRO_DEC_261 260
+#define MACRO_DEC_262 261
+#define MACRO_DEC_263 262
+#define MACRO_DEC_264 263
+#define MACRO_DEC_265 264
+#define MACRO_DEC_266 265
+#define MACRO_DEC_267 266
+#define MACRO_DEC_268 267
+#define MACRO_DEC_269 268
+#define MACRO_DEC_270 269
+#define MACRO_DEC_271 270
+#define MACRO_DEC_272 271
+#define MACRO_DEC_273 272
+#define MACRO_DEC_274 273
+#define MACRO_DEC_275 274
+#define MACRO_DEC_276 275
+#define MACRO_DEC_277 276
+#define MACRO_DEC_278 277
+#define MACRO_DEC_279 278
+#define MACRO_DEC_280 279
+#define MACRO_DEC_281 280
+#define MACRO_DEC_282 281
+#define MACRO_DEC_283 282
+#define MACRO_DEC_284 283
+#define MACRO_DEC_285 284
+#define MACRO_DEC_286 285
+#define MACRO_DEC_287 286
+#define MACRO_DEC_288 287
+#define MACRO_DEC_289 288
+#define MACRO_DEC_290 289
+#define MACRO_DEC_291 290
+#define MACRO_DEC_292 291
+#define MACRO_DEC_293 292
+#define MACRO_DEC_294 293
+#define MACRO_DEC_295 294
+#define MACRO_DEC_296 295
+#define MACRO_DEC_297 296
+#define MACRO_DEC_298 297
+#define MACRO_DEC_299 298
+#define MACRO_DEC_300 299
+#define MACRO_DEC_301 300
+#define MACRO_DEC_302 301
+#define MACRO_DEC_303 302
+#define MACRO_DEC_304 303
+#define MACRO_DEC_305 304
+#define MACRO_DEC_306 305
+#define MACRO_DEC_307 306
+#define MACRO_DEC_308 307
+#define MACRO_DEC_309 308
+#define MACRO_DEC_310 309
+#define MACRO_DEC_311 310
+#define MACRO_DEC_312 311
+#define MACRO_DEC_313 312
+#define MACRO_DEC_314 313
+#define MACRO_DEC_315 314
+#define MACRO_DEC_316 315
+#define MACRO_DEC_317 316
+#define MACRO_DEC_318 317
+#define MACRO_DEC_319 318
+#define MACRO_DEC_320 319
+#define MACRO_DEC_321 320
+#define MACRO_DEC_322 321
+#define MACRO_DEC_323 322
+#define MACRO_DEC_324 323
+#define MACRO_DEC_325 324
+#define MACRO_DEC_326 325
+#define MACRO_DEC_327 326
+#define MACRO_DEC_328 327
+#define MACRO_DEC_329 328
+#define MACRO_DEC_330 329
+#define MACRO_DEC_331 330
+#define MACRO_DEC_332 331
+#define MACRO_DEC_333 332
+#define MACRO_DEC_334 333
+#define MACRO_DEC_335 334
+#define MACRO_DEC_336 335
+#define MACRO_DEC_337 336
+#define MACRO_DEC_338 337
+#define MACRO_DEC_339 338
+#define MACRO_DEC_340 339
+#define MACRO_DEC_341 340
+#define MACRO_DEC_342 341
+#define MACRO_DEC_343 342
+#define MACRO_DEC_344 343
+#define MACRO_DEC_345 344
+#define MACRO_DEC_346 345
+#define MACRO_DEC_347 346
+#define MACRO_DEC_348 347
+#define MACRO_DEC_349 348
+#define MACRO_DEC_350 349
+#define MACRO_DEC_351 350
+#define MACRO_DEC_352 351
+#define MACRO_DEC_353 352
+#define MACRO_DEC_354 353
+#define MACRO_DEC_355 354
+#define MACRO_DEC_356 355
+#define MACRO_DEC_357 356
+#define MACRO_DEC_358 357
+#define MACRO_DEC_359 358
+#define MACRO_DEC_360 359
+#define MACRO_DEC_361 360
+#define MACRO_DEC_362 361
+#define MACRO_DEC_363 362
+#define MACRO_DEC_364 363
+#define MACRO_DEC_365 364
+#define MACRO_DEC_366 365
+#define MACRO_DEC_367 366
+#define MACRO_DEC_368 367
+#define MACRO_DEC_369 368
+#define MACRO_DEC_370 369
+#define MACRO_DEC_371 370
+#define MACRO_DEC_372 371
+#define MACRO_DEC_373 372
+#define MACRO_DEC_374 373
+#define MACRO_DEC_375 374
+#define MACRO_DEC_376 375
+#define MACRO_DEC_377 376
+#define MACRO_DEC_378 377
+#define MACRO_DEC_379 378
+#define MACRO_DEC_380 379
+#define MACRO_DEC_381 380
+#define MACRO_DEC_382 381
+#define MACRO_DEC_383 382
+#define MACRO_DEC_384 383
+#define MACRO_DEC_385 384
+#define MACRO_DEC_386 385
+#define MACRO_DEC_387 386
+#define MACRO_DEC_388 387
+#define MACRO_DEC_389 388
+#define MACRO_DEC_390 389
+#define MACRO_DEC_391 390
+#define MACRO_DEC_392 391
+#define MACRO_DEC_393 392
+#define MACRO_DEC_394 393
+#define MACRO_DEC_395 394
+#define MACRO_DEC_396 395
+#define MACRO_DEC_397 396
+#define MACRO_DEC_398 397
+#define MACRO_DEC_399 398
+#define MACRO_DEC_400 399
+#define MACRO_DEC_401 400
+#define MACRO_DEC_402 401
+#define MACRO_DEC_403 402
+#define MACRO_DEC_404 403
+#define MACRO_DEC_405 404
+#define MACRO_DEC_406 405
+#define MACRO_DEC_407 406
+#define MACRO_DEC_408 407
+#define MACRO_DEC_409 408
+#define MACRO_DEC_410 409
+#define MACRO_DEC_411 410
+#define MACRO_DEC_412 411
+#define MACRO_DEC_413 412
+#define MACRO_DEC_414 413
+#define MACRO_DEC_415 414
+#define MACRO_DEC_416 415
+#define MACRO_DEC_417 416
+#define MACRO_DEC_418 417
+#define MACRO_DEC_419 418
+#define MACRO_DEC_420 419
+#define MACRO_DEC_421 420
+#define MACRO_DEC_422 421
+#define MACRO_DEC_423 422
+#define MACRO_DEC_424 423
+#define MACRO_DEC_425 424
+#define MACRO_DEC_426 425
+#define MACRO_DEC_427 426
+#define MACRO_DEC_428 427
+#define MACRO_DEC_429 428
+#define MACRO_DEC_430 429
+#define MACRO_DEC_431 430
+#define MACRO_DEC_432 431
+#define MACRO_DEC_433 432
+#define MACRO_DEC_434 433
+#define MACRO_DEC_435 434
+#define MACRO_DEC_436 435
+#define MACRO_DEC_437 436
+#define MACRO_DEC_438 437
+#define MACRO_DEC_439 438
+#define MACRO_DEC_440 439
+#define MACRO_DEC_441 440
+#define MACRO_DEC_442 441
+#define MACRO_DEC_443 442
+#define MACRO_DEC_444 443
+#define MACRO_DEC_445 444
+#define MACRO_DEC_446 445
+#define MACRO_DEC_447 446
+#define MACRO_DEC_448 447
+#define MACRO_DEC_449 448
+#define MACRO_DEC_450 449
+#define MACRO_DEC_451 450
+#define MACRO_DEC_452 451
+#define MACRO_DEC_453 452
+#define MACRO_DEC_454 453
+#define MACRO_DEC_455 454
+#define MACRO_DEC_456 455
+#define MACRO_DEC_457 456
+#define MACRO_DEC_458 457
+#define MACRO_DEC_459 458
+#define MACRO_DEC_460 459
+#define MACRO_DEC_461 460
+#define MACRO_DEC_462 461
+#define MACRO_DEC_463 462
+#define MACRO_DEC_464 463
+#define MACRO_DEC_465 464
+#define MACRO_DEC_466 465
+#define MACRO_DEC_467 466
+#define MACRO_DEC_468 467
+#define MACRO_DEC_469 468
+#define MACRO_DEC_470 469
+#define MACRO_DEC_471 470
+#define MACRO_DEC_472 471
+#define MACRO_DEC_473 472
+#define MACRO_DEC_474 473
+#define MACRO_DEC_475 474
+#define MACRO_DEC_476 475
+#define MACRO_DEC_477 476
+#define MACRO_DEC_478 477
+#define MACRO_DEC_479 478
+#define MACRO_DEC_480 479
+#define MACRO_DEC_481 480
+#define MACRO_DEC_482 481
+#define MACRO_DEC_483 482
+#define MACRO_DEC_484 483
+#define MACRO_DEC_485 484
+#define MACRO_DEC_486 485
+#define MACRO_DEC_487 486
+#define MACRO_DEC_488 487
+#define MACRO_DEC_489 488
+#define MACRO_DEC_490 489
+#define MACRO_DEC_491 490
+#define MACRO_DEC_492 491
+#define MACRO_DEC_493 492
+#define MACRO_DEC_494 493
+#define MACRO_DEC_495 494
+#define MACRO_DEC_496 495
+#define MACRO_DEC_497 496
+#define MACRO_DEC_498 497
+#define MACRO_DEC_499 498
+#define MACRO_DEC_500 499
+#define MACRO_DEC_501 500
+#define MACRO_DEC_502 501
+#define MACRO_DEC_503 502
+#define MACRO_DEC_504 503
+#define MACRO_DEC_505 504
+#define MACRO_DEC_506 505
+#define MACRO_DEC_507 506
+#define MACRO_DEC_508 507
+#define MACRO_DEC_509 508
+#define MACRO_DEC_510 509
+#define MACRO_DEC_511 510
+#define MACRO_DEC_512 511
+#define MACRO_DEC_513 512
+#define MACRO_DEC_514 513
+#define MACRO_DEC_515 514
+#define MACRO_DEC_516 515
+#define MACRO_DEC_517 516
+#define MACRO_DEC_518 517
+#define MACRO_DEC_519 518
+#define MACRO_DEC_520 519
+#define MACRO_DEC_521 520
+#define MACRO_DEC_522 521
+#define MACRO_DEC_523 522
+#define MACRO_DEC_524 523
+#define MACRO_DEC_525 524
+#define MACRO_DEC_526 525
+#define MACRO_DEC_527 526
+#define MACRO_DEC_528 527
+#define MACRO_DEC_529 528
+#define MACRO_DEC_530 529
+#define MACRO_DEC_531 530
+#define MACRO_DEC_532 531
+#define MACRO_DEC_533 532
+#define MACRO_DEC_534 533
+#define MACRO_DEC_535 534
+#define MACRO_DEC_536 535
+#define MACRO_DEC_537 536
+#define MACRO_DEC_538 537
+#define MACRO_DEC_539 538
+#define MACRO_DEC_540 539
+#define MACRO_DEC_541 540
+#define MACRO_DEC_542 541
+#define MACRO_DEC_543 542
+#define MACRO_DEC_544 543
+#define MACRO_DEC_545 544
+#define MACRO_DEC_546 545
+#define MACRO_DEC_547 546
+#define MACRO_DEC_548 547
+#define MACRO_DEC_549 548
+#define MACRO_DEC_550 549
+#define MACRO_DEC_551 550
+#define MACRO_DEC_552 551
+#define MACRO_DEC_553 552
+#define MACRO_DEC_554 553
+#define MACRO_DEC_555 554
+#define MACRO_DEC_556 555
+#define MACRO_DEC_557 556
+#define MACRO_DEC_558 557
+#define MACRO_DEC_559 558
+#define MACRO_DEC_560 559
+#define MACRO_DEC_561 560
+#define MACRO_DEC_562 561
+#define MACRO_DEC_563 562
+#define MACRO_DEC_564 563
+#define MACRO_DEC_565 564
+#define MACRO_DEC_566 565
+#define MACRO_DEC_567 566
+#define MACRO_DEC_568 567
+#define MACRO_DEC_569 568
+#define MACRO_DEC_570 569
+#define MACRO_DEC_571 570
+#define MACRO_DEC_572 571
+#define MACRO_DEC_573 572
+#define MACRO_DEC_574 573
+#define MACRO_DEC_575 574
+#define MACRO_DEC_576 575
+#define MACRO_DEC_577 576
+#define MACRO_DEC_578 577
+#define MACRO_DEC_579 578
+#define MACRO_DEC_580 579
+#define MACRO_DEC_581 580
+#define MACRO_DEC_582 581
+#define MACRO_DEC_583 582
+#define MACRO_DEC_584 583
+#define MACRO_DEC_585 584
+#define MACRO_DEC_586 585
+#define MACRO_DEC_587 586
+#define MACRO_DEC_588 587
+#define MACRO_DEC_589 588
+#define MACRO_DEC_590 589
+#define MACRO_DEC_591 590
+#define MACRO_DEC_592 591
+#define MACRO_DEC_593 592
+#define MACRO_DEC_594 593
+#define MACRO_DEC_595 594
+#define MACRO_DEC_596 595
+#define MACRO_DEC_597 596
+#define MACRO_DEC_598 597
+#define MACRO_DEC_599 598
+#define MACRO_DEC_600 599
+#define MACRO_DEC_601 600
+#define MACRO_DEC_602 601
+#define MACRO_DEC_603 602
+#define MACRO_DEC_604 603
+#define MACRO_DEC_605 604
+#define MACRO_DEC_606 605
+#define MACRO_DEC_607 606
+#define MACRO_DEC_608 607
+#define MACRO_DEC_609 608
+#define MACRO_DEC_610 609
+#define MACRO_DEC_611 610
+#define MACRO_DEC_612 611
+#define MACRO_DEC_613 612
+#define MACRO_DEC_614 613
+#define MACRO_DEC_615 614
+#define MACRO_DEC_616 615
+#define MACRO_DEC_617 616
+#define MACRO_DEC_618 617
+#define MACRO_DEC_619 618
+#define MACRO_DEC_620 619
+#define MACRO_DEC_621 620
+#define MACRO_DEC_622 621
+#define MACRO_DEC_623 622
+#define MACRO_DEC_624 623
+#define MACRO_DEC_625 624
+#define MACRO_DEC_626 625
+#define MACRO_DEC_627 626
+#define MACRO_DEC_628 627
+#define MACRO_DEC_629 628
+#define MACRO_DEC_630 629
+#define MACRO_DEC_631 630
+#define MACRO_DEC_632 631
+#define MACRO_DEC_633 632
+#define MACRO_DEC_634 633
+#define MACRO_DEC_635 634
+#define MACRO_DEC_636 635
+#define MACRO_DEC_637 636
+#define MACRO_DEC_638 637
+#define MACRO_DEC_639 638
+#define MACRO_DEC_640 639
+#define MACRO_DEC_641 640
+#define MACRO_DEC_642 641
+#define MACRO_DEC_643 642
+#define MACRO_DEC_644 643
+#define MACRO_DEC_645 644
+#define MACRO_DEC_646 645
+#define MACRO_DEC_647 646
+#define MACRO_DEC_648 647
+#define MACRO_DEC_649 648
+#define MACRO_DEC_650 649
+#define MACRO_DEC_651 650
+#define MACRO_DEC_652 651
+#define MACRO_DEC_653 652
+#define MACRO_DEC_654 653
+#define MACRO_DEC_655 654
+#define MACRO_DEC_656 655
+#define MACRO_DEC_657 656
+#define MACRO_DEC_658 657
+#define MACRO_DEC_659 658
+#define MACRO_DEC_660 659
+#define MACRO_DEC_661 660
+#define MACRO_DEC_662 661
+#define MACRO_DEC_663 662
+#define MACRO_DEC_664 663
+#define MACRO_DEC_665 664
+#define MACRO_DEC_666 665
+#define MACRO_DEC_667 666
+#define MACRO_DEC_668 667
+#define MACRO_DEC_669 668
+#define MACRO_DEC_670 669
+#define MACRO_DEC_671 670
+#define MACRO_DEC_672 671
+#define MACRO_DEC_673 672
+#define MACRO_DEC_674 673
+#define MACRO_DEC_675 674
+#define MACRO_DEC_676 675
+#define MACRO_DEC_677 676
+#define MACRO_DEC_678 677
+#define MACRO_DEC_679 678
+#define MACRO_DEC_680 679
+#define MACRO_DEC_681 680
+#define MACRO_DEC_682 681
+#define MACRO_DEC_683 682
+#define MACRO_DEC_684 683
+#define MACRO_DEC_685 684
+#define MACRO_DEC_686 685
+#define MACRO_DEC_687 686
+#define MACRO_DEC_688 687
+#define MACRO_DEC_689 688
+#define MACRO_DEC_690 689
+#define MACRO_DEC_691 690
+#define MACRO_DEC_692 691
+#define MACRO_DEC_693 692
+#define MACRO_DEC_694 693
+#define MACRO_DEC_695 694
+#define MACRO_DEC_696 695
+#define MACRO_DEC_697 696
+#define MACRO_DEC_698 697
+#define MACRO_DEC_699 698
+#define MACRO_DEC_700 699
+#define MACRO_DEC_701 700
+#define MACRO_DEC_702 701
+#define MACRO_DEC_703 702
+#define MACRO_DEC_704 703
+#define MACRO_DEC_705 704
+#define MACRO_DEC_706 705
+#define MACRO_DEC_707 706
+#define MACRO_DEC_708 707
+#define MACRO_DEC_709 708
+#define MACRO_DEC_710 709
+#define MACRO_DEC_711 710
+#define MACRO_DEC_712 711
+#define MACRO_DEC_713 712
+#define MACRO_DEC_714 713
+#define MACRO_DEC_715 714
+#define MACRO_DEC_716 715
+#define MACRO_DEC_717 716
+#define MACRO_DEC_718 717
+#define MACRO_DEC_719 718
+#define MACRO_DEC_720 719
+#define MACRO_DEC_721 720
+#define MACRO_DEC_722 721
+#define MACRO_DEC_723 722
+#define MACRO_DEC_724 723
+#define MACRO_DEC_725 724
+#define MACRO_DEC_726 725
+#define MACRO_DEC_727 726
+#define MACRO_DEC_728 727
+#define MACRO_DEC_729 728
+#define MACRO_DEC_730 729
+#define MACRO_DEC_731 730
+#define MACRO_DEC_732 731
+#define MACRO_DEC_733 732
+#define MACRO_DEC_734 733
+#define MACRO_DEC_735 734
+#define MACRO_DEC_736 735
+#define MACRO_DEC_737 736
+#define MACRO_DEC_738 737
+#define MACRO_DEC_739 738
+#define MACRO_DEC_740 739
+#define MACRO_DEC_741 740
+#define MACRO_DEC_742 741
+#define MACRO_DEC_743 742
+#define MACRO_DEC_744 743
+#define MACRO_DEC_745 744
+#define MACRO_DEC_746 745
+#define MACRO_DEC_747 746
+#define MACRO_DEC_748 747
+#define MACRO_DEC_749 748
+#define MACRO_DEC_750 749
+
+

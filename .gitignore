@@ -31,7 +31,7 @@ tmp/
 *~
 *example*
 *sopc_*
-*.sdc
+
 
 # Ignore Quartus II generated folders
 */db/
@@ -40,10 +40,13 @@ tmp/
 */timing/
 */testbench/
 */*_sim/
+*/output_files/
 
 # Ignore Eagle temp files
 *.b#*
 *.s#*
 
-
 *~*
+=======
+# Ignore Qt user files
+*.pro.user
