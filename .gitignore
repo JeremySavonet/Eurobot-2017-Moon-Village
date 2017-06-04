@@ -14,7 +14,6 @@ tmp/
 *.hex
 *.html
 *.jdi
-*.jpg
 *.mif
 *.pin
 *.pof
@@ -47,5 +46,7 @@ tmp/
 *.b#*
 *.s#*
 
+*~*
+=======
 # Ignore Qt user files
 *.pro.user

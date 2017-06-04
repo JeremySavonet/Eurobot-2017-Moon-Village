@@ -1,4 +1,0 @@
-Meca section:
-====
-
-TODO: XXX
