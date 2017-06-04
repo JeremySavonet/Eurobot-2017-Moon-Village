@@ -78,7 +78,8 @@ private:
 	u32				uartNb = 2;
 	SerialToTcp*	uart[2];
 	const char*		uartName[2] = {"ttyUSB0","ttyUSB1"};
-	u32				uartBrg[2] = {1000000,115200};
+	u32				uartBrg[2] = {1000000,1000000};
+	//u32				uartBrg[2] = {1000000,115200};
 	u32				uartPort[2] = {1000,1001};
 
 private slots:

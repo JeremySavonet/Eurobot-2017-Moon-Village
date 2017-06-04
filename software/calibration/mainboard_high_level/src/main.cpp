@@ -96,10 +96,12 @@ MsgCmdPosition msg_pos;
 uint8_t msg_id = 0;
 int ISystem::messageCmdPosition(ISystem* sys, MsgCmdPosition *msg)
 {
-	qDebug() << "new cmd " << (int)msg->x << (int)msg->y;
+	qDebug() << "new cmd " << (int)msg->x << (int)msg->y << (int)(msg->teta*10);
     msg_pos.x = msg->x;
     msg_pos.y = msg->y;
-    msg_id ++ ;
+	msg_pos.teta = msg->teta;
+
+	msg_id ++ ;
 
     return ISUCCESS;
 }//messageCmdPosition
@@ -558,8 +560,8 @@ int main( int argc, char *argv[] )
     pid_distance_en.write(0);
     pid_distance_override.write(0);
     pid_distance_inverted.write(0);
-    pid_distance_p.write((float)2000.0);
-    pid_distance_i.write((float)0.0);
+	pid_distance_p.write((float)(8000.0));
+	pid_distance_i.write((float)10.0);
     pid_distance_d.write((float)0.0);
     pid_distance_speed.write((float)0.01);
     pid_distance_acc.write((float)0.0001);
@@ -588,9 +590,9 @@ int main( int argc, char *argv[] )
     pid_angle_en.write(0);
     pid_angle_override.write(0);
     pid_angle_inverted.write(1);
-    pid_angle_p.write((float)500000.0);
+	pid_angle_p.write((float)(500000.0*0.75));
 
-    pid_angle_i.write((float)0.0);
+	pid_angle_i.write((float)(50.0));
     pid_angle_d.write((float)0.0);
     pid_angle_speed.write((float)0.0001);
     pid_angle_acc.write((float)0.00000002);
@@ -710,9 +712,9 @@ int main( int argc, char *argv[] )
     traj_cmd_valid.write(0x0);
     traj_cmd_id.write(cmd_id++);
     traj_cmd_type.write(CMD_TYPE_CFG_WND);
-    traj_cmd_wnd_distance.write((float)10.0);
-    traj_cmd_wnd_angle_deg.write((float)2.0);
-    traj_cmd_wnd_angle_start_deg.write((float)10.0);
+	traj_cmd_wnd_distance.write((float)200.0);
+	traj_cmd_wnd_angle_deg.write((float)2.0);
+	traj_cmd_wnd_angle_start_deg.write((float)70.0);
     traj_cmd_valid.write(0x1);
 
     while (traj_out_ack.read<uint8_t>() != cmd_id)
@@ -724,8 +726,8 @@ int main( int argc, char *argv[] )
     traj_cmd_valid.write(0x0);
     traj_cmd_id.write(cmd_id++);
     traj_cmd_type.write(CMD_TYPE_CFG_DISTANCE);
-    traj_cmd_cfg_speed.write((float)0.12);
-    traj_cmd_cfg_acc.write((float)0.00001);
+	traj_cmd_cfg_speed.write((float)(0.14*1.5 ));
+	traj_cmd_cfg_acc.write((float)(0.00001*4.0 ));
     traj_cmd_valid.write(0x1);
 
     while (traj_out_ack.read<uint8_t>() != cmd_id)
@@ -738,7 +740,7 @@ int main( int argc, char *argv[] )
     traj_cmd_id.write(cmd_id++);
     traj_cmd_type.write(CMD_TYPE_CFG_ANGLE);
     traj_cmd_cfg_speed.write((float)0.0008);
-    traj_cmd_cfg_acc.write((float)0.0000002);
+	traj_cmd_cfg_acc.write((float)(0.0000002*0.75));
     traj_cmd_valid.write(0x1);
 
     while (traj_out_ack.read<uint8_t>() != cmd_id)
@@ -957,10 +959,19 @@ int main( int argc, char *argv[] )
             traj_cmd_valid.write(0x0);
             traj_cmd_id.write(cmd_id++);
             traj_cmd_type.write(CMD_TYPE_TRAJ);
-            traj_cmd_order_type.write(TRAJ_GOTO_XY_ABS);
-            traj_cmd_pos_teta.write((float)0.0);
-            traj_cmd_pos_x.write((float)msg_pos.x);
-            traj_cmd_pos_y.write((float)msg_pos.y);
+
+			if (msg_pos.teta == 0.0) {
+				qDebug() << "go xy";
+				traj_cmd_order_type.write(TRAJ_GOTO_FORWARD_XY_ABS);
+				traj_cmd_pos_teta.write((float)0.0);
+				traj_cmd_pos_x.write((float)msg_pos.x);
+				traj_cmd_pos_y.write((float)msg_pos.y);
+			} else {
+				qDebug() << "go a abs";
+				traj_cmd_order_type.write(TRAJ_A_ABS);
+				traj_cmd_pos_teta.write((float)msg_pos.teta);
+			}
+
 
             traj_cmd_valid.write(0x1);
 
@@ -972,14 +983,14 @@ int main( int argc, char *argv[] )
             }
 
             do {
-                QThread::msleep( 100 );
-                QCoreApplication::processEvents();
+				QThread::msleep( 100 );
+				QCoreApplication::processEvents();
 
                 MsgStatus msg;
                 msg.x = (float)odo_x.read<int16_t>();
                 msg.y = (float)odo_y.read<int16_t>();
                 msg.progress = 0;
-                sendMsg(ADDR_DEST_MATLAB|ADDR_ID_STATUS,&msg,sizeof(msg));
+				//sendMsg(ADDR_DEST_MATLAB|ADDR_ID_STATUS,&msg,sizeof(msg));
 
                 state = (trajectory_state)traj_out_state.read<uint8_t>();
                 in_window = traj_out_in_window.read<uint8_t>();
