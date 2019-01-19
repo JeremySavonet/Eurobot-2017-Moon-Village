@@ -1,18 +1,18 @@
 # -------------------------------------------------------------------------- #
 #
 # Copyright (C) 1991-2016 Altera Corporation. All rights reserved.
-# Your use of Altera Corporation's design tools, logic functions 
-# and other software and tools, and its AMPP partner logic 
-# functions, and any output files from any of the foregoing 
-# (including device programming or simulation files), and any 
-# associated documentation or information are expressly subject 
-# to the terms and conditions of the Altera Program License 
+# Your use of Altera Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Altera Program License
 # Subscription Agreement, the Altera Quartus Prime License Agreement,
-# the Altera MegaCore Function License Agreement, or other 
-# applicable license agreement, including, without limitation, 
-# that your use is for the sole purpose of programming logic 
-# devices manufactured by Altera and sold by Altera or its 
-# authorized distributors.  Please refer to the applicable 
+# the Altera MegaCore Function License Agreement, or other
+# applicable license agreement, including, without limitation,
+# that your use is for the sole purpose of programming logic
+# devices manufactured by Altera and sold by Altera or its
+# authorized distributors.  Please refer to the applicable
 # agreement for further details.
 #
 # -------------------------------------------------------------------------- #
@@ -26,7 +26,7 @@
 # Notes:
 #
 # 1) The default values for assignments are stored in the file:
-#		HPSFPGA_assignment_defaults.qdf
+#		DE10_assignment_defaults.qdf
 #    If this file doesn't exist, see file:
 #		assignment_defaults.qdf
 #
@@ -38,18 +38,16 @@
 
 
 set_global_assignment -name FAMILY "Cyclone V"
-set_global_assignment -name DEVICE 5CSEMA4U23C6
+set_global_assignment -name DEVICE 5CSEBA6U23I7
 set_global_assignment -name TOP_LEVEL_ENTITY HPSFPGA
-set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.0.0
-set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:31:04  NOVEMBER 13, 2016"
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "20:23:32  OCTOBRE 08, 2018"
 set_global_assignment -name LAST_QUARTUS_VERSION "16.1.2 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
-set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
-set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP "-40"
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
-set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT NONE -section_id eda_simulation
 
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ADC_CONVST
@@ -235,77 +233,77 @@ set_location_assignment PIN_V11 -to FPGA_CLK1_50
 set_location_assignment PIN_Y13 -to FPGA_CLK2_50
 set_location_assignment PIN_E11 -to FPGA_CLK3_50
 set_location_assignment PIN_V12 -to io_7
-set_location_assignment PIN_AF7 -to ad0_miso
+set_location_assignment PIN_E8 -to ad0_miso
 set_location_assignment PIN_W12 -to io_6
-set_location_assignment PIN_AF8 -to ad0_sync
-set_location_assignment PIN_Y8 -to io_5
-set_location_assignment PIN_AB4 -to ad0_clk
-set_location_assignment PIN_W8 -to io_4
-set_location_assignment PIN_Y4 -to ad0_sclk
-set_location_assignment PIN_Y5 -to io_3
-set_location_assignment PIN_U11 -to ad0_drdy
-set_location_assignment PIN_T8 -to io_2
-set_location_assignment PIN_T12 -to qei0_a
-set_location_assignment PIN_AH5 -to io_1
-set_location_assignment PIN_AH6 -to qei0_b
-set_location_assignment PIN_AH4 -to io_0
-set_location_assignment PIN_AG5 -to qei2_a
-set_location_assignment PIN_AH3 -to qei2_b
-set_location_assignment PIN_AH2 -to qei2_z
-set_location_assignment PIN_AF4 -to i2c0_sda
-set_location_assignment PIN_AG6 -to i2c0_reset
-set_location_assignment PIN_AF5 -to i2c0_scl
-set_location_assignment PIN_AE4 -to m01_resetn
-set_location_assignment PIN_T13 -to m1_pwma
-set_location_assignment PIN_T11 -to m1_pwmb
-set_location_assignment PIN_AE7 -to m01_fault
-set_location_assignment PIN_AF6 -to m0_pwma
-set_location_assignment PIN_AF9 -to s[4]
-set_location_assignment PIN_AE8 -to m0_pwmb
-set_location_assignment PIN_AD10 -to spi0_sclk
-set_location_assignment PIN_AE9 -to spi0_ss
-set_location_assignment PIN_AD11 -to spi0_mosi
-set_location_assignment PIN_AF10 -to spi0_miso
-set_location_assignment PIN_AD12 -to uart2_rx
-set_location_assignment PIN_AE11 -to uart2_tx
-set_location_assignment PIN_AF11 -to uart0_rx
-set_location_assignment PIN_AE12 -to uart0_tx
+set_location_assignment PIN_D11 -to ad0_sync
+set_location_assignment PIN_D8 -to io_5
+set_location_assignment PIN_AH13 -to ad0_clk
+set_location_assignment PIN_AF7 -to io_4
+set_location_assignment PIN_AH14 -to ad0_sclk
+set_location_assignment PIN_AF4 -to io_3
+set_location_assignment PIN_AH3 -to ad0_drdy
+set_location_assignment PIN_AD5 -to io_2
+set_location_assignment PIN_AG14 -to qei0_a
+set_location_assignment PIN_AE23 -to io_1
+set_location_assignment PIN_AE6 -to qei0_b
+set_location_assignment PIN_AD23 -to io_0
+set_location_assignment PIN_AE24 -to qei2_a
+set_location_assignment PIN_D12 -to qei2_b
+set_location_assignment PIN_AD20 -to qei2_z
+set_location_assignment PIN_C12 -to i2c0_sda
+set_location_assignment PIN_AD17 -to i2c0_reset
+set_location_assignment PIN_AC23 -to i2c0_scl
+set_location_assignment PIN_AC22 -to m01_resetn
+set_location_assignment PIN_Y19 -to m1_pwma
+set_location_assignment PIN_AB23 -to m1_pwmb
+set_location_assignment PIN_AA19 -to m01_fault
+set_location_assignment PIN_W11 -to m0_pwma
+set_location_assignment PIN_AA18 -to s[4]
+set_location_assignment PIN_W14 -to m0_pwmb
+set_location_assignment PIN_Y18 -to spi0_sclk
+set_location_assignment PIN_Y17 -to spi0_ss
+set_location_assignment PIN_AB25 -to spi0_mosi
+set_location_assignment PIN_AB26 -to spi0_miso
+set_location_assignment PIN_Y11 -to uart2_rx
+set_location_assignment PIN_AA26 -to uart2_tx
+set_location_assignment PIN_AA13 -to uart0_rx
+set_location_assignment PIN_AA11 -to uart0_tx
 set_location_assignment PIN_Y15 -to led_green
-set_location_assignment PIN_AG28 -to led_red
+set_location_assignment PIN_AC24 -to led_red
 set_location_assignment PIN_AA15 -to imu_ss
-set_location_assignment PIN_AH27 -to uart1_rx
-set_location_assignment PIN_AG26 -to imu_drdy
-set_location_assignment PIN_AH24 -to uart1_tx
-set_location_assignment PIN_AF23 -to s[3]
-set_location_assignment PIN_AE22 -to uart3_rx
-set_location_assignment PIN_AF21 -to s[2]
-set_location_assignment PIN_AG20 -to uart3_tx
-set_location_assignment PIN_AG19 -to s[1]
-set_location_assignment PIN_AF20 -to spi1_sclk
-set_location_assignment PIN_AC23 -to s[0]
-set_location_assignment PIN_AG18 -to spi1_ss
-set_location_assignment PIN_AH26 -to m2_pwmb
-set_location_assignment PIN_AA19 -to spi1_mosi
+set_location_assignment PIN_AD26 -to uart1_rx
+set_location_assignment PIN_AG28 -to imu_drdy
+set_location_assignment PIN_AF28 -to uart1_tx
+set_location_assignment PIN_AE25 -to s[3]
+set_location_assignment PIN_AF27 -to uart3_rx
+set_location_assignment PIN_AG26 -to s[2]
+set_location_assignment PIN_AH27 -to uart3_tx
+set_location_assignment PIN_AG25 -to s[1]
+set_location_assignment PIN_AH26 -to spi1_sclk
+set_location_assignment PIN_AH24 -to s[0]
+set_location_assignment PIN_AF25 -to spi1_ss
+set_location_assignment PIN_AG23 -to m2_pwmb
+set_location_assignment PIN_AF23 -to spi1_mosi
 set_location_assignment PIN_AG24 -to m2_pwma
-set_location_assignment PIN_AF25 -to spi1_miso
-set_location_assignment PIN_AH23 -to m3_pwmb
-set_location_assignment PIN_AG23 -to i2c1_sda
-set_location_assignment PIN_AE19 -to m3_pwma
-set_location_assignment PIN_AF18 -to i2c1_reset
-set_location_assignment PIN_AD19 -to m2345_fault
-set_location_assignment PIN_AE20 -to i2c1_scl
-set_location_assignment PIN_AE24 -to m4_pwmb
-set_location_assignment PIN_AD20 -to qei3_a
-set_location_assignment PIN_AF22 -to m4_pwma
-set_location_assignment PIN_AH22 -to qei3_b
-set_location_assignment PIN_AH19 -to m5_pwmb
-set_location_assignment PIN_AH21 -to qei3_z
-set_location_assignment PIN_AG21 -to m5_pwma
-set_location_assignment PIN_AH18 -to qei1_a
-set_location_assignment PIN_AD23 -to m2345_resetn
-set_location_assignment PIN_AE23 -to qei1_b
-set_location_assignment PIN_AA18 -to lv_mux[1]
-set_location_assignment PIN_AC22 -to lv_mux[0]
+set_location_assignment PIN_AH22 -to spi1_miso
+set_location_assignment PIN_AH21 -to m3_pwmb
+set_location_assignment PIN_AG21 -to i2c1_sda
+set_location_assignment PIN_AH23 -to m3_pwma
+set_location_assignment PIN_AA20 -to i2c1_reset
+set_location_assignment PIN_AF22 -to m2345_fault
+set_location_assignment PIN_AE22 -to i2c1_scl
+set_location_assignment PIN_AG20 -to m4_pwmb
+set_location_assignment PIN_AF21 -to qei3_a
+set_location_assignment PIN_AG19 -to m4_pwma
+set_location_assignment PIN_AH19 -to qei3_b
+set_location_assignment PIN_AG18 -to m5_pwmb
+set_location_assignment PIN_AH18 -to qei3_z
+set_location_assignment PIN_AF18 -to m5_pwma
+set_location_assignment PIN_AF20 -to qei1_a
+set_location_assignment PIN_AG15 -to m2345_resetn
+set_location_assignment PIN_AE20 -to qei1_b
+set_location_assignment PIN_AE19 -to lv_mux[1]
+set_location_assignment PIN_AE17 -to lv_mux[0]
 set_location_assignment PIN_AH17 -to KEY[0]
 set_location_assignment PIN_AH16 -to KEY[1]
 set_location_assignment PIN_W15 -to LED[0]
@@ -316,10 +314,10 @@ set_location_assignment PIN_AF26 -to LED[4]
 set_location_assignment PIN_AE26 -to LED[5]
 set_location_assignment PIN_Y16 -to LED[6]
 set_location_assignment PIN_AA23 -to LED[7]
-set_location_assignment PIN_L10 -to SW[0]
-set_location_assignment PIN_L9 -to SW[1]
-set_location_assignment PIN_H6 -to SW[2]
-set_location_assignment PIN_H5 -to SW[3]
+set_location_assignment PIN_Y24 -to SW[0]
+set_location_assignment PIN_W24 -to SW[1]
+set_location_assignment PIN_W21 -to SW[2]
+set_location_assignment PIN_W20 -to SW[3]
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -600,7 +598,6 @@ set_instance_assignment -name OUTPUT_TERMINATION "SERIES 50 OHM WITH CALIBRATION
 set_global_assignment -name USE_DLL_FREQUENCY_FOR_DQS_DELAY_CHAIN ON
 set_global_assignment -name UNIPHY_SEQUENCER_DQS_CONFIG_ENABLE ON
 set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING OFF
-set_global_assignment -name ECO_REGENERATE_REPORT OFF
 
 set_global_assignment -name ENABLE_SIGNALTAP OFF
 set_global_assignment -name USE_SIGNALTAP_FILE stp_ad1.stp
@@ -633,7 +630,6 @@ set_global_assignment -name ALM_REGISTER_PACKING_EFFORT LOW
 set_global_assignment -name ADVANCED_PHYSICAL_OPTIMIZATION OFF
 set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 set_global_assignment -name SMART_RECOMPILE ON
-set_global_assignment -name OPTIMIZE_TIMING "NORMAL COMPILATION"
 set_global_assignment -name OPTIMIZE_IOC_REGISTER_PLACEMENT_FOR_TIMING OFF
 set_global_assignment -name FITTER_AGGRESSIVE_ROUTABILITY_OPTIMIZATION NEVER
 set_global_assignment -name IO_PLACEMENT_OPTIMIZATION OFF
@@ -662,4 +658,5 @@ set_global_assignment -name VHDL_FILE pwm.vhd
 set_global_assignment -name SDC_FILE HPSFPGA.sdc
 set_global_assignment -name QIP_FILE fifo_sc.qip
 set_global_assignment -name SIGNALTAP_FILE stp_ad1.stp
+
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

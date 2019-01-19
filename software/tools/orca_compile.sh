@@ -4,7 +4,7 @@
 
 export LM_LICENSE_FILE=
 
-export PATH=$PATH:/workspace/nano_soc/orca/orca/rv/bin/
+export PATH=$PATH:/home/laptop/robot/gcc-riscv/bin/
 export PATH=$PATH:/opt/altera16.1_lite/quartus/bin/
 
 
@@ -29,3 +29,9 @@ cp orca.elf.qex ../../HPS_FPGA_LED/fpga/system_ll.hex
 quartus_cdb --update_mif ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
 quartus_asm ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
 quartus_cpf -c -o bitstream_compression=on ../..//HPS_FPGA_LED/fpga/output_files/HPSFPGA.sof ../..//HPS_FPGA_LED/fpga/output_files/soc_system.rbf
+
+quartus_cdb --rev=DE10 --update_mif ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
+quartus_asm --rev=DE10 ../..//HPS_FPGA_LED/fpga/HPSFPGA.qpf
+quartus_cpf -c -o bitstream_compression=on ../..//HPS_FPGA_LED/fpga/output_files/DE10.sof ../..//HPS_FPGA_LED/fpga/output_files/soc_system_de10.rbf
+
+
