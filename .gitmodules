@@ -1,9 +1,7 @@
 [submodule "software/orca"]
 	path = software/orca
 	url = https://github.com/drunkpony/orca.git
-[submodule "software/cvra-modules"]
-	path = software/cvra-modules
-    url = https://github.com/drunkpony/cvra-modules
+        branch = master
 [submodule "software/rplidar"]
 	path = software/rplidar
 	url = https://github.com/JeremySavonet/rplidar.git
