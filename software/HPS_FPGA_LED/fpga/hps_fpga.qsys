@@ -278,6 +278,190 @@
          type = "String";
       }
    }
+   element uart_0
+   {
+      datum _sortIndex
+      {
+         value = "13";
+         type = "int";
+      }
+   }
+   element uart_0.external_connection
+   {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
+   }
+   element uart_0.irq
+   {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
+   }
+   element uart_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3072";
+         type = "String";
+      }
+   }
+   element uart_1
+   {
+      datum _sortIndex
+      {
+         value = "14";
+         type = "int";
+      }
+   }
+   element uart_1.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3296";
+         type = "String";
+      }
+   }
+   element uart_2
+   {
+      datum _sortIndex
+      {
+         value = "15";
+         type = "int";
+      }
+   }
+   element uart_2.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3264";
+         type = "String";
+      }
+   }
+   element uart_3
+   {
+      datum _sortIndex
+      {
+         value = "16";
+         type = "int";
+      }
+   }
+   element uart_3.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3232";
+         type = "String";
+      }
+   }
+   element uart_4
+   {
+      datum _sortIndex
+      {
+         value = "17";
+         type = "int";
+      }
+   }
+   element uart_4.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3200";
+         type = "String";
+      }
+   }
+   element uart_5
+   {
+      datum _sortIndex
+      {
+         value = "18";
+         type = "int";
+      }
+   }
+   element uart_5.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3168";
+         type = "String";
+      }
+   }
+   element uart_6
+   {
+      datum _sortIndex
+      {
+         value = "19";
+         type = "int";
+      }
+   }
+   element uart_6.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3136";
+         type = "String";
+      }
+   }
+   element uart_7
+   {
+      datum _sortIndex
+      {
+         value = "20";
+         type = "int";
+      }
+   }
+   element uart_7.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "3104";
+         type = "String";
+      }
+   }
 }
 ]]></parameter>
  <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
@@ -340,6 +524,38 @@
    type="conduit"
    dir="end" />
  <interface name="reset" internal="clk_50.clk_in_reset" type="reset" dir="end" />
+ <interface
+   name="uart_0"
+   internal="uart_0.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="uart_1"
+   internal="uart_1.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="uart_2"
+   internal="uart_2.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="uart_3"
+   internal="uart_3.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="uart_4"
+   internal="uart_4.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="uart_5"
+   internal="uart_5.external_connection"
+   type="conduit"
+   dir="end" />
+ <interface name="uart_6" internal="uart_6.external_connection" />
+ <interface name="uart_7" internal="uart_7.external_connection" />
  <module name="button_pio" kind="altera_avalon_pio" version="16.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="true" />
   <parameter name="bitModifyingOutReg" value="false" />
@@ -500,7 +716,7 @@
   <parameter name="F2SCLK_WARMRST_Enable" value="false" />
   <parameter name="F2SDRAM_Type" value="" />
   <parameter name="F2SDRAM_Width" value="" />
-  <parameter name="F2SINTERRUPT_Enable" value="false" />
+  <parameter name="F2SINTERRUPT_Enable" value="true" />
   <parameter name="F2S_Width" value="0" />
   <parameter name="FIX_READ_LATENCY" value="8" />
   <parameter name="FORCED_NON_LDC_ADDR_CMD_MEM_CK_INVERT" value="false" />
@@ -1016,6 +1232,134 @@
    enabled="1">
   <parameter name="id" value="-1395322110" />
  </module>
+ <module name="uart_0" kind="altera_avalon_uart" version="16.1" enabled="1">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_1" kind="altera_avalon_uart" version="16.1" enabled="1">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_2" kind="altera_avalon_uart" version="16.1" enabled="1">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_3" kind="altera_avalon_uart" version="16.1" enabled="1">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_4" kind="altera_avalon_uart" version="16.1" enabled="1">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_5" kind="altera_avalon_uart" version="16.1" enabled="1">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_6" kind="altera_avalon_uart" version="16.1" enabled="0">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
+ <module name="uart_7" kind="altera_avalon_uart" version="16.1" enabled="0">
+  <parameter name="baud" value="115200" />
+  <parameter name="clockRate" value="50000000" />
+  <parameter name="dataBits" value="8" />
+  <parameter name="fixedBaud" value="true" />
+  <parameter name="parity" value="NONE" />
+  <parameter name="simCharStream" value="" />
+  <parameter name="simInteractiveInputEnable" value="false" />
+  <parameter name="simInteractiveOutputEnable" value="false" />
+  <parameter name="simTrueBaud" value="false" />
+  <parameter name="stopBits" value="1" />
+  <parameter name="syncRegDepth" value="2" />
+  <parameter name="useCtsRts" value="false" />
+  <parameter name="useEopRegister" value="false" />
+  <parameter name="useRelativePathForSimFile" value="false" />
+ </module>
  <connection
    kind="avalon"
    version="16.1"
@@ -1091,6 +1435,78 @@
  <connection
    kind="avalon"
    version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0c00" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_1.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0ce0" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_2.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0cc0" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_3.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0ca0" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_4.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0c80" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_5.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0c60" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_6.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0c40" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
+   start="hps_arm.h2f_lw_axi_master"
+   end="uart_7.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0c20" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="16.1"
    start="fpga_only_master.master"
    end="jtag_uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -1160,6 +1576,14 @@
  <connection kind="clock" version="16.1" start="clk_50.clk" end="pio_n_layer1.clk" />
  <connection kind="clock" version="16.1" start="clk_50.clk" end="pio_n_layer2.clk" />
  <connection kind="clock" version="16.1" start="clk_50.clk" end="pio_n_layer3.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_0.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_1.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_2.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_3.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_4.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_5.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_6.clk" />
+ <connection kind="clock" version="16.1" start="clk_50.clk" end="uart_7.clk" />
  <connection
    kind="clock"
    version="16.1"
@@ -1170,6 +1594,62 @@
    version="16.1"
    start="clk_50.clk"
    end="hps_arm.h2f_lw_axi_clock" />
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_0.irq">
+  <parameter name="irqNumber" value="0" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_1.irq">
+  <parameter name="irqNumber" value="1" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_2.irq">
+  <parameter name="irqNumber" value="2" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_3.irq">
+  <parameter name="irqNumber" value="3" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_4.irq">
+  <parameter name="irqNumber" value="4" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_5.irq">
+  <parameter name="irqNumber" value="5" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_6.irq">
+  <parameter name="irqNumber" value="6" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="16.1"
+   start="hps_arm.f2h_irq0"
+   end="uart_7.irq">
+  <parameter name="irqNumber" value="7" />
+ </connection>
  <connection
    kind="reset"
    version="16.1"
@@ -1220,6 +1700,46 @@
    version="16.1"
    start="clk_50.clk_reset"
    end="pio_n_layer3.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_0.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_1.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_2.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_3.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_4.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_5.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_6.reset" />
+ <connection
+   kind="reset"
+   version="16.1"
+   start="clk_50.clk_reset"
+   end="uart_7.reset" />
  <connection
    kind="reset"
    version="16.1"

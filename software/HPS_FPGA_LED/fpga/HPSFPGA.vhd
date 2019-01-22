@@ -308,7 +308,24 @@ architecture hpsfpga_arch of hpsfpga is
             pio_n_layer3_data_in_value            : in    std_logic_vector(2048-1 downto 0) := (others => 'X'); -- data_in_value
             pio_n_layer3_data_in_read             : out   std_logic_vector(64-1 downto 0);                     -- data_in_read
             pio_n_layer3_data_out_value           : out   std_logic_vector(2048-1 downto 0);                    -- data_out_value
-            pio_n_layer3_data_out_write           : out   std_logic_vector(64-1 downto 0)                      -- data_out_write
+            pio_n_layer3_data_out_write           : out   std_logic_vector(64-1 downto 0);                     -- data_out_write
+			   uart_0_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   uart_0_txd                            : out   std_logic;                                           -- txd
+			   uart_1_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   uart_1_txd                            : out   std_logic;                                           -- txd
+			   uart_2_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   uart_2_txd                            : out   std_logic;                                           -- txd
+			   uart_3_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   uart_3_txd                            : out   std_logic;                                           -- txd
+			   uart_4_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   uart_4_txd                            : out   std_logic;                                           -- txd
+			   uart_5_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   uart_5_txd                            : out   std_logic                                           -- txd
+			   --uart_6_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   --uart_6_txd                            : out   std_logic;                                           -- txd
+			   --uart_7_rxd                            : in    std_logic                       := 'X';             -- rxd
+			   --uart_7_txd                            : out   std_logic                                           -- txd
+			
         );
 	end component hps_fpga;
 
@@ -376,6 +393,7 @@ architecture hpsfpga_arch of hpsfpga is
     signal r_reset : std_logic;
     --signal r_cnt : natural := 0;
 
+	 signal w_uart_loop : std_logic;
 begin
 
    
@@ -744,6 +762,31 @@ begin
 	    -- HPS I2C1
 	    hps_arm_hps_io_hps_io_i2c1_inst_SDA     =>  HPS_I2C1_SDAT ,     --                               hps_io_i2c1_inst_SDA
 	    hps_arm_hps_io_hps_io_i2c1_inst_SCL     =>  HPS_I2C1_SCLK ,     --                               hps_io_i2c1_inst_SCL
+	
+		 uart_0_rxd => w_uart_tx(0),
+		 uart_0_txd => open,
+
+		 uart_1_rxd => w_uart_tx(1),
+		 uart_1_txd => open,
+		 
+		 uart_2_rxd => w_uart_tx(2),
+		 uart_2_txd => open,
+
+		 uart_3_rxd => w_uart_tx(3),
+		 uart_3_txd => open,
+
+		 uart_4_rxd => w_uart_tx(3),
+		 uart_4_txd => open,
+
+		 uart_5_rxd => w_uart_loop,
+		 uart_5_txd => w_uart_loop,
+
+		 --uart_6_rxd => '0',
+		 --uart_6_txd => open,
+
+		 --uart_7_rxd => '0',
+		 --uart_7_txd => open,		 
+		 
 	
 	    -- HPS DDR3
 	    memory_mem_a                          =>  HPS_DDR3_ADDR ,                       --                memorymem_a
